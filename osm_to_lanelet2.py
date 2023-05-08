@@ -6,6 +6,6 @@ origin = lanelet2.io.Origin(37.400,-122.023)
 
 map = lanelet2.io.load(f"./{dir}/{filename}.osm", origin)
 
-outputfile = f"{filename}.bin"
+outputfile = f"{filename}.osm"
 lanelet2.io.write(outputfile, map, origin)
 
