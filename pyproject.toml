@@ -6,7 +6,7 @@ authors = ["Changnam"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.9,<3.12"
 lanelet2 = "^1.2.1"
 protobuf = "^4.25.0"
 pyproj = "^3.6.1"
