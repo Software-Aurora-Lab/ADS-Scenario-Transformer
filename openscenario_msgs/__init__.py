@@ -1,1 +1,1 @@
-from .generated_msgs import LanePosition
+from .generated_msgs import *

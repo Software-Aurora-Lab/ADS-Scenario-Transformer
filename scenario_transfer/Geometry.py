@@ -8,7 +8,8 @@ from lanelet2.geometry import (findNearest, distanceToCenterline2d, distance, fi
 from pyproj import Proj, transform
 
 from apollo_msgs import PointENU
-from openscenario_msgs import LanePosition
+from openscenario_msgs import (LanePosition, Orientation)
+
 
 class Geometry:
     @staticmethod
@@ -29,15 +30,15 @@ class Geometry:
         basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
         t_attribute = distanceToCenterline2d(lanelet, basic_point2d)
 
-        return LanePosition(laneId=lanelet.id, s=s_attribute, offset=t_attribute)
-    
+        return LanePosition(laneId=str(lanelet.id), s=s_attribute, offset=t_attribute)
+
     @staticmethod
-    def utm_to_WGS(pose: PointENU) -> GPSPoint:
-        utm_proj = Proj(proj="utm", zone=pose.zone, ellps="WGS84")
+    def utm_to_WGS(pose: PointENU, zone=10) -> GPSPoint:
+        utm_proj = Proj(proj="utm", zone=zone, ellps="WGS84")
         lon, lat = utm_proj(pose.x, pose.y, inverse=True)
         return GPSPoint(lat=lat, lon=lon, ele=0)
 
     @staticmethod
-    def project_UTM_to_lanelet(projector: UtmProjector, pose: PointENU):
+    def project_UTM_to_lanelet(projector: UtmProjector, pose: PointENU) -> BasicPoint3d:
         gps_point = Geometry.utm_to_WGS(pose)
         return projector.forward(gps_point)
