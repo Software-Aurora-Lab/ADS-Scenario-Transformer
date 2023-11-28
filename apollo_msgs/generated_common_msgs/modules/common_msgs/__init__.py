@@ -1,1 +1,4 @@
-from .basic_msgs import PointENU
+from .basic_msgs import *
+from .localization_msgs import *
+from .map_msgs import *
+from .routing_msgs import *

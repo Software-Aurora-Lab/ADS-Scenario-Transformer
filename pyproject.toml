@@ -7,10 +7,16 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
-lanelet2 = "^1.2.1"
+
 protobuf = "^4.25.0"
 pyproj = "^3.6.1"
+pyecore = "^0.14.0"
+pyecoregen = "^0.5.1"
+plantuml = "^0.3.0"
 
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
 
 [build-system]
 requires = ["poetry-core"]

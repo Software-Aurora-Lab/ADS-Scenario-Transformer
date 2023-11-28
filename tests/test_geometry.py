@@ -3,13 +3,9 @@ from typing import Optional
 
 import lanelet2
 from lanelet2.projection import UtmProjector
-from lanelet2.core import (Lanelet, LaneletMap, GPSPoint, BasicPoint2d, BasicPoint3d, getId, LineString2d, Point2d, Point3d)
+from lanelet2.core import BasicPoint3d
 from lanelet2.io import Origin
-from lanelet2.geometry import (findNearest, distanceToCenterline2d, distanceToCenterline3d, distance,
-                               findWithin3d)
-
-from Geometry import Geometry, UTMPose
-
+from scenario_transfer import Geometry
 
 class TestGeometry(unittest.TestCase):
     def setUp(self):
@@ -23,7 +19,7 @@ class TestGeometry(unittest.TestCase):
     def prop(self, obj):
         return str(type(obj)) + ' ' + str(list(filter(lambda name: not name.startswith('__'), dir(obj))))
 
-    def test_gps(self):
+    def test_projection(self):
         poses = [UTMPose(x=587079.3045861976, y=4141574.299574421, zone=10),
                  UTMPose(x=587044.4300003723, y=4141550.060588833, zone=10)]
 
@@ -61,3 +57,6 @@ class TestGeometry(unittest.TestCase):
             self.assertEqual(target_lane_position["laneId"], expectation["laneId"], "laneId should be the same")
             self.assertAlmostEqual(abs(target_lane_position["s"] - expectation["s"]), second=1.0, msg="s attribute should be almost equal to expectation", delta=1.0)
             self.assertAlmostEqual(abs(target_lane_position["offset"] - expectation["offset"]), second=1.0, msg="t attribute should be almost equal to expectation", delta=2.0)
+
+if __name__ == '__main__':
+    unittest.main()
