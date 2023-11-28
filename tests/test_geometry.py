@@ -5,6 +5,9 @@ import lanelet2
 from lanelet2.projection import UtmProjector
 from lanelet2.core import BasicPoint3d
 from lanelet2.io import Origin
+
+from apollo_msgs import PointENU
+from openscenario_msgs import LanePosition
 from scenario_transfer import Geometry
 
 class TestGeometry(unittest.TestCase):
@@ -20,8 +23,8 @@ class TestGeometry(unittest.TestCase):
         return str(type(obj)) + ' ' + str(list(filter(lambda name: not name.startswith('__'), dir(obj))))
 
     def test_projection(self):
-        poses = [UTMPose(x=587079.3045861976, y=4141574.299574421, zone=10),
-                 UTMPose(x=587044.4300003723, y=4141550.060588833, zone=10)]
+        poses = [PointENU(x=587079.3045861976, y=4141574.299574421, zone=10),
+                 PointENU(x=587044.4300003723, y=4141550.060588833, zone=10)]
 
         expectations = [BasicPoint3d(87079.3, 41574.3, 0),
                         BasicPoint3d(87044.4, 41550.1, 0)]
@@ -40,10 +43,10 @@ class TestGeometry(unittest.TestCase):
                         BasicPoint3d(87079.3, 41574.3, 0)]
 
         expectations = [
-            {"laneId":154, "s": 10.9835, "offset": -0.5042},
-            {"laneId":108, "s": 35.266, "offset": -1.1844},
-            {"laneId":108, "s": 121.5308, "offset": -0.134},
-            {"laneId": 22, "s": 35.7761, "offset": -0.2818}
+            LanePosition(laneId="154", s=10.9835, offset=-0.5042),
+            LanePosition(laneId="108", s=35.266, offset=-1.1844),
+            LanePosition(laneId="108", s=121.5308, offset=-0.134),
+            LanePosition(laneId="22", s=35.7761, offset=-0.2818)
         ]
 
         for idx, (basic_point, expectation) in enumerate(zip(basic_points, expectations)):
@@ -54,9 +57,9 @@ class TestGeometry(unittest.TestCase):
             target_lane_position = Geometry.lane_position(lanelet, basic_point)
             print("Lane Position", target_lane_position)
 
-            self.assertEqual(target_lane_position["laneId"], expectation["laneId"], "laneId should be the same")
-            self.assertAlmostEqual(abs(target_lane_position["s"] - expectation["s"]), second=1.0, msg="s attribute should be almost equal to expectation", delta=1.0)
-            self.assertAlmostEqual(abs(target_lane_position["offset"] - expectation["offset"]), second=1.0, msg="t attribute should be almost equal to expectation", delta=2.0)
+            self.assertEqual(target_lane_position.laneId, expectation.laneId, "laneId should be the same")
+            self.assertAlmostEqual(abs(target_lane_position.s - expectation.s), second=1.0, msg="s attribute should be almost equal to expectation", delta=1.0)
+            self.assertAlmostEqual(abs(target_lane_position.offset - expectation.offset), second=1.0, msg="t attribute should be almost equal to expectation", delta=2.0)
 
 if __name__ == '__main__':
     unittest.main()
