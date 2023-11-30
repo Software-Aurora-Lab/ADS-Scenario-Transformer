@@ -1,0 +1,106 @@
+header {
+  timestamp_sec: 1661458009.781878
+  module_name: "routing"
+  sequence_num: 0
+}
+road {
+  id: "road_0"
+  passage {
+    segment {
+      id: "lane_3"
+      start_s: 32.79999999997588
+      end_s: 48.76395034790039
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_9"
+  passage {
+    segment {
+      id: "lane_32"
+      start_s: 0.0
+      end_s: 39.92530822753906
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_8"
+  passage {
+    segment {
+      id: "lane_30"
+      start_s: 0.0
+      end_s: 32.63747024536133
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_3"
+  passage {
+    segment {
+      id: "lane_18"
+      start_s: 0.0
+      end_s: 217.78500366210938
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+road {
+  id: "road_7"
+  passage {
+    segment {
+      id: "lane_26"
+      start_s: 0.0
+      end_s: 26.2
+    }
+    can_exit: true
+    change_lane_type: FORWARD
+  }
+}
+measurement {
+  distance: 332.5117324829343
+}
+routing_request {
+  header {
+    timestamp_sec: 1661458009.777059
+    module_name: "MAGGIE"
+    sequence_num: 0
+  }
+  waypoint {
+    id: "lane_3"
+    s: 32.79999999997588
+    pose {
+      x: 587079.3045861976
+      y: 4141574.299574421
+    }
+    heading: 2.883901414579166
+  }
+  waypoint {
+    id: "lane_32"
+    s: 0.0
+  }
+  waypoint {
+    id: "lane_30"
+    s: 0.0
+  }
+  waypoint {
+    id: "lane_18"
+    s: 0.0
+  }
+  waypoint {
+    id: "lane_26"
+    s: 26.2
+  }
+}
+map_version: "1.500000"
+status {
+  error_code: OK
+  msg: "Success!"
+}
+

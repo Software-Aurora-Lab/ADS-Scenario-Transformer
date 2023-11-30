@@ -1,0 +1,29 @@
+header {
+  timestamp_sec: 1661458009.777059
+  module_name: "MAGGIE"
+  sequence_num: 0
+}
+waypoint {
+  pose {
+    x: 587079.3045861976
+    y: 4141574.299574421
+  }
+  heading: 2.883901414579166
+}
+waypoint {
+  id: "lane_32"
+  s: 0.0
+}
+waypoint {
+  id: "lane_30"
+  s: 0.0
+}
+waypoint {
+  id: "lane_18"
+  s: 0.0
+}
+waypoint {
+  id: "lane_26"
+  s: 26.2
+}
+
