@@ -1,1 +1,0 @@
-from .geometry_pb2 import *

@@ -6,7 +6,8 @@ from lanelet2.projection import UtmProjector
 from lanelet2.core import BasicPoint3d
 from lanelet2.io import Origin
 
-from apollo_msgs import PointENU
+from apollo_msgs.basic_msgs import PointENU
+from apollo_msgs.routing_msgs import LaneWaypoint
 from openscenario_msgs import LanePosition
 
 from scenario_transfer import PointENUTransformer
