@@ -1,4 +1,5 @@
 import unittest
+import pytest
 
 from apollo_msgs import PointENU
 from openscenario_msgs import LanePosition

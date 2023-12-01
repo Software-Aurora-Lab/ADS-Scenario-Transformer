@@ -1,5 +1,6 @@
 import unittest
 from typing import Optional
+import pytest
 
 import lanelet2
 from lanelet2.projection import UtmProjector
