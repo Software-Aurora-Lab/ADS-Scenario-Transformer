@@ -1,2 +1,2 @@
-# from .Geometry import *
-from .TransformRuleMap import *
+from .Geometry import Geometry
+from .Transformer import *
