@@ -2,12 +2,11 @@ from typing import Type, TypeVar, List
 
 from lanelet2.core import GPSPoint
 
-from apollo_msgs import PointENU
+from apollo_msgs.basic_msgs import PointENU
 from openscenario_msgs import LanePosition
 
 from .Transformable import Transformable
 from ..Geometry import Geometry
-from .TransformRuleMap import TransformRuleContainer
 
 
 # properties = [lanelet2.core.LaneletMap, lanelet2.projection.UtmProjector]

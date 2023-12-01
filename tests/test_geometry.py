@@ -7,7 +7,7 @@ from lanelet2.projection import UtmProjector
 from lanelet2.core import BasicPoint3d
 from lanelet2.io import Origin
 
-from apollo_msgs import PointENU
+from apollo_msgs.basic_msgs import PointENU
 from openscenario_msgs import LanePosition
 from scenario_transfer import Geometry
 
@@ -73,7 +73,8 @@ class TestGeometry(unittest.TestCase):
       lanelet = Geometry.find_lanelet(map=self.map, basic_point=basic_point)
       self.assertIsNotNone(lanelet, "lanelet should not be None")
 
-      target_lane_position = Geometry.lane_position(lanelet=lanelet, basic_point=basic_point)
+      target_lane_position = Geometry.lane_position(lanelet=lanelet,
+                                                    basic_point=basic_point)
       print("Lane Position", target_lane_position)
 
       self.assertEqual(target_lane_position.laneId, expectation.laneId,
