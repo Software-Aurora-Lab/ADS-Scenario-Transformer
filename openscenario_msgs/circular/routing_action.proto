@@ -1,0 +1,33 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/position.proto";
+import "openscenario_msgs/route.proto";
+import "openscenario_msgs/catalog_reference.proto";
+
+// Message for RoutingAction
+message RoutingAction {
+    optional AssignRouteAction assignRouteAction = 1;  // 0..1
+    optional FollowTrajectoryAction followTrajectoryAction = 2;  // 0..1
+    optional AcquirePositionAction acquirePositionAction = 3;  // 0..1
+}
+
+// Message for AssignRouteAction
+message AssignRouteAction {
+    required Route route = 1;             // 0..1
+    required CatalogReference catalogReference = 2;  // 0..1
+    required AssignRouteAction action = 3;  // 1..1
+}
+
+// Message for FollowTrajectoryAction (doc out-of-date)
+message FollowTrajectoryAction {
+    required double initialDistanceOffset = 1;   // Unsupported
+    required RoutingAction action = 2;  // Unsupported
+    // Additional fields are unsupported and documentation is out-of-date
+}
+
+// Message for AcquirePositionAction
+message AcquirePositionAction {
+    required Position position = 1;      // 1..1
+    required RoutingAction routing_action = 2;  // 1..1
+}

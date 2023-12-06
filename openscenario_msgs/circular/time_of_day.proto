@@ -1,0 +1,8 @@
+syntax = "proto2";
+package openscenairo;
+
+// Message for TimeOfDay
+message TimeOfDay {
+    required bool animation = 1;  // 1..1
+    required double dateTime = 2;  // 1..1, Note that this property changed implicitly to double. Type of dateTime should be corrseponding data type of DateTime in OpenScenario.
+}

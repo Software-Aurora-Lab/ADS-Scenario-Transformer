@@ -1,0 +1,21 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/entity.proto";
+import "openscenario_msgs/catalog_reference.proto";
+import "openscenario_msgs/maneuver.proto";
+
+// Message for ManeuverGroup
+message ManeuverGroup {
+    required uint32 maximumExecutionCount = 1;  // 1..1
+    required string name = 2;  // 1..1
+    required Actors actors = 3;  // 1..1
+    repeated CatalogReference catalogReferences = 4;  // 0..*
+    repeated Maneuver maneuvers = 5;  // 0..*
+}
+
+// Message for Actors
+message Actors {
+    required bool selectTriggeringEntities = 1;  // 1..1
+    repeated EntityRef entityRefs = 2;  // 0..*
+}

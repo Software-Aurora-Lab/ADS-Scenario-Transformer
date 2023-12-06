@@ -1,0 +1,22 @@
+syntax = "proto2";
+package openscenairo;
+
+// Message for BoundingBox
+message BoundingBox {
+    required Center center = 1;    // 1..1
+    required Dimensions dimensions = 2;  // 1..1
+}
+
+// Message for Center
+message Center {
+    required double x = 1;   // 1..1
+    required double y = 2;   // 1..1
+    required double z = 3;   // 1..1
+}
+
+// Message for Dimensions
+message Dimensions {
+    required double height = 1;   // 1..1
+    required double length = 2;   // 1..1
+    required double width = 3;    // 1..1
+}

@@ -1,0 +1,34 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/position.proto";
+
+// Message for Shape
+message Shape {
+    optional Polyline polyline = 1;  // 0..1 (Unsupported)
+    optional Clothoid clothoid = 2;  // 0..1 (Unsupported)
+    optional Nurbs nurbs = 3;        // 0..1
+}
+
+// Message for Polyline
+message Polyline {
+    repeated Vertex vertices = 1;  // 2..*
+}
+
+message Vertex {
+    optional double time = 1;     // 0..1
+    required Position position = 2;  // 1..1
+}
+
+// Message for Clothoid (Unsupported)
+message Clothoid {}
+
+// Message for Nurbs  (Unsupported)
+message Nurbs {}
+
+// Message for ControlPoint
+message ControlPoint {
+    optional double time = 1;             // 0..1
+    optional double weight = 2;           // 0..1
+    required Position position = 3;      // 1..1
+}

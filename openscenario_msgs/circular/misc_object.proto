@@ -1,0 +1,37 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/boundingbox.proto";
+import "openscenario_msgs/parameter.proto";
+import "openscenario_msgs/property.proto";
+
+// Enum for MiscObjectCategory
+enum MiscObjectCategory {
+    MISC_OBJECT_CATEGORY_BARRIER = 0;
+    MISC_OBJECT_CATEGORY_BUILDING = 1;
+    MISC_OBJECT_CATEGORY_CROSSWALK = 2;
+    MISC_OBJECT_CATEGORY_GANTRY = 3;
+    MISC_OBJECT_CATEGORY_NONE = 4;
+    MISC_OBJECT_CATEGORY_OBSTACLE = 5;
+    MISC_OBJECT_CATEGORY_PARKING_SPACE = 6;
+    MISC_OBJECT_CATEGORY_PATCH = 7;
+    MISC_OBJECT_CATEGORY_POLE = 8;
+    MISC_OBJECT_CATEGORY_RAILING = 9;
+    MISC_OBJECT_CATEGORY_ROAD_MARK = 10;
+    MISC_OBJECT_CATEGORY_SOUND_BARRIER = 11;
+    MISC_OBJECT_CATEGORY_STREET_LAMP = 12;
+    MISC_OBJECT_CATEGORY_TRAFFIC_ISLAND = 13;
+    MISC_OBJECT_CATEGORY_TREE = 14;
+    MISC_OBJECT_CATEGORY_VEGETATION = 15;
+    MISC_OBJECT_CATEGORY_WIND_DEPRECATED = 16;
+}
+
+// Message for MiscObject
+message MiscObject {
+    required MiscObjectCategory miscObjectCategory = 1;  // 1..1
+    optional string model3d = 2;  // 0..1
+    required string name = 3;  // 1..1
+    repeated ParameterDeclaration parameterDeclarations = 4;  // 0..*
+    required BoundingBox boundingBox = 5;  // 1..1
+    required Properties properties = 6;  // 1..1
+}

@@ -1,0 +1,34 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/position.proto";
+import "openscenario_msgs/longitudinal_action.proto";
+import "openscenario_msgs/lateral_action.proto";
+import "openscenario_msgs/controller_action.proto";
+import "openscenario_msgs/routing_action.proto";
+
+// Message for PrivateAction
+message PrivateAction {
+    optional LongitudinalAction longitudinalAction = 1;  // 0..1
+    optional LateralAction lateralAction = 2;  // 0..1
+    optional VisibilityAction visibilityAction = 3;  // 0..1
+    optional SynchronizeAction synchronizeAction = 4;  // 0..1
+    optional ControllerAction controllerAction = 5;  // 0..1
+    optional TeleportAction teleportAction = 6;  // 0..1
+    optional RoutingAction routingAction = 7;  // 0..1
+    optional AppearanceAction appearanceAction = 8;  // 0..1
+}
+
+// Message for TeleportAction
+message TeleportAction {
+    required Position position = 1;  // 1..1
+}
+
+// Message for VisibilityAction (Unsupported)
+message VisibilityAction {}
+// Message for SynchronizeAction (Unsupported)
+message SynchronizeAction {}
+// Message for AnimationAction (Unsupported)
+message AnimationAction {}
+// Message for AppearanceAction (Unsupported)
+message AppearanceAction {}

@@ -1,0 +1,696 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/boundingbox.proto";
+import "openscenario_msgs/by_type.proto";
+import "openscenario_msgs/environment.proto";
+import "openscenario_msgs/following_mode.proto";
+import "openscenario_msgs/parameter.proto";
+import "openscenario_msgs/pedestrian.proto";
+import "openscenario_msgs/position.proto";
+import "openscenario_msgs/property.proto";
+import "openscenario_msgs/route.proto";
+import "openscenario_msgs/rule.proto";
+import "openscenario_msgs/shape.proto";
+import "openscenario_msgs/traffic_signal.proto";
+import "openscenario_msgs/vehicle.proto";
+import "openscenario_msgs/transition_dynamics.proto";
+
+// Message for ByEntityCondition
+message ByEntityCondition {
+    required TriggeringEntities triggeringEntities = 1;  // 1..1
+    required EntityCondition entityCondition = 2;  // 1..1
+}
+
+// Message for TriggeringEntities
+message TriggeringEntities {
+    // Enum for TriggeringEntitiesRule
+    enum TriggeringEntitiesRule {
+        ALL = 0;
+        ANY = 1;
+    }
+    required TriggeringEntitiesRule triggeringEntitiesRule = 1;  // 1..1
+    repeated EntityRef entityRefs = 2;  // 1..*
+}
+
+// Message for ByValueCondition
+message ByValueCondition {
+    optional ParameterCondition parameterCondition = 1;  // 0..1
+    optional TimeOfDayCondition timeOfDayCondition = 2;  // 0..1
+    optional SimulationTimeCondition simulationTimeCondition = 3;  // 0..1
+    optional StoryboardElementStateCondition storyboardElementStateCondition = 4;  // 0..1
+    optional UserDefinedValueCondition userDefinedValueCondition = 5;  // 0..1
+    optional TrafficSignalCondition trafficSignalCondition = 6;  // 0..1
+    optional TrafficSignalControllerCondition trafficSignalControllerCondition = 7;  // 0..1
+    optional VariableCondition variableCondition = 8;  // 0..1
+}
+
+// Message for SimulationTimeCondition
+message SimulationTimeCondition {
+    required Rule rule = 1;             // 1..1
+    required double value = 2;          // 1..1
+}
+
+// Message for UserDefinedValueCondition
+message UserDefinedValueCondition {
+    required string name = 1;  // 1..1
+    required Rule rule = 2;    // 1..1
+    required string value = 3; // 1..1
+}
+
+// Message for VariableCondition (Unsupported)
+message VariableCondition {}
+
+// Message for TimeOfDayCondition (Unsupported)
+message TimeOfDayCondition {}
+
+// Message for CatalogReference
+message CatalogReference {
+    required string catalog_name = 1;           // 1..1
+    required string entry_name = 2;            // 1..1
+    repeated ParameterAssignment parameter_assignments = 3;  // 0..*
+    required CatalogElement ref = 4;           // 1..1
+}
+
+message CatalogElement {
+    oneof implementation {
+        ControllerVehicle controller_vehicle = 4;
+        Environment environment = 5;
+        Maneuver maneuver = 6;
+        MiscObject misc_object = 7;
+        Pedestrian pedestrian = 8;
+        Route route = 9;
+        Trajectory trajectory = 10;
+        Vehicle vehicle = 11;
+    }
+}
+
+// Message for ControllerVehicle, Unsupported
+message ControllerVehicle {}
+
+
+// Message for RouteRef
+message RouteRef {
+    optional Route route = 1;                // 0..1
+    optional CatalogReference catalog_reference = 2;  // 0..1
+}
+
+// Message for TrajectoryRef
+message TrajectoryRef {
+    required Trajectory trajectory = 1;  // 1..1
+    required CatalogReference catalogReference = 2;  // 1..1
+}
+
+// Message for ControllerAction
+message ControllerAction {
+    optional AssignControllerAction assignControllerAction = 1;  // 0..1
+    optional OverrideControllerValueAction overrideControllerValueAction = 2;  // 0..1
+    optional ActivateControllerAction activateControllerAction = 3;  // 0..1
+}
+
+// Message for AssignControllerAction
+message AssignControllerAction {
+    required bool activateLateral = 1;         // 0..1
+    required bool activateLighting = 2;        // 0..1
+    required bool activateLongitudinal = 3;   // 0..1
+    required Controller controller = 4;           // 0..1
+    required CatalogReference catalogReference = 5;  // 0..1
+    required ControllerAction controller_action = 6;  // 1..1
+}
+// Message for OverrideControllerValueAction (Unsupported)
+message OverrideControllerValueAction {}
+
+// Message for ActivateControllerAction (Unsupported/Deprecated)
+message ActivateControllerAction {}
+
+// Message for ConditionGroup
+message ConditionGroup {
+    repeated Condition conditions = 1;  // 1..*
+}
+
+// Message for Condition
+message Condition {
+    // Enum for ConditionEdge
+    enum ConditionEdge {
+        FALLING = 0;
+        NONE = 1;
+        RISING = 2;
+        RISING_OR_FALLING = 3;
+    }
+
+    required ConditionEdge conditionEdge = 1;  // 1..1
+    required double delay = 2;  // 1..1
+    required string name = 3;  // 1..1
+    optional ByEntityCondition byEntityCondition = 4;  // 0..1
+    optional ByValueCondition byValueCondition = 5;  // 0..1
+}
+
+// Enum for ControllerType
+enum ControllerType {
+    CONTROLLERTYPE_LATERAL = 0;
+    CONTROLLERTYPE_LONGITUDINAL = 1;
+    CONTROLLERTYPE_LIGHTING = 2;
+    CONTROLLERTYPE_ANIMATION = 3;
+    CONTROLLERTYPE_MOVEMENT = 4;
+    CONTROLLERTYPE_APPEARANCE = 5;
+    CONTROLLERTYPE_ALL = 6;
+}
+
+// Message for Controller
+message Controller {
+    required ControllerType controllerType = 1;  // 0..1
+    required string name = 2;                   // 1..1
+    repeated ParameterDeclaration parameterDeclarations = 3;  // 0..*
+    required Properties properties = 4;         // 1..1
+}
+
+// Message for ObjectController
+message ObjectController {
+    optional CatalogReference catalogReference = 1;  // 0..1
+    optional Controller controller = 2;    // 0..1
+}
+
+// Message for EntityAction
+message EntityAction {
+    required EntityRef entityRef = 1;  // 1..1
+    optional AddEntityAction addEntityAction = 2;  // 0..1
+    optional DeleteEntityAction deleteEntityAction = 3;  // 0..1
+}
+
+// Message for AddEntityAction
+message AddEntityAction {
+    required Position position = 1;      // 1..1
+    required EntityAction entity_action = 2;  // 1..1
+}
+
+// Message for DeleteEntityAction
+message DeleteEntityAction {}
+
+// Enum for CoordinateSystem
+enum CoordinateSystem {
+    ENTITY = 0;
+    LANE = 1;
+    ROAD = 2;
+    TRAJECTORY = 3;
+}
+
+// Enum for RelativeDistanceType
+enum RelativeDistanceType {
+    RELATIVEDISTANCETYPE_LATERAL = 0;
+    RELATIVEDISTANCETYPE_LONGITUDINAL = 1;
+    RELATIVEDISTANCETYPE_CARTESIAN_DISTANCE = 2;
+    RELATIVEDISTANCETYPE_EUCLIDIAN_DISTANCE = 3;
+}
+
+// Enum for RoutingAlgorithm
+enum RoutingAlgorithm {
+    ASSIGNED_ROUTE = 0;
+    FASTEST = 1;
+    LEAST_INTERSECTIONS = 2;
+    SHORTEST = 3;
+    UNDEFINED = 4;
+}
+
+// Enum for DirectionalDimension
+enum DirectionalDimension {
+    DIRECTIONALDIMENSION_LONGITUDINAL = 0;
+    DIRECTIONALDIMENSION_LATERAL = 1;
+    DIRECTIONALDIMENSION_VERTICAL = 2;
+}
+
+// Message for EntityCondition
+message EntityCondition {
+    optional EndOfRoadCondition endOfRoadCondition = 1;  // 0..1
+    optional CollisionCondition collisionCondition = 2;  // 0..1
+    optional OffroadCondition offroadCondition = 3;  // 0..1
+    optional TimeHeadwayCondition timeHeadwayCondition = 4;  // 0..1
+    optional TimeToCollisionCondition timeToCollisionCondition = 5;  // 0..1
+    optional AccelerationCondition accelerationCondition = 6;  // 0..1
+    optional StandStillCondition standStillCondition = 7;  // 0..1
+    optional SpeedCondition speedCondition = 8;  // 0..1
+    optional RelativeSpeedCondition relativeSpeedCondition = 9;  // 0..1
+    optional TraveledDistanceCondition traveledDistanceCondition = 10;  // 0..1
+    optional DistanceCondition distanceCondition = 11;  // 0..1
+    optional RelativeDistanceCondition relativeDistanceCondition = 12;  // 0..1
+    optional RelativeClearanceCondition relativeClearanceCondition = 13;  // 0..1
+}
+
+// Message for CollisionCondition
+message CollisionCondition {
+    required EntityRef entityRef = 1;    // 0..1
+    required ByObjectType byType = 2;    // 0..1
+}
+
+// Message for TimeHeadwayCondition
+message TimeHeadwayCondition {
+    optional CoordinateSystem coordinateSystem = 1;  // 0..1
+    required EntityRef entityRef = 2;  // 1..1
+    required bool freespace = 3;      // 1..1
+    optional RelativeDistanceType relativeDistanceType = 4;  // 0..1
+    required RoutingAlgorithm routingAlgorithm = 5;  // 0..1
+    required Rule rule = 6;          // 1..1
+    required double value = 7;       // 1..1
+}
+
+// Message for TimeToCollisionCondition (Unsupported)
+message TimeToCollisionCondition {}
+
+// Message for AccelerationCondition
+message AccelerationCondition {
+    optional DirectionalDimension direction = 1; // 0..1
+    required Rule rule = 2;                       // 1..1
+    required double value = 3;                    // 1..1
+}
+
+// Message for SpeedCondition
+message SpeedCondition {
+    optional DirectionalDimension direction = 1;  // 0..1
+    required EntityCondition condition = 2;  // 1..1
+    required Rule rule = 3;      // 1..1
+    required double value = 4;   // 1..1
+}
+
+// Message for StandStillCondition
+message StandStillCondition {
+    required double duration = 1;  // 1..1
+    required EntityCondition condition = 2;  // 1..1
+}
+
+// Message for RelativeClearanceCondition
+message RelativeClearanceCondition {
+    optional double distanceBackward = 1;  // 0..1
+    optional double distanceForward = 2;  // 0..1
+    required bool freeSpace = 3;  // 1..1
+    required bool oppositeLanes = 4;  // 1..1
+    repeated RelativeLaneRange relativeLaneRange = 5;  // 0..*
+    repeated EntityRef entityRef = 6;  // 0..*
+}
+
+// Message for RelativeLaneRange
+message RelativeLaneRange {
+    optional int32 from = 1;  // 0..1
+    optional int32 to = 2;  // 0..1
+}
+
+// Message for DistanceCondition
+message DistanceCondition {
+    required CoordinateSystem coordinateSystem = 1;  // 0..1
+    required bool freespace = 2;         // 1..1
+    required RelativeDistanceType relativeDistanceType = 3;  // 0..1
+    required RoutingAlgorithm routingAlgorithm = 4;  // 0..1
+    required Rule rule = 5;             // 1..1
+    required double value = 6;          // 1..1
+}
+
+// Message for EndOfRoadCondition (Unsupported)
+message EndOfRoadCondition {}
+    
+// Message for OffroadCondition (Unsupported)
+message OffroadCondition {}
+
+// Message for RelativeSpeedCondition (Unsupported)
+message RelativeSpeedCondition {}
+
+// Message for TraveledDistanceCondition (Unsupported)
+message TraveledDistanceCondition {}
+
+// Message for RelativeDistanceCondition (Unsupported)
+message RelativeDistanceCondition {}
+
+message Entity {
+    oneof implementation {
+    EntitySelection entity_selection = 1;
+    ScenarioObject scenario_object = 2;
+    SpawnedObject spawned_object = 3;
+    }
+}
+
+// Message for ScenarioObject
+message ScenarioObject {
+    required string name = 1;              // 1..1
+    required EntityObject entityObject = 2;  // 1..1
+    repeated ObjectController objectController = 3;  // 0..*
+}
+
+// Message for EntityObject
+message EntityObject {
+    optional CatalogReference catalogReference = 1;  // 0..1
+    optional Vehicle vehicle = 2;      // 0..1
+    optional Pedestrian pedestrian = 3;  // 0..1
+    optional MiscObject miscObject = 4;  // 0..1
+    optional ExternalObjectReference externalObjectReference = 5;  // 0..1
+}
+
+// Message for EntityRef
+message EntityRef {
+    required Entity entityRef = 1;	// 1..1
+}
+
+// Message for SpawnedObject, Unsupported
+message SpawnedObject {}
+
+// Message for EntitySelection
+message EntitySelection {
+    required string name = 1;              // 1..1
+    required SelectedEntities members = 2;  // 1..1
+}
+
+// Message for SelectedEntities
+message SelectedEntities {
+    repeated EntityRef entityRef = 1;  // 0..*
+    repeated ByType byType = 2;        // 0..*
+}
+
+// Message for ExternalObjectReference
+message ExternalObjectReference {
+    required string name = 1;   // 1..1
+}
+
+// Enum for Priority
+enum Priority {
+    OVERWRITE = 0;
+    OVERRIDE = 1;
+    PARALLEL = 2;
+    SKIP = 3;
+}
+
+// Message for Event
+message Event {
+    optional uint32 maximumExecutionCount = 1;  // 0..1
+    required string name = 2;  // 1..1
+    required Priority priority = 3;  // 1..1
+    repeated Action actions = 4;  // 1..*
+    optional Trigger startTrigger = 5;  // 0..1
+}
+
+
+// Message for Trigger
+message Trigger {
+    repeated ConditionGroup conditionGroups = 1;  // 0..*
+}
+
+// Message for Action
+message Action {
+    required string name = 1;  // 1..1
+    optional GlobalAction globalAction = 2;  // 0..1
+    optional UserDefinedAction userDefinedAction = 3;  // 0..1
+    optional PrivateAction privateAction = 4;  // 0..1
+}
+
+// Message for GlobalAction
+message GlobalAction {
+    optional EnvironmentAction environmentAction = 1;  // 0..1
+    optional EntityAction entityAction = 2;  // 0..1
+    optional InfrastructureAction infrastructureAction = 3;  // 0..1
+    optional TrafficAction trafficAction = 4;  // 0..1
+    optional VariableAction variableAction = 5;  // 0..1
+}
+
+// Message for InfrastructureAction
+message InfrastructureAction {
+    required TrafficSignalAction trafficSignalAction = 1;  // 1..1
+}
+
+// Message for EnvironmentAction (Unsupported)
+message EnvironmentAction {}
+
+// Message for TrafficAction (Unsupported)
+message TrafficAction {}
+
+// Message for VariableAction (Unsupported)
+message VariableAction {}
+
+// Message for LateralAction
+message LateralAction {
+    optional LaneChangeAction laneChangeAction = 1;  // 0..1
+    optional LaneOffsetAction laneOffsetAction = 2;  // 0..1
+    optional LateralDistanceAction lateralDistanceAction = 3;  // 0..1
+}
+
+// Message for LaneOffsetAction (Unsupported)
+message LaneOffsetAction {
+    required bool continuous = 1;
+    required LaneOffsetActionDynamics laneOffsetActionDynamics = 2;
+    required LaneOffsetTarget laneOffsetTarget = 3;
+}
+
+// Message for LaneChangeAction
+message LaneChangeAction {
+    required double targetLaneOffset = 1;   // 0..1
+    required TransitionDynamics laneChangeActionDynamics = 2;  // 1..1
+    required LaneChangeTarget laneChangeTarget = 3;  // 1..1
+}
+
+// Message for LaneChangeTarget
+message LaneChangeTarget {
+    optional RelativeTargetLane relative_target_lane = 1;  // 0..1
+    optional AbsoluteTargetLane absolute_target_lane = 2;  // 0..1
+}
+
+// Message for RelativeTargetLane
+message RelativeTargetLane {
+    required EntityRef entity_ref = 1;  // 1..1
+    required int32 value = 2;           // 1..1
+}
+
+// Message for AbsoluteTargetLane
+message AbsoluteTargetLane {
+    required string value = 1;  // 1..1
+}
+
+// Message for LaneOffsetActionDynamics (Unsupported)
+message LaneOffsetActionDynamics {}
+
+// Message for LaneOffsetTarget (Unsupported)
+message LaneOffsetTarget {}
+// Message for LateralDistanceAction (Unsupported)
+message LateralDistanceAction {}
+
+// Message for LongitudinalAction
+message LongitudinalAction {
+    optional SpeedAction speedAction = 1;  // 0..1
+    optional LongitudinalDistanceAction longitudinalDistanceAction = 2;  // 0..1
+    optional SpeedProfileAction speedProfileAction = 3;  // 0..1
+}
+
+// Message for LongitudinalDistanceAction (Unsupported)
+message LongitudinalDistanceAction {}
+
+// Message for ManeuverGroup
+message ManeuverGroup {
+    required uint32 maximumExecutionCount = 1;  // 1..1
+    required string name = 2;  // 1..1
+    required Actors actors = 3;  // 1..1
+    repeated CatalogReference catalogReferences = 4;  // 0..*
+    repeated Maneuver maneuvers = 5;  // 0..*
+}
+
+// Message for Actors
+message Actors {
+    required bool selectTriggeringEntities = 1;  // 1..1
+    repeated EntityRef entityRefs = 2;  // 0..*
+}
+
+// Message for Maneuver
+message Maneuver {
+    required string name = 1;  // 1..1
+    repeated ParameterDeclaration parameterDeclarations = 2;  // 0..*
+    repeated Event events = 3;  // 1..*
+}
+
+// Message for MiscObject
+message MiscObject {
+    // Enum for MiscObjectCategory
+    enum Category {
+        CATEGORY_BARRIER = 0;
+        CATEGORY_BUILDING = 1;
+        CATEGORY_CROSSWALK = 2;
+        CATEGORY_GANTRY = 3;
+        CATEGORY_NONE = 4;
+        CATEGORY_OBSTACLE = 5;
+        CATEGORY_PARKING_SPACE = 6;
+        CATEGORY_PATCH = 7;
+        CATEGORY_POLE = 8;
+        CATEGORY_RAILING = 9;
+        CATEGORY_ROAD_MARK = 10;
+        CATEGORY_SOUND_BARRIER = 11;
+        CATEGORY_STREET_LAMP = 12;
+        CATEGORY_TRAFFIC_ISLAND = 13;
+        CATEGORY_TREE = 14;
+        CATEGORY_VEGETATION = 15;
+        CATEGORY_WIND_DEPRECATED = 16;
+    }
+
+    required MiscObject.Category miscObjectCategory = 1;  // 1..1
+    optional string model3d = 2;  // 0..1
+    required string name = 3;  // 1..1
+    repeated ParameterDeclaration parameterDeclarations = 4;  // 0..*
+    required BoundingBox boundingBox = 5;  // 1..1
+    required Properties properties = 6;  // 1..1
+}
+
+
+// Message for PrivateAction
+message PrivateAction {
+    optional LongitudinalAction longitudinalAction = 1;  // 0..1
+    optional LateralAction lateralAction = 2;  // 0..1
+    optional VisibilityAction visibilityAction = 3;  // 0..1
+    optional SynchronizeAction synchronizeAction = 4;  // 0..1
+    optional ControllerAction controllerAction = 5;  // 0..1
+    optional TeleportAction teleportAction = 6;  // 0..1
+    optional RoutingAction routingAction = 7;  // 0..1
+    optional AppearanceAction appearanceAction = 8;  // 0..1
+}
+
+// Message for TeleportAction
+message TeleportAction {
+    required Position position = 1;  // 1..1
+}
+
+// Message for VisibilityAction (Unsupported)
+message VisibilityAction {}
+// Message for SynchronizeAction (Unsupported)
+message SynchronizeAction {}
+// Message for AnimationAction (Unsupported)
+message AnimationAction {}
+// Message for AppearanceAction (Unsupported)
+message AppearanceAction {}
+
+// Message for RoutingAction
+message RoutingAction {
+    optional AssignRouteAction assignRouteAction = 1;  // 0..1
+    optional FollowTrajectoryAction followTrajectoryAction = 2;  // 0..1
+    optional AcquirePositionAction acquirePositionAction = 3;  // 0..1
+}
+
+// Message for AssignRouteAction
+message AssignRouteAction {
+    required Route route = 1;             // 0..1
+    required CatalogReference catalogReference = 2;  // 0..1
+    required AssignRouteAction action = 3;  // 1..1
+}
+
+// Message for FollowTrajectoryAction (doc out-of-date)
+message FollowTrajectoryAction {
+    required double initialDistanceOffset = 1;   // Unsupported
+    required RoutingAction action = 2;  // Unsupported
+    // Additional fields are unsupported and documentation is out-of-date
+}
+
+// Message for AcquirePositionAction
+message AcquirePositionAction {
+    required Position position = 1;      // 1..1
+    required RoutingAction routing_action = 2;  // 1..1
+}
+
+// Message for SpeedAction
+message SpeedAction {
+    required TransitionDynamics speedActionDynamics = 1;  // 1..1
+    required SpeedActionTarget speedActionTarget = 2;  // 1..1
+}
+
+// Enum for SpeedTargetValueType
+enum SpeedTargetValueType {
+    SPEEDTARGETVALUETYPE_DELTA = 0;
+    SPEEDTARGETVALUETYPE_FACTOR = 1;
+}
+
+// Message for SpeedActionTarget
+message SpeedActionTarget {
+    required RelativeTargetSpeed relativeTargetSpeed = 1;  // 0..1
+    required AbsoluteTargetSpeed absoluteTargetSpeed = 2;  // 0..1
+}
+
+// Message for RelativeTargetSpeed
+message RelativeTargetSpeed {
+    required bool continuous = 1;     // 1..1
+    required EntityRef entityRef = 2;   // 1..1
+    required SpeedTargetValueType speedTargetValueType = 3;  // 1..1
+    required double value = 4;          // 1..1
+}
+    
+// Message for AbsoluteTargetSpeed
+message AbsoluteTargetSpeed {
+    required double value = 1;   // 1..1
+}
+
+// Message for SpeedProfileAction (Unsupported)
+message SpeedProfileAction {}
+
+message StoryboardElement {
+    oneof implementation {
+        Act act = 12;
+        Action action = 13;
+        Event event = 14;
+        Maneuver maneuver = 15;
+        ManeuverGroup maneuver_group = 16;
+        Story story = 17;
+    }
+}
+    
+// Message for Story
+message Story {
+    required string name = 1;  // 1..1
+    repeated ParameterDeclaration parameterDeclarations = 2;  // 0..*
+    repeated Act acts = 3;  // 1..*
+}
+
+// Message for Act
+message Act {
+    required string name = 1;  // 1..1
+    repeated ManeuverGroup maneuverGroups = 2;  // 1..*
+    required Trigger startTrigger = 3;  // 1..1
+    optional Trigger stopTrigger = 4;  // 0..1
+}
+
+// Message for StoryboardElementStateCondition
+message StoryboardElementStateCondition {
+    // Enum for StoryboardElementState
+    enum State {
+        COMPLETE_STATE = 0;
+        END_TRANSITION = 1;
+        RUNNING_STATE = 2;
+        SKIP_TRANSITION = 3;
+        STANDBY_STATE = 4;
+        START_TRANSITION = 5;
+        STOP_TRANSITION = 6;
+    }
+
+    // Enum for StoryboardElementType
+    enum Type {
+        ACT = 0;
+        ACTION = 1;
+        EVENT = 2;
+        MANEUVER = 3;
+        MANEUVER_GROUP = 4;
+        STORY = 5;
+    }
+
+    required StoryboardElementStateCondition.State state = 1;  // 1..1
+    required StoryboardElement storyboardElementRef = 2;  // 1..1
+    required StoryboardElementStateCondition.Type storyboardElementType = 3;  // 1..1
+}
+
+// Message for TrajectoryFollowingMode
+message TrajectoryFollowingMode {
+    required FollowingMode followingMode = 1;  // 1..1
+}
+
+// Message for Trajectory
+message Trajectory {
+    required bool closed = 1;                   // 1..1
+    required string name = 2;                   // 1..1
+    repeated ParameterDeclaration parameter_declarations = 3;  // 0..*
+    required Shape shape = 4;                   // 1..1
+}
+
+// Message for UserDefinedAction
+message UserDefinedAction {
+    required CustomCommandAction customCommandAction = 1;  // 1..1
+}
+
+// Message for CustomCommandAction
+message CustomCommandAction {
+    required string type = 1;            // 1..1
+    required string content = 2;         // 1..1
+}

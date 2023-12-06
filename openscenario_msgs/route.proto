@@ -1,0 +1,27 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/parameter.proto";
+import "openscenario_msgs/position.proto";
+
+// Enum for RouteStrategy
+enum RouteStrategy {
+    ROUTESTRATEGY_FASTEST = 0;
+    ROUTESTRATEGY_LEAST_INTERSECTIONS = 1;
+    ROUTESTRATEGY_RANDOM = 2;
+    ROUTESTRATEGY_SHORTEST = 3;
+}
+
+// Message for Route
+message Route {
+    required bool closed = 1;                  // 1..1
+    required string name = 2;                  // 1..1
+    repeated ParameterDeclaration parameter_declarations = 3;  // 0..*
+    repeated Waypoint waypoints = 4;           // 2..*
+}
+
+// Message for Waypoint
+message Waypoint {
+    required RouteStrategy route_strategy = 1;  // 1..1
+    required Position position = 2;             // 1..1
+}

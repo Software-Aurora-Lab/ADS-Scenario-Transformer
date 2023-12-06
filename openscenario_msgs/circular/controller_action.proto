@@ -1,0 +1,27 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/controller.proto";
+import "openscenario_msgs/catalog_reference.proto";
+
+// Message for ControllerAction
+message ControllerAction {
+    optional AssignControllerAction assignControllerAction = 1;  // 0..1
+    optional OverrideControllerValueAction overrideControllerValueAction = 2;  // 0..1
+    optional ActivateControllerAction activateControllerAction = 3;  // 0..1
+}
+
+// Message for AssignControllerAction
+message AssignControllerAction {
+    required bool activateLateral = 1;         // 0..1
+    required bool activateLighting = 2;        // 0..1
+    required bool activateLongitudinal = 3;   // 0..1
+    required Controller controller = 4;           // 0..1
+    required CatalogReference catalogReference = 5;  // 0..1
+    required ControllerAction controller_action = 6;  // 1..1
+}
+// Message for OverrideControllerValueAction (Unsupported)
+message OverrideControllerValueAction {}
+
+// Message for ActivateControllerAction (Unsupported/Deprecated)
+message ActivateControllerAction {}

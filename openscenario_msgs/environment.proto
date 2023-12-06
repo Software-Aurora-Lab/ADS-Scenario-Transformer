@@ -1,0 +1,97 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/boundingbox.proto";
+import "openscenario_msgs/file.proto";
+import "openscenario_msgs/parameter.proto";
+import "openscenario_msgs/property.proto";
+import "openscenario_msgs/time_of_day.proto";
+
+// Enum for FractionalCloudCover
+enum FractionalCloudCover {
+    FRACTIONALCLOUDCOVER_ZERO_OKTAS = 0;
+    FRACTIONALCLOUDCOVER_ONE_OKTAS = 1;
+    FRACTIONALCLOUDCOVER_TWO_OKTAS = 2;
+    FRACTIONALCLOUDCOVER_THREE_OKTAS = 3;
+    FRACTIONALCLOUDCOVER_FOUR_OKTAS = 4;
+    FRACTIONALCLOUDCOVER_FIVE_OKTAS = 5;
+    FRACTIONALCLOUDCOVER_SIX_OKTAS = 6;
+    FRACTIONALCLOUDCOVER_SEVEN_OKTAS = 7;
+    FRACTIONALCLOUDCOVER_EIGHT_OKTAS = 8;
+    FRACTIONALCLOUDCOVER_NINE_OKTAS = 9;
+}
+
+// Enum for PrecipitationType
+enum PrecipitationType {
+    PRECIPITATIONTYPE_DRY = 0;
+    PRECIPITATIONTYPE_RAIN = 1;
+    PRECIPITATIONTYPE_SNOW = 2;
+}
+
+// Enum for Wetness
+enum Wetness {
+    WETNESS_DRY = 0;
+    WETNESS_MOIST = 1;
+    WETNESS_WET_WITH_PUDDLES = 2;
+    WETNESS_LOW_FLOODED = 3;
+    WETNESS_HIGH_FLOODED = 4;
+}
+
+// Message for Environment
+message Environment {
+    required string name = 1;   // 1..1
+    repeated ParameterDeclaration parameterDeclarations = 2;  // 0..*
+    optional TimeOfDay timeOfDay = 3;  // 0..1
+    optional Weather weather = 4;     // 0..1
+    optional RoadCondition roadCondition = 5;  // 0..1
+}
+
+// Message for Weather
+message Weather {
+    optional double atmosphericPressure = 1;  // 0..1
+    optional FractionalCloudCover fractionalCloudCover = 2;  // 0..1
+    optional double temperature = 3;  // 0..1
+    optional Sun sun = 4;  // 0..1
+    optional Fog fog = 5;  // 0..1
+    optional Precipitation precipitation = 6;  // 0..1
+    optional Wind wind = 7;  // 0..1
+    optional DomeImage domeImage = 8;  // 0..1
+}
+
+// Message for Fog
+message Fog {
+    required double visualRange = 1;  // 1..1
+    optional BoundingBox boundingBox = 2;  // 0..1
+}
+
+// Message for Precipitation
+message Precipitation {
+    optional double precipitationIntensity = 1;  // 0..1
+    required PrecipitationType precipitationType = 2;  // 1..1
+}
+
+// Message for Sun
+message Sun {
+    required double azimuth = 1;  // 1..1
+    required double elevation = 2;  // 1..1
+    optional double illuminance = 3;  // 0..1
+}
+
+// Message for Wind
+message Wind {
+    required double direction = 1;  // 1..1
+    required double speed = 2;  // 1..1
+}
+
+// Message for DomeImage
+message DomeImage {
+    optional double azimuthOffset = 1;  // 0..1
+    required File domeFile = 2;  // 1..1
+}
+
+// Message for RoadCondition
+message RoadCondition {
+    required double frictionScaleFactor = 1;  // 1..1
+    optional Wetness wetness = 2;  // 0..1
+    optional Properties properties = 3;  // 0..1
+}

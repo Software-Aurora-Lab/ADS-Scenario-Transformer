@@ -1,0 +1,21 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/entity.proto";
+import "openscenario_msgs/position.proto";
+
+// Message for EntityAction
+message EntityAction {
+    required EntityRef entityRef = 1;  // 1..1
+    optional AddEntityAction addEntityAction = 2;  // 0..1
+    optional DeleteEntityAction deleteEntityAction = 3;  // 0..1
+}
+
+// Message for AddEntityAction
+message AddEntityAction {
+    required Position position = 1;      // 1..1
+    required EntityAction entity_action = 2;  // 1..1
+}
+
+// Message for DeleteEntityAction
+message DeleteEntityAction {}

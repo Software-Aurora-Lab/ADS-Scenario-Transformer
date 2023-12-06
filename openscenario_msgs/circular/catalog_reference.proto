@@ -1,0 +1,48 @@
+syntax = "proto2";
+package openscenairo;
+
+// import "openscenario_msgs/maneuver.proto";
+import "openscenario_msgs/parameter.proto";
+import "openscenario_msgs/misc_object.proto";
+import "openscenario_msgs/pedestrian.proto";
+import "openscenario_msgs/vehicle.proto";
+import "openscenario_msgs/environment.proto";
+import "openscenario_msgs/route.proto";
+import "openscenario_msgs/trajectory.proto";
+
+// Message for CatalogReference
+message CatalogReference {
+    required string catalog_name = 1;           // 1..1
+    required string entry_name = 2;            // 1..1
+    repeated ParameterAssignment parameter_assignments = 3;  // 0..*
+    required CatalogElement ref = 4;           // 1..1
+}
+
+message CatalogElement {
+    oneof implementation {
+        ControllerVehicle controller_vehicle = 4;
+        Environment environment = 5;
+        Maneuver maneuver = 6;
+        MiscObject misc_object = 7;
+        Pedestrian pedestrian = 8;
+        Route route = 9;
+        Trajectory trajectory = 10;
+        Vehicle vehicle = 11;
+    }
+}
+
+// Message for ControllerVehicle, Unsupported
+message ControllerVehicle {}
+
+
+// Message for RouteRef
+message RouteRef {
+    optional Route route = 1;                // 0..1
+    optional CatalogReference catalog_reference = 2;  // 0..1
+}
+
+// Message for TrajectoryRef
+message TrajectoryRef {
+    required Trajectory trajectory = 1;  // 1..1
+    required CatalogReference catalogReference = 2;  // 1..1
+}

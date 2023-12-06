@@ -1,0 +1,28 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/entity_action.proto";
+import "openscenario_msgs/traffic_signal.proto";
+
+// Message for GlobalAction
+message GlobalAction {
+    optional EnvironmentAction environmentAction = 1;  // 0..1
+    optional EntityAction entityAction = 2;  // 0..1
+    optional InfrastructureAction infrastructureAction = 3;  // 0..1
+    optional TrafficAction trafficAction = 4;  // 0..1
+    optional VariableAction variableAction = 5;  // 0..1
+}
+
+// Message for InfrastructureAction
+message InfrastructureAction {
+    required TrafficSignalAction trafficSignalAction = 1;  // 1..1
+}
+
+// Message for EnvironmentAction (Unsupported)
+message EnvironmentAction {}
+
+// Message for TrafficAction (Unsupported)
+message TrafficAction {}
+
+// Message for VariableAction (Unsupported)
+message VariableAction {}

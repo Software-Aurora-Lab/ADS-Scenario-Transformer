@@ -1,0 +1,59 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/by_type.proto";
+import "openscenario_msgs/misc_object.proto";
+import "openscenario_msgs/pedestrian.proto";
+import "openscenario_msgs/vehicle.proto";
+import "openscenario_msgs/catalog_reference.proto";
+import "openscenario_msgs/controller.proto";
+
+message Entity {
+    oneof implementation {
+    EntitySelection entity_selection = 1;
+    ScenarioObject scenario_object = 2;
+    SpawnedObject spawned_object = 3;
+    }
+}
+
+// Message for ScenarioObject
+message ScenarioObject {
+    required string name = 1;              // 1..1
+    required EntityObject entityObject = 2;  // 1..1
+    repeated ObjectController objectController = 3;  // 0..*
+}
+
+// Message for EntityObject
+message EntityObject {
+    optional CatalogReference catalogReference = 1;  // 0..1
+    optional Vehicle vehicle = 2;      // 0..1
+    optional Pedestrian pedestrian = 3;  // 0..1
+    optional MiscObject miscObject = 4;  // 0..1
+    optional ExternalObjectReference externalObjectReference = 5;  // 0..1
+}
+
+// Message for EntityRef
+message EntityRef {
+    required Entity entityRef = 1;	// 1..1
+}
+
+// Message for SpawnedObject, Unsupported
+message SpawnedObject {}
+
+
+// Message for EntitySelection
+message EntitySelection {
+    required string name = 1;              // 1..1
+    required SelectedEntities members = 2;  // 1..1
+}
+
+// Message for SelectedEntities
+message SelectedEntities {
+    repeated EntityRef entityRef = 1;  // 0..*
+    repeated ByType byType = 2;        // 0..*
+}
+
+// Message for ExternalObjectReference
+message ExternalObjectReference {
+    required string name = 1;   // 1..1
+}

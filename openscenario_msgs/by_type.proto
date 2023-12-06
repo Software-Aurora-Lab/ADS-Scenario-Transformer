@@ -1,0 +1,20 @@
+syntax = "proto2";
+package openscenairo;
+
+// Enum for ObjectType
+enum ObjectType {
+    OBJECTTYPE_MISCELLANEOUS = 0;
+    OBJECTTYPE_PEDESTRIAN = 1;
+    OBJECTTYPE_VEHICLE = 2;
+    OBJECTTYPE_EXTERNAL = 3;
+}
+
+// Message for ByType
+message ByType {
+    required ObjectType objectType = 1;  // 1..1
+}
+
+// Message for ByObjectType
+message ByObjectType {
+    required ObjectType type = 1;        // 1..1
+}

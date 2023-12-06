@@ -1,0 +1,9 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/following_mode.proto";
+
+// Message for TrajectoryFollowingMode
+message TrajectoryFollowingMode {
+    required FollowingMode followingMode = 1;  // 1..1
+}

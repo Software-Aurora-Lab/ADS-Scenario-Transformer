@@ -1,0 +1,61 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/maneuver.proto";
+import "openscenario_msgs/maneuver_group.proto";
+import "openscenario_msgs/parameter.proto";
+import "openscenario_msgs/event.proto";
+
+message StoryboardElement {
+    oneof implementation {
+        Act act = 12;
+        Action action = 13;
+        Event event = 14;
+        Maneuver maneuver = 15;
+        ManeuverGroup maneuver_group = 16;
+        Story story = 17;
+    }
+}
+    
+// Message for Story
+message Story {
+    required string name = 1;  // 1..1
+    repeated ParameterDeclaration parameterDeclarations = 2;  // 0..*
+    repeated Act acts = 3;  // 1..*
+}
+
+// Message for Act
+message Act {
+    required string name = 1;  // 1..1
+    repeated ManeuverGroup maneuverGroups = 2;  // 1..*
+    required Trigger startTrigger = 3;  // 1..1
+    optional Trigger stopTrigger = 4;  // 0..1
+}
+
+// Enum for StoryboardElementState
+enum StoryboardElementState {
+    STORYBOARDELEMENTSTATE_COMPLETE_STATE = 0;
+    STORYBOARDELEMENTSTATE_END_TRANSITION = 1;
+    STORYBOARDELEMENTSTATE_RUNNING_STATE = 2;
+    STORYBOARDELEMENTSTATE_SKIP_TRANSITION = 3;
+    STORYBOARDELEMENTSTATE_STANDBY_STATE = 4;
+    STORYBOARDELEMENTSTATE_START_TRANSITION = 5;
+    STORYBOARDELEMENTSTATE_STOP_TRANSITION = 6;
+}
+
+// Enum for StoryboardElementType
+enum StoryboardElementType {
+    STORYBOARDELEMENTTYPE_ACT = 0;
+    STORYBOARDELEMENTTYPE_ACTION = 1;
+    STORYBOARDELEMENTTYPE_EVENT = 2;
+    STORYBOARDELEMENTTYPE_MANEUVER = 3;
+    STORYBOARDELEMENTTYPE_MANEUVER_GROUP = 4;
+    STORYBOARDELEMENTTYPE_STORY = 5;
+}
+
+// Message for StoryboardElementStateCondition
+message StoryboardElementStateCondition {
+    required StoryboardElementState state = 1;  // 1..1
+    required StoryboardElement storyboardElementRef = 2;  // 1..1
+    required StoryboardElementType storyboardElementType = 3;  // 1..1
+}

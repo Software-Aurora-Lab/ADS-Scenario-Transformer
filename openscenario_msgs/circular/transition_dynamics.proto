@@ -1,0 +1,27 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/following_mode.proto";
+
+// Message for TransitionDynamics
+message TransitionDynamics {
+
+    // Enum for DynamicsDimension
+    enum DynamicsDimension {
+        DISTANCE = 0;
+        RATE = 1;
+        TIME = 2;
+    }
+
+    // Enum for DynamicsShape
+    enum DynamicsShape {
+        CUBIC = 0;
+        LINEAR = 1;
+        SINUSOIDAL = 2;
+        STEP = 3;
+    }
+    required DynamicsDimension dynamicsDimension = 1;  // 1..1
+    required DynamicsShape dynamicsShape = 2;  // 1..1
+    required FollowingMode followingMode = 3;  // 1..1
+    required double value = 4;          // 1..1
+}

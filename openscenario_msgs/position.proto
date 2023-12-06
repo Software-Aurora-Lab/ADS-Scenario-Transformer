@@ -1,0 +1,60 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/orientation.proto";
+
+// Message for Position
+message Position {
+    optional WorldPosition world_position = 1;                    // 0..1
+    optional RelativeWorldPosition relative_world_position = 2;    // Unsupported
+    optional RelativeObjectPosition relative_object_position = 3;  // 0..1
+    optional RoadPosition road_position = 4;                      // Unsupported
+    optional RelativeRoadPosition relative_road_position = 5;     // Unsupported
+    optional LanePosition lane_position = 6;                      // 0..1
+    optional RelativeLanePosition relative_lane_position = 7;     // Unsupported
+    optional RoutePosition route_position = 8;                    // Unsupported
+    optional GeoPosition geo_position = 9;                        // Not Listed
+    optional TrajectoryPosition trajectory_position = 10;         // Not Listed
+}
+
+// Message for WorldPosition
+message WorldPosition {
+    optional double h = 1;  // 0..1
+    optional double p = 2;  // 0..1
+    optional double r = 3;  // 0..1
+    required double x = 4;  // 1..1
+    required double y = 5;  // 1..1
+    optional double z = 6;  // 0..1
+}
+
+// Message for LanePosition
+message LanePosition {
+    required string lane_id = 1;        // 1..1
+    optional double offset = 2;         // 0..1
+    required string road_id = 3;        // 1..1
+    required double s = 4;              // 1..1
+    optional Orientation orientation = 5;  // 0..1
+}
+
+// Message for RelativeWorldPosition, (Unsupported)
+message RelativeWorldPosition {}
+
+// Message for GeoPosition, (Unsupported)
+message GeoPosition {}
+
+// Message for RelativeObjectPosition, (Unsupported)
+message RelativeObjectPosition {}
+
+// Message for RelativeLanePosition, (Unsupported)
+message RelativeLanePosition {}
+
+// Message for RoutePosition, (Unsupported)
+message RoutePosition {}
+
+// Message for RoadPosition, Unsupported
+message RoadPosition {}
+// Message for RelativeRoadPosition, Unsupported
+message RelativeRoadPosition {}
+
+// Message for TrajectoryPosition, Unsupported
+message TrajectoryPosition {}

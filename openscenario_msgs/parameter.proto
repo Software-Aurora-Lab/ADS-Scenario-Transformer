@@ -1,0 +1,43 @@
+syntax = "proto2";
+package openscenairo;
+
+import "openscenario_msgs/rule.proto";
+import "openscenario_msgs/valueconstraint_group.proto";
+
+// Enum for ParameterType
+enum ParameterType {
+    PARAMETERTYPE_BOOLEAN = 0;
+    PARAMETERTYPE_DATETIME = 1;
+    PARAMETERTYPE_DOUBLE = 2;
+    PARAMETERTYPE_INTEGER = 3;
+    PARAMETERTYPE_STRING = 4;
+    PARAMETERTYPE_UNSIGNED_INT = 5;
+    PARAMETERTYPE_UNSIGNED_SHORT = 6;
+    PARAMETERTYPE_INT = 7;
+}
+
+// Message for ParameterAssignment
+message ParameterAssignment {
+    required ParameterDeclaration parameter_ref = 1;  // 1..1
+    required string value = 2;                         // 1..1
+}
+
+// Message for ParameterCondition
+message ParameterCondition {
+    required ParameterDeclaration parameterRef = 1;  // 1..1
+    required Rule rule = 2;             // 1..1
+    required string value = 3;          // 1..1
+}
+
+// Message for ParameterDeclaration
+message ParameterDeclaration {
+    required string name = 1;                  // 1..1
+    required ParameterType parameter_type = 2; // 1..1
+    required string value = 3;                 // 1..1
+    repeated ValueConstraintGroup constraint_groups = 4;  // 0..*
+}
+
+// Message for ParameterModifyAction (Deprecated/v1.2)
+message ParameterModifyAction {}
+// Message for ParameterSetAction (Deprecated/v1.2)
+message ParameterSetAction {}
