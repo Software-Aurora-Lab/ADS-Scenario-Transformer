@@ -61,10 +61,10 @@ class TestGeometry(unittest.TestCase):
     ]
 
     expectations = [
-        LanePosition(laneId="154", s=10.9835, offset=-0.5042),
-        LanePosition(laneId="108", s=35.266, offset=-1.1844),
-        LanePosition(laneId="108", s=121.5308, offset=-0.134),
-        LanePosition(laneId="22", s=35.7761, offset=-0.2818)
+        LanePosition(lane_id="154", s=10.9835, offset=-0.5042),
+        LanePosition(lane_id="108", s=35.266, offset=-1.1844),
+        LanePosition(lane_id="108", s=121.5308, offset=-0.134),
+        LanePosition(lane_id="22", s=35.7761, offset=-0.2818)
     ]
 
     for idx, (basic_point,
@@ -77,7 +77,7 @@ class TestGeometry(unittest.TestCase):
                                                     basic_point=basic_point)
       print("Lane Position", target_lane_position)
 
-      self.assertEqual(target_lane_position.laneId, expectation.laneId,
+      self.assertEqual(target_lane_position.lane_id, expectation.lane_id,
                        "laneId should be the same")
       self.assertAlmostEqual(
           abs(target_lane_position.s - expectation.s),
