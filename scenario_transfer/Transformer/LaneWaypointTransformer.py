@@ -9,11 +9,11 @@ from apollo_msgs.routing_msgs import LaneWaypoint
 from openscenario_msgs import (Waypoint, RouteStrategy, Position)
 
 from ..Geometry import Geometry
-from .Transformable import Transformable
+from .Transformer import Transformer
 
 
 # properties = [lanelet2.core.Lanelet, lanelet2.projection.UtmProjector]
-class LaneWaypointTransformer(Transformable):
+class LaneWaypointTransformer(Transformer):
 
     T = LaneWaypoint
     V = Waypoint

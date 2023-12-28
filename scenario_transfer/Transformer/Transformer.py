@@ -5,7 +5,7 @@ T = TypeVar('T')
 V = TypeVar('V')
 
 
-class Transformable(ABC):
+class Transformer(ABC):
     properties: List
 
     @abstractmethod

@@ -1,4 +1,4 @@
 from .PointENUTransformer import PointENUTransformer
-from .Transformable import Transformable
+from .Transformer import Transformer
 from .TransformRuleMap import TransformRuleContainer
 from .LaneWaypointTransformer import LaneWaypointTransformer

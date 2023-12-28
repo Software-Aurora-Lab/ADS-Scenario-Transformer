@@ -7,7 +7,7 @@ from openscenario_msgs import Position, Waypoint
 
 @dataclass
 class TransformRuleContainer:
-  rules = {
-      type(PointENU): [type(Position)],
-      type(LaneWaypoint): [type(Waypoint)]
-  }
+    rules = {
+        type(PointENU): [type(Position)],
+        type(LaneWaypoint): [type(Waypoint)]
+    }
