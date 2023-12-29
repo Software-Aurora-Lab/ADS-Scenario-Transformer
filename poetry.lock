@@ -370,6 +370,20 @@ files = [
 ]
 
 [[package]]
+name = "protobuf3-to-dict"
+version = "0.1.5"
+description = "Ben Hodgson: A teeny Python library for creating Python dicts from protocol buffers and the reverse. Useful as an intermediate step before serialisation (e.g. to JSON). Kapor: upgrade it to PB3 and PY3, rename it to protobuf3-to-dict"
+optional = false
+python-versions = "*"
+files = [
+    {file = "protobuf3-to-dict-0.1.5.tar.gz", hash = "sha256:1e42c25b5afb5868e3a9b1962811077e492c17557f9c66f0fe40d821375d2b5a"},
+]
+
+[package.dependencies]
+protobuf = ">=2.3.0"
+six = "*"
+
+[[package]]
 name = "pycodestyle"
 version = "2.11.1"
 description = "Python style guide checker"
@@ -574,6 +588,17 @@ docs = ["Sphinx", "sphinx-rtd-theme"]
 test = ["pytest", "pytest-mock"]
 
 [[package]]
+name = "six"
+version = "1.16.0"
+description = "Python 2 and 3 compatibility utilities"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+files = [
+    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
+    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
+]
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -587,4 +612,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "006ef4ac9d07498222a0e77149ed2f2e1a23ed7d555961079a98ce81d096581c"
+content-hash = "5e96e35a9462679b7272d28da683c9e73ebb5c79ad40c2376ef9c97c93d0be70"
