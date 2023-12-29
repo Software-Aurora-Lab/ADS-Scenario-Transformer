@@ -6,14 +6,13 @@ import lanelet2
 
 from apollo_msgs.basic_msgs import PointENU
 from openscenario_msgs import Position, LanePosition, WorldPosition
-from scenario_transfer.XMLConvertible import XMLConvertible
 
 from .Transformer import Transformer
 from ..Geometry import Geometry
 
 
 # properties = [PointENUTransformer.SupportedPosition, lanelet2.core.LaneletMap, lanelet2.projection.UtmProjector]
-class PointENUTransformer(Transformer, XMLConvertible):
+class PointENUTransformer(Transformer):
 
     class SupportedPosition(Enum):
         Lane = 1
@@ -50,28 +49,4 @@ class PointENUTransformer(Transformer, XMLConvertible):
 
     def transformToWorldPosition(self, source: T) -> WorldPosition:
         pose = Geometry.utm_to_WGS(pose=source)
-        return WorldPosition(x=pose.lat, y=pose.lon)
-
-    def to_xml(self, value: T) -> ET.Element:
-        position_element = ET.Element('Position')
-
-        if value.world_position:
-            world_position = ET.SubElement(position_element, 'WorldPosition')
-            x_point = ET.SubElement(world_position, 'x')
-            x_point.text = str(value.world_position.x)
-            y_point = ET.SubElement(world_position, 'y')
-            y_point.text = str(value.world_position.y)
-        elif value.lane_position:
-            lane_position = ET.SubElement(position_element, 'LanePosition')
-            lane_id = ET.SubElement(lane_position, 'lane_id')
-            lane_id.text = value.lane_position.lane_id
-            offset = ET.SubElement(lane_position, 'offset')
-            offset.text = value.lane_position.offset
-            s = ET.SubElement(lane_position, 's')
-            s.text = value.lane_position.s
-
-        tree = ET.ElementTree(position_element)
-
-        # Save the XML to a file
-        tree.write('output.xml')
-        return position_element
+        return WorldPosition(x=pose.lat, y=pose.lon, z=0)

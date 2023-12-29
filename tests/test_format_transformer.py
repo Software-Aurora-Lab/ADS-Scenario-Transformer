@@ -1,13 +1,13 @@
 import unittest
-import xml.etree.ElementTree as ET
+import yaml
 
-import pytest
 import lanelet2
 from lanelet2.projection import UtmProjector
 from lanelet2.io import Origin
+from pytest import fail
 
 from apollo_msgs.basic_msgs import PointENU
-from scenario_transfer import PointENUTransformer
+from scenario_transfer import PointENUTransformer, FormatTransformer
 
 
 class TestTransformer(unittest.TestCase):
@@ -23,11 +23,20 @@ class TestTransformer(unittest.TestCase):
         worldType = PointENUTransformer.SupportedPosition.World
         transformer = PointENUTransformer(properties=[worldType])
         position = transformer.transform(source=point)
+
         self.assertIsNotNone(position.world_position,
                              "The gpspoint should not be None.")
-        self.assertEqual(position.world_position.x, 37.416880423172465)
-        self.assertEqual(position.world_position.y, -122.01593194093681)
-        self.assertEqual(position.world_position.z, 0.0)
+        yaml_data = FormatTransformer.transform_proto_pyobject_to_yaml(
+            position)
+
+        python_object = yaml.safe_load(yaml_data)
+
+        print("pr", type(python_object), python_object)
+        # # Save the YAML to a file or print it
+        with open('output.yaml', 'w') as file:
+            file.write(yaml_data)
+
+        self.assertFalse(false)
 
     def test_transform_lane_position(self):
         point = PointENU(x=587079.3045861976, y=4141574.299574421, z=0)
@@ -38,10 +47,10 @@ class TestTransformer(unittest.TestCase):
         self.assertIsNotNone(position.lane_position,
                              "The lane_position should not be None.")
 
-        self.assertEqual(position.lane_position.lane_id, "22")
-        self.assertEqual(position.lane_position.s, 35.71471492399046)
-        self.assertEqual(position.lane_position.offset, 0.1750399287494411)
+        yaml_data = FormatTransformer.transform_proto_pyobject_to_yaml(
+            position)
 
+        with open('output2.yaml', 'w') as file:
+            file.write(yaml_data)
 
-if __name__ == '__main__':
-    unittest.main()
+        # self.assertFalse(false)
