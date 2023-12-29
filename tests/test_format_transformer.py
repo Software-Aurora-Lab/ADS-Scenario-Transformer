@@ -29,14 +29,10 @@ class TestTransformer(unittest.TestCase):
         yaml_data = FormatTransformer.transform_proto_pyobject_to_yaml(
             position)
 
-        python_object = yaml.safe_load(yaml_data)
-
-        print("pr", type(python_object), python_object)
-        # # Save the YAML to a file or print it
-        with open('output.yaml', 'w') as file:
-            file.write(yaml_data)
-
-        self.assertFalse(false)
+        py_dict = yaml.safe_load(yaml_data)
+        world_position_dict = py_dict['Position']['WorldPosition']
+        self.assertEqual(world_position_dict['x'], 37.416880423172465)
+        self.assertEqual(world_position_dict['y'], -122.01593194093681)
 
     def test_transform_lane_position(self):
         point = PointENU(x=587079.3045861976, y=4141574.299574421, z=0)
@@ -49,8 +45,11 @@ class TestTransformer(unittest.TestCase):
 
         yaml_data = FormatTransformer.transform_proto_pyobject_to_yaml(
             position)
+        py_dict = yaml.safe_load(yaml_data)
 
-        with open('output2.yaml', 'w') as file:
-            file.write(yaml_data)
-
-        # self.assertFalse(false)
+        lane_position_dict = py_dict['Position']['LanePosition']
+        self.assertEqual(lane_position_dict['roadId'], '')
+        self.assertEqual(lane_position_dict['laneId'], '22')
+        self.assertEqual(lane_position_dict['offset'], 0.1750399287494411)
+        self.assertEqual(lane_position_dict['s'], 35.71471492399046)
+        self.assertEqual(lane_position_dict['orientation']['type'], 'relative')
