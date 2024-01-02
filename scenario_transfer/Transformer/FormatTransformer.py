@@ -6,9 +6,7 @@ class FormatTransformer:
 
     @staticmethod
     def transform_proto_pyobject_to_yaml(proto_pyobject):
-
         proto_dict = protobuf_to_dict(proto_pyobject, use_enum_labels=True)
-        print(proto_dict)
 
         toplevel_name_included_dict = {
             type(proto_pyobject).__name__: proto_dict

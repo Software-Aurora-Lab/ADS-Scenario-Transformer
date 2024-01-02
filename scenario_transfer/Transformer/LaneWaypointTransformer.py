@@ -14,8 +14,8 @@ from .Transformer import Transformer
 # properties = [lanelet2.core.Lanelet, lanelet2.projection.UtmProjector]
 class LaneWaypointTransformer(Transformer):
 
-    T = LaneWaypoint
-    V = Waypoint
+    Source = LaneWaypoint
+    Target = Waypoint
 
     def __init__(self, properties: List = []):
         self.properties = properties
@@ -40,3 +40,5 @@ class LaneWaypointTransformer(Transformer):
             return Waypoint(
                 route_strategy=RouteStrategy.ROUTESTRATEGY_SHORTEST,
                 position=Position(lane_position=lane_position))
+
+        # TODO: Add case where source does not have pose

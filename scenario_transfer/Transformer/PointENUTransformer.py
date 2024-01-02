@@ -17,8 +17,8 @@ class PointENUTransformer(Transformer):
         Lane = 1
         World = 2
 
-    T = PointENU
-    V = Position
+    Source = PointENU
+    Target = Position
 
     def __init__(self, properties: List = []):
         self.properties = properties

@@ -24,7 +24,7 @@ class TestTransformer(unittest.TestCase):
         position = transformer.transform(source=point)
 
         self.assertIsNotNone(position.world_position,
-                             "The gpspoint should not be None.")
+                             "The world_position should not be None.")
         yaml_data = FormatTransformer.transform_proto_pyobject_to_yaml(
             position)
 
