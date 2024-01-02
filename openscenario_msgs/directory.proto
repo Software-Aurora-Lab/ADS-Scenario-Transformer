@@ -1,0 +1,7 @@
+syntax = "proto2";
+package openscenairo;
+
+// Message for Directory
+message Directory {
+    required string path = 1;                        // 1..1
+}

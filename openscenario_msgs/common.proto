@@ -3,7 +3,9 @@ package openscenairo;
 
 import "openscenario_msgs/boundingbox.proto";
 import "openscenario_msgs/by_type.proto";
+import "openscenario_msgs/directory.proto";
 import "openscenario_msgs/environment.proto";
+import "openscenario_msgs/file.proto";
 import "openscenario_msgs/following_mode.proto";
 import "openscenario_msgs/parameter.proto";
 import "openscenario_msgs/pedestrian.proto";
@@ -15,6 +17,141 @@ import "openscenario_msgs/shape.proto";
 import "openscenario_msgs/traffic_signal.proto";
 import "openscenario_msgs/vehicle.proto";
 import "openscenario_msgs/transition_dynamics.proto";
+
+// Message for OpenScenario
+message OpenScenario {
+    required FileHeader fileHeader = 1;                      // 1..1
+    required OpenScenarioCategory openScenarioCategory = 2;  // 1..1
+}
+
+// Message for FileHeader
+message FileHeader {
+    required uint32 revMajor = 1;                   // 1..1
+    required uint32 revMinor = 2;                   // 1..1
+    required string date = 3;                       // 1..1, YYYY-MM-DDThh:mm:ss
+    required string description = 4;                // 1..1
+    required string author = 5;                     // 1..1
+}
+
+// Message for OpenScenarioCategory
+message OpenScenarioCategory {
+    required ScenarioDefinition scenarioDefinition = 1;  // 1..1
+    required CatalogDefinition catalogDefinition = 2;    // 1..1
+}
+
+// Message for ScenarioDefinition
+message ScenarioDefinition {
+    repeated ParameterDeclaration parameterDeclarations = 1;  // 0..*
+    required CatalogLocations catalogLocations = 2;           // 1..1
+    required RoadNetwork roadNetwork = 3;                     // 1..1
+    required Entities entities = 4;                           // 1..1
+    required Storyboard storyboard = 5;                       // 1..1
+}
+
+// Message for RoadNetwork
+message RoadNetwork {
+    optional File logicFile = 1;  // 0..1
+    optional File sceneGraphFile = 2;  // 0..1
+    repeated TrafficSignalController trafficSignals = 3;  // 0..*
+}
+
+// Message for CatalogDefinition
+message CatalogDefinition {
+    required Catalog catalog = 1;  // 1..1
+}
+
+// Message for Catalog
+message Catalog {
+    optional string name = 1;  // 0..1
+    repeated Vehicle vehicles = 2;  // 0..*
+    repeated Controller controllers = 3;  // 0..*
+    repeated Pedestrian pedestrians = 4;  // 0..*
+    repeated MiscObject miscObjects = 5;  // 0..*
+    repeated Environment environments = 6;  // 0..*
+    repeated Maneuver maneuvers = 7;  // 0..*
+    repeated Trajectory trajectories = 8;  // 0..*
+    repeated Route routes = 9;  // 0..*
+}
+
+// Message for CatalogLocations
+message CatalogLocations {
+    optional VehicleCatalogLocation vehicleCatalog = 1;  // 0..1
+    optional ControllerCatalogLocation controllerCatalog = 2;  // 0..1
+    optional PedestrianCatalogLocation pedestrianCatalog = 3;  // 0..1
+    optional MiscObjectCatalogLocation miscObjectCatalog = 4;  // 0..1
+    optional EnvironmentCatalogLocation environmentCatalog = 5;  // 0..1
+}
+
+// Message for VehicleCatalogLocation
+message VehicleCatalogLocation {
+    required Directory directory = 1;  // 1..1
+}
+
+// Message for ControllerCatalogLocation
+message ControllerCatalogLocation {
+    required Directory directory = 1;  // 1..1
+}
+
+// Message for PedestrianCatalogLocation
+message PedestrianCatalogLocation {
+    required Directory directory = 1;  // 1..1
+}
+
+// Message for MiscObjectCatalogLocation
+message MiscObjectCatalogLocation {
+    required Directory directory = 1;  // 1..1
+}
+
+// Message for EnvironmentCatalogLocation
+message EnvironmentCatalogLocation {
+    required Directory directory = 1;  // 1..1
+}
+
+// Message for ManeuverCatalogLocation
+message ManeuverCatalogLocation {
+    required Directory directory = 1;  // 1..1
+}
+
+// Message for TrajectoryCatalogLocation
+message TrajectoryCatalogLocation {
+    required Directory directory = 1;  // 1..1
+}
+
+// Message for RouteCatalogLocation
+message RouteCatalogLocation {
+    required Directory directory = 1;  // 1..1
+}
+
+// Message for Storyboard
+message Storyboard {
+    required Init init = 1;  // 1..1
+    repeated Story stories = 2;  // 1..*
+    required Trigger stopTrigger = 3;  // 1..1
+}
+
+// Message for Init
+message Init {
+    required InitActions actions = 1;  // 1..1
+}
+
+// Message for InitActions
+message InitActions {
+    repeated GlobalAction globalActions = 1;   // 0..*
+    repeated UserDefinedAction userDefinedActions = 2;  // 0..*
+    repeated Private privates = 3;             // 0..*
+}
+
+// Message for Private
+message Private {
+    required Entity entityRef = 1;  // 1..1
+    repeated PrivateAction privateActions = 2;  // 1..*
+}
+
+// Message for Entities
+message Entities {
+    repeated ScenarioObject scenarioObjects = 1;  // 0..*
+    repeated EntitySelection entitySelections = 2;  // 0..*
+}
 
 // Message for ByEntityCondition
 message ByEntityCondition {
