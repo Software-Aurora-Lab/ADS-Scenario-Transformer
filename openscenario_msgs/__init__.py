@@ -1,6 +1,7 @@
 from .boundingbox_pb2 import *
 from .by_type_pb2 import *
 from .common_pb2 import *
+from .directory_pb2 import *
 from .environment_pb2 import *
 from .file_pb2 import *
 from .following_mode_pb2 import *

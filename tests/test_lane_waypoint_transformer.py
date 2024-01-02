@@ -1,6 +1,5 @@
 import unittest
 
-import pytest
 import lanelet2
 from lanelet2.projection import UtmProjector
 from lanelet2.io import Origin

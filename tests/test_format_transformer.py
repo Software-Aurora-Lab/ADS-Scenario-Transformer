@@ -4,7 +4,6 @@ import yaml
 import lanelet2
 from lanelet2.projection import UtmProjector
 from lanelet2.io import Origin
-from pytest import fail
 
 from apollo_msgs.basic_msgs import PointENU
 from scenario_transfer import PointENUTransformer, FormatTransformer

@@ -1,6 +1,5 @@
-from typing import Type, TypeVar, List
+from typing import List
 from enum import Enum
-import xml.etree.ElementTree as ET
 
 import lanelet2
 

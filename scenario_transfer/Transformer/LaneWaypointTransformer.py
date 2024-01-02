@@ -1,5 +1,4 @@
-from typing import Type, TypeVar, List
-from enum import Enum
+from typing import List
 
 import lanelet2
 from lanelet2.core import Lanelet
