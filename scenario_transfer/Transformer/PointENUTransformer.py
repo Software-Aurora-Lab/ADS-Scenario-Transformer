@@ -23,12 +23,12 @@ class PointENUTransformer(Transformer):
     def __init__(self, properties: List = []):
         self.properties = properties
 
-    def transform(self, source: T) -> V:
+    def transform(self, source: Source) -> Target:
         if self.properties[0] == PointENUTransformer.SupportedPosition.Lane:
             return Position(lane_position=self.transformToLanePosition(source))
         return Position(world_position=self.transformToWorldPosition(source))
 
-    def transformToLanePosition(self, source: T) -> LanePosition:
+    def transformToLanePosition(self, source: Source) -> LanePosition:
         lanelet_map = self.properties[1]
         projector = self.properties[2]
 
@@ -46,6 +46,6 @@ class PointENUTransformer(Transformer):
                                                basic_point=projected_point)
         return lane_position
 
-    def transformToWorldPosition(self, source: T) -> WorldPosition:
+    def transformToWorldPosition(self, source: Source) -> WorldPosition:
         pose = Geometry.utm_to_WGS(pose=source)
         return WorldPosition(x=pose.lat, y=pose.lon, z=0)

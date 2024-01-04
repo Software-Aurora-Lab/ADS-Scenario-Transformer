@@ -20,7 +20,7 @@ class LaneWaypointTransformer(Transformer):
     def __init__(self, properties: List = []):
         self.properties = properties
 
-    def transform(self, source: T) -> V:
+    def transform(self, source: Source) -> Target:
         pose = source.pose  # PointENU
         lanelet = self.properties[0]
         projector = self.properties[1]
