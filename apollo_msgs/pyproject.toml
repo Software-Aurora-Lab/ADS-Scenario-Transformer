@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "apollo-msgs"
+version = "0.1.0"
+description = ""
+authors = ["Changnam"]
+readme = "README.md"
+packages = [
+    { include = "basic_msgs"},
+    { include = "routing_msgs"},
+    { include = "localization_msgs"},
+    { include = "map_msgs"},
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
