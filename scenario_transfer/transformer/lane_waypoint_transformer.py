@@ -1,19 +1,19 @@
-from typing import Dict
+from typing import Dict, Tuple
 
 import lanelet2
-from lanelet2.core import Lanelet
+from lanelet2.core import LaneletMap
 from lanelet2.projection import UtmProjector
 
-from apollo_msgs import Map as ApolloHDMap
-from apollo_msgs.routing_msgs import LaneWaypoint
+from apollo_msgs import (Map as ApolloHDMap, PointENU, LaneWaypoint)
 from openscenario_msgs import (Waypoint, RouteStrategy, Position)
 from pkgs.scenorita.map_service import MapService
 
-from .transformer import Transformer
-from ..geometry import Geometry
+from scenario_transfer.geometry import Geometry
 from scenario_transfer.apollo_map_io_handler import ApolloMapIOHandler
+from scenario_transfer.transformer import Transformer
+from scenario_transfer.transformer.pointenu_transformer import PointENUTransformer
 
-# properties = ["lanelet": lanelet2.core.Lanelet, "projector": lanelet2.projection.UtmProjector, "apollo_map": apollo_msgs.Map]
+# properties = ["lanelet_map": lanelet2.core.LaneletMap, "projector": lanelet2.projection.UtmProjector, "apollo_map": apollo_msgs.Map]
 class LaneWaypointTransformer(Transformer):
 
     Source = LaneWaypoint
@@ -23,24 +23,36 @@ class LaneWaypointTransformer(Transformer):
         self.properties = properties
 
     def transform(self, source: Source) -> Target:
-        pose = source.pose  # PointENU
+        pose = source.pose
+        heading = source.heading if source.heading else 0.0
         
-        if source.pose:
-            lanelet = self.properties["lanelet"]
-            projector = self.properties["projector"]
-
-            assert isinstance(
-                lanelet,
-                Lanelet), "lanelet should be of type lanelet2.core.Lanelet"
-            assert isinstance(
-                projector, UtmProjector
-            ), "projector should be of type lanelet2.projection.UtmProjector"
+        if "apollo_map" in self.properties: # Cannot check pose is None or zero.
+            (pose, heading) = self.get_pose_from_apollo_waypoint(source)
             
-            projected_point = Geometry.project_UTM_to_lanelet(
-                projector=projector, pose=pose)
-            lane_position = Geometry.lane_position(lanelet=lanelet,
-                                                   basic_point=projected_point,
-                                                   heading=source.heading)
-            return Waypoint(
-                route_strategy=RouteStrategy.ROUTESTRATEGY_SHORTEST,
-                position=Position(lane_position=lane_position))
+        lanelet_map = self.properties["lanelet_map"]
+        projector = self.properties["projector"]
+
+        assert isinstance(lanelet_map, LaneletMap), "lanelet should be of type lanelet2.core.Lanelet"
+        assert isinstance(projector, UtmProjector), "projector should be of type lanelet2.projection.UtmProjector"
+
+        pointenu_transformer = PointENUTransformer(
+            properties={"supported_position": PointENUTransformer.SupportedPosition.Lane,
+                        "lanelet_map": lanelet_map, 
+                        "projector": projector})
+        position = pointenu_transformer.transform((pose, heading))
+        
+        return Waypoint(
+            route_strategy=RouteStrategy.ROUTESTRATEGY_SHORTEST,
+            position=position)
+
+    def get_pose_from_apollo_waypoint(self, source: Source) -> Tuple[PointENU, float]:
+        apollo_map = self.properties["apollo_map"]
+
+        assert isinstance(apollo_map, ApolloHDMap), "apollo_map should be of type apollo_msgs.Map"
+
+        map_service = MapService()
+        map_service.load_map_from_proto(apollo_map)
+        (point, heading) = map_service.get_lane_coord_and_heading(lane_id=source.id, s = source.s)
+        # print("res", res, dir(res[0]))
+        # res.x
+        return (PointENU(x=point.x, y=point.y, z=0), heading)

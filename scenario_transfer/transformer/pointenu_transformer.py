@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Tuple
 from enum import Enum
 
 import lanelet2
@@ -17,7 +17,7 @@ class PointENUTransformer(Transformer):
         Lane = 1
         World = 2
 
-    Source = PointENU
+    Source = Tuple[PointENU, float]
     Target = Position
 
     def __init__(self, properties: Dict = {}):
@@ -40,12 +40,13 @@ class PointENUTransformer(Transformer):
         ), "projector should be of type lanelet2.projection.UtmProjector"
 
         projected_point = Geometry.project_UTM_to_lanelet(projector=projector,
-                                                          pose=source)
+                                                          pose=source[0])
         lanelet = Geometry.find_lanelet(lanelet_map, projected_point)
         lane_position = Geometry.lane_position(lanelet=lanelet,
-                                               basic_point=projected_point)
+                                               basic_point=projected_point,
+                                               heading=source[1])
         return lane_position
 
     def transformToWorldPosition(self, source: Source) -> WorldPosition:
-        pose = Geometry.utm_to_WGS(pose=source)
-        return WorldPosition(x=pose.lat, y=pose.lon, z=0)
+        pose = Geometry.utm_to_WGS(pose=source[0])
+        return WorldPosition(x=pose.lat, y=pose.lon, z=0, h=source[1])
