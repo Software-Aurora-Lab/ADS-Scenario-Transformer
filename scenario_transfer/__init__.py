@@ -1,2 +1,2 @@
-from .Geometry import Geometry
-from .Transformer import *
+from .geometry import Geometry
+from .transformer import *

@@ -20,9 +20,9 @@ class TestTransformer(unittest.TestCase):
     def test_transform_world_position(self):
         point = PointENU(x=587079.3045861976, y=4141574.299574421, z=0)
         worldType = PointENUTransformer.SupportedPosition.World
-        transformer = PointENUTransformer(properties=[worldType])
+        transformer = PointENUTransformer(properties={"supported_position": worldType})
         position = transformer.transform(source=point)
-
+        
         self.assertIsNotNone(position.world_position,
                              "The world_position should not be None.")
         yaml_data = FormatTransformer.transform_proto_pyobject_to_yaml(
@@ -37,11 +37,11 @@ class TestTransformer(unittest.TestCase):
         point = PointENU(x=587079.3045861976, y=4141574.299574421, z=0)
         laneType = PointENUTransformer.SupportedPosition.Lane
         transformer = PointENUTransformer(
-            properties=[laneType, self.map, self.utm_projector])
+            properties={"supported_position": laneType, "lanelet_map": self.map, "projector": self.utm_projector})
         position = transformer.transform(source=point)
         self.assertIsNotNone(position.lane_position,
                              "The lane_position should not be None.")
-
+        
         yaml_data = FormatTransformer.transform_proto_pyobject_to_yaml(
             position)
         py_dict = yaml.safe_load(yaml_data)

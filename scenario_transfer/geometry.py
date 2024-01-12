@@ -28,7 +28,8 @@ class Geometry:
 
     @staticmethod
     def lane_position(lanelet: Lanelet,
-                      basic_point: BasicPoint3d) -> LanePosition:
+                      basic_point: BasicPoint3d, 
+                      heading = 0.0) -> LanePosition:
         point3d = Point3d(getId(), basic_point.x, basic_point.y, basic_point.z)
         s_attribute = distance(lanelet.leftBound[0], point3d)
 
@@ -41,7 +42,7 @@ class Geometry:
             s=s_attribute,
             offset=t_attribute,
             orientation=Orientation(
-                h=0, p=0, r=0,
+                h=heading, p=0, r=0,
                 type=ReferenceContext.REFERENCECONTEXT_RELATIVE))
 
     @staticmethod

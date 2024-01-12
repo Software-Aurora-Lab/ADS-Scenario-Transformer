@@ -29,9 +29,8 @@ class TestTransformer(unittest.TestCase):
 
         if not lanelet:
             assert False, "lanelet should not be empty"
-
-        transformer = LaneWaypointTransformer(
-            properties=[lanelet, self.utm_projector])
+        
+        transformer = LaneWaypointTransformer(properties={"lanelet": lanelet, "projector": self.utm_projector})
         waypoint = transformer.transform(source=lane_waypoint)
         self.assertIsInstance(waypoint, Waypoint,
                               "The waypoint should be of type Waypoint.")
