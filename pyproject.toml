@@ -17,6 +17,8 @@ pyyaml = "^6.0.1"
 protobuf3-to-dict = "^0.1.5"
 apollo-msgs = {path = "apollo_msgs/dist/apollo_msgs-0.1.0-py3-none-any.whl"}
 openscenario-msgs = {path = "openscenario_msgs/dist/openscenario_msgs-0.1.0-py3-none-any.whl"}
+shapely = "^2.0.2"
+networkx = "^3.2.1"
 
 
 [tool.poetry.group.dev.dependencies]
