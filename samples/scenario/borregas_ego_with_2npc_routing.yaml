@@ -1,0 +1,424 @@
+ScenarioModifiers:
+  ScenarioModifier: []
+OpenSCENARIO:
+  FileHeader:
+    revMajor: 1
+    revMinor: 1
+    date: '2024-01-12T22:57:24.199Z'
+    description: ''
+    author: Changnam Hong
+  ParameterDeclarations:
+    ParameterDeclaration:
+      - name: __ego_dimensions_length__
+        parameterType: double
+        value: '0'
+      - name: __ego_dimensions_width__
+        parameterType: double
+        value: '0'
+      - name: __ego_dimensions_height__
+        parameterType: double
+        value: '0'
+      - name: __ego_center_x__
+        parameterType: double
+        value: '0'
+      - name: __ego_center_y__
+        parameterType: double
+        value: '0'
+      - name: __ego_center_z__
+        parameterType: double
+        value: '0'
+  CatalogLocations:
+    CatalogLocation: []
+  RoadNetwork:
+    LogicFile:
+      filepath: lanelet2_map.osm
+    SceneGraphFile:
+      filepath: lanelet2_map.pcd
+    TrafficSignals:
+      TrafficSignalController: []
+  Entities:
+    ScenarioObject:
+      - name: ego
+        Vehicle:
+          name: ''
+          vehicleCategory: car
+          BoundingBox:
+            Center:
+              x: 1.355
+              y: 0
+              z: 1.25
+            Dimensions:
+              length: 4.77
+              width: 1.83
+              height: 2.5
+          Performance:
+            maxSpeed: 50
+            maxAcceleration: INF
+            maxDeceleration: INF
+          Axles:
+            FrontAxle:
+              maxSteering: 0.5236
+              wheelDiameter: 0.78
+              trackWidth: 1.63
+              positionX: 1.385
+              positionZ: 0.39
+            RearAxle:
+              maxSteering: 0.5236
+              wheelDiameter: 0.78
+              trackWidth: 1.63
+              positionX: 0
+              positionZ: 0.39
+          Properties:
+            Property: []
+        ObjectController:
+          Controller:
+            name: ''
+            Properties:
+              Property:
+                - name: isEgo
+                  value: 'true'
+      - name: Npc2
+        Vehicle:
+          name: ''
+          vehicleCategory: car
+          BoundingBox:
+            Center:
+              x: 0
+              y: 0
+              z: 1.25
+            Dimensions:
+              length: 4
+              width: 1.8
+              height: 2.5
+          Performance:
+            maxSpeed: 50
+            maxAcceleration: INF
+            maxDeceleration: INF
+          Axles:
+            FrontAxle:
+              maxSteering: 0.5236
+              wheelDiameter: 0.6
+              trackWidth: 1.8
+              positionX: 2
+              positionZ: 0.3
+            RearAxle:
+              maxSteering: 0.5236
+              wheelDiameter: 0.6
+              trackWidth: 1.8
+              positionX: 0
+              positionZ: 0.3
+          Properties:
+            Property: []
+        ObjectController:
+          Controller:
+            name: ''
+            Properties:
+              Property: []
+      - name: Npc3
+        Vehicle:
+          name: ''
+          vehicleCategory: car
+          BoundingBox:
+            Center:
+              x: 0
+              y: 0
+              z: 1.25
+            Dimensions:
+              length: 4
+              width: 1.8
+              height: 2.5
+          Performance:
+            maxSpeed: 50
+            maxAcceleration: INF
+            maxDeceleration: INF
+          Axles:
+            FrontAxle:
+              maxSteering: 0.5236
+              wheelDiameter: 0.6
+              trackWidth: 1.8
+              positionX: 2
+              positionZ: 0.3
+            RearAxle:
+              maxSteering: 0.5236
+              wheelDiameter: 0.6
+              trackWidth: 1.8
+              positionX: 0
+              positionZ: 0.3
+          Properties:
+            Property: []
+        ObjectController:
+          Controller:
+            name: ''
+            Properties:
+              Property: []
+  Storyboard:
+    Init:
+      Actions:
+        Private:
+          - entityRef: ego
+            PrivateAction:
+              - TeleportAction:
+                  Position:
+                    LanePosition:
+                      roadId: ''
+                      laneId: '154'
+                      s: 10.9437
+                      offset: -0.5042
+                      Orientation:
+                        type: relative
+                        h: 0
+                        p: -0.0
+                        r: 0
+              - RoutingAction:
+                  AssignRouteAction:
+                    Route:
+                      name: ''
+                      closed: false
+                      Waypoint:
+                        - Position:
+                            LanePosition:
+                              roadId: ''
+                              laneId: '108'
+                              s: 35.266
+                              offset: -1.1844
+                              Orientation:
+                                type: relative
+                                h: 0
+                                p: -0.0
+                                r: 0
+                          routeStrategy: shortest
+                        - Position:
+                            LanePosition:
+                              roadId: ''
+                              laneId: '108'
+                              s: 212.4336
+                              offset: -0.3921
+                              Orientation:
+                                type: relative
+                                h: 0
+                                p: -0.0
+                                r: 0
+                          routeStrategy: shortest
+                        - Position:
+                            LanePosition:
+                              roadId: ''
+                              laneId: '81'
+                              s: 16.4365
+                              offset: 0.6977
+                              Orientation:
+                                type: relative
+                                h: 0
+                                p: -0.0
+                                r: 0
+                          routeStrategy: shortest
+          - entityRef: Npc2
+            PrivateAction:
+              - TeleportAction:
+                  Position:
+                    LanePosition:
+                      roadId: ''
+                      laneId: '192'
+                      s: 7.6041
+                      offset: -0.3299
+                      Orientation:
+                        type: relative
+                        h: 0
+                        p: -0.0
+                        r: 0
+              - RoutingAction:
+                  AssignRouteAction:
+                    Route:
+                      name: ''
+                      closed: false
+                      Waypoint:
+                        - Position:
+                            LanePosition:
+                              roadId: ''
+                              laneId: '104'
+                              s: 104.9992
+                              offset: -0.3996
+                              Orientation:
+                                type: relative
+                                h: 0
+                                p: -0.0
+                                r: 0
+                          routeStrategy: shortest
+                        - Position:
+                            LanePosition:
+                              roadId: ''
+                              laneId: '126'
+                              s: 14.4003
+                              offset: 0.0438
+                              Orientation:
+                                type: relative
+                                h: 0
+                                p: -0.0
+                                r: 0
+                          routeStrategy: shortest
+          - entityRef: Npc3
+            PrivateAction:
+              - TeleportAction:
+                  Position:
+                    LanePosition:
+                      roadId: ''
+                      laneId: '62'
+                      s: 14.9534
+                      offset: -0.7193
+                      Orientation:
+                        type: relative
+                        h: 0
+                        p: -0.0
+                        r: 0
+              - RoutingAction:
+                  AssignRouteAction:
+                    Route:
+                      name: ''
+                      closed: false
+                      Waypoint:
+                        - Position:
+                            LanePosition:
+                              roadId: ''
+                              laneId: '104'
+                              s: 78.9662
+                              offset: 0.3536
+                              Orientation:
+                                type: relative
+                                h: 0
+                                p: -0.0
+                                r: 0
+                          routeStrategy: shortest
+                        - Position:
+                            LanePosition:
+                              roadId: ''
+                              laneId: '137'
+                              s: 43.4571
+                              offset: 0.2302
+                              Orientation:
+                                type: relative
+                                h: 0
+                                p: -0.0
+                                r: 0
+                          routeStrategy: shortest
+    Story:
+      - name: ''
+        Act:
+          - name: _EndCondition
+            ManeuverGroup:
+              - maximumExecutionCount: 1
+                name: ''
+                Actors:
+                  selectTriggeringEntities: false
+                  EntityRef:
+                    - entityRef: ego
+                Maneuver:
+                  - name: ''
+                    Event:
+                      - name: ''
+                        priority: parallel
+                        StartTrigger:
+                          ConditionGroup:
+                            - Condition:
+                                - name: ''
+                                  delay: 0
+                                  conditionEdge: none
+                                  ByEntityCondition:
+                                    TriggeringEntities:
+                                      triggeringEntitiesRule: any
+                                      EntityRef:
+                                        - entityRef: ego
+                                    EntityCondition:
+                                      ReachPositionCondition:
+                                        Position:
+                                          LanePosition:
+                                            roadId: ''
+                                            laneId: '81'
+                                            s: 16.4365
+                                            offset: 0.6977
+                                            Orientation:
+                                              type: relative
+                                              h: 0
+                                              p: -0.0
+                                              r: 0
+                                        tolerance: 1
+                                - name: ''
+                                  delay: 0
+                                  conditionEdge: none
+                                  ByEntityCondition:
+                                    TriggeringEntities:
+                                      triggeringEntitiesRule: any
+                                      EntityRef:
+                                        - entityRef: ego
+                                    EntityCondition:
+                                      ReachPositionCondition:
+                                        Position:
+                                          LanePosition:
+                                            roadId: ''
+                                            laneId: '81'
+                                            s: 16.4365
+                                            offset: 0.6977
+                                            Orientation:
+                                              type: relative
+                                              h: 0
+                                              p: -0.0
+                                              r: 0
+                                        tolerance: 1
+                        Action:
+                          - name: ''
+                            UserDefinedAction:
+                              CustomCommandAction:
+                                type: exitSuccess
+                      - name: ''
+                        priority: parallel
+                        StartTrigger:
+                          ConditionGroup:
+                            - Condition:
+                                - name: ''
+                                  delay: 0
+                                  conditionEdge: none
+                                  ByValueCondition:
+                                    SimulationTimeCondition:
+                                      value: 180
+                                      rule: greaterThan
+                            - Condition:
+                                - name: ''
+                                  delay: 0
+                                  conditionEdge: none
+                                  ByEntityCondition:
+                                    TriggeringEntities:
+                                      triggeringEntitiesRule: any
+                                      EntityRef:
+                                        - entityRef: ego
+                                    EntityCondition:
+                                      CollisionCondition:
+                                        EntityRef:
+                                          entityRef: Npc2
+                            - Condition:
+                                - name: ''
+                                  delay: 0
+                                  conditionEdge: none
+                                  ByEntityCondition:
+                                    TriggeringEntities:
+                                      triggeringEntitiesRule: any
+                                      EntityRef:
+                                        - entityRef: ego
+                                    EntityCondition:
+                                      CollisionCondition:
+                                        EntityRef:
+                                          entityRef: Npc3
+                        Action:
+                          - name: ''
+                            UserDefinedAction:
+                              CustomCommandAction:
+                                type: exitFailure
+            StartTrigger:
+              ConditionGroup:
+                - Condition:
+                    - name: ''
+                      delay: 0
+                      conditionEdge: none
+                      ByValueCondition:
+                        SimulationTimeCondition:
+                          value: 0
+                          rule: greaterThan
+    StopTrigger:
+      ConditionGroup: []
