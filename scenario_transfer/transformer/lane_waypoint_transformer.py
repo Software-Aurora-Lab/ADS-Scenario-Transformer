@@ -1,4 +1,5 @@
 from typing import Dict, Tuple
+import math
 
 import lanelet2
 from lanelet2.core import LaneletMap
@@ -13,6 +14,7 @@ from scenario_transfer.apollo_map_io_handler import ApolloMapIOHandler
 from scenario_transfer.transformer import Transformer
 from scenario_transfer.transformer.pointenu_transformer import PointENUTransformer
 
+
 # properties = ["lanelet_map": lanelet2.core.LaneletMap, "projector": lanelet2.projection.UtmProjector, "apollo_map": apollo_msgs.Map]
 class LaneWaypointTransformer(Transformer):
 
@@ -25,34 +27,47 @@ class LaneWaypointTransformer(Transformer):
     def transform(self, source: Source) -> Target:
         pose = source.pose
         heading = source.heading if source.heading else 0.0
-        
-        if "apollo_map" in self.properties: # Cannot check pose is None or zero.
+
+        if math.isnan(
+                pose.x
+        ):  # if pose.x and pose.y are nan, then it will check lane_id and s
             (pose, heading) = self.get_pose_from_apollo_waypoint(source)
-            
+
         lanelet_map = self.properties["lanelet_map"]
         projector = self.properties["projector"]
 
-        assert isinstance(lanelet_map, LaneletMap), "lanelet should be of type lanelet2.core.Lanelet"
-        assert isinstance(projector, UtmProjector), "projector should be of type lanelet2.projection.UtmProjector"
+        assert isinstance(
+            lanelet_map,
+            LaneletMap), "lanelet should be of type lanelet2.core.Lanelet"
+        assert isinstance(
+            projector, UtmProjector
+        ), "projector should be of type lanelet2.projection.UtmProjector"
 
         pointenu_transformer = PointENUTransformer(
-            properties={"supported_position": PointENUTransformer.SupportedPosition.Lane,
-                        "lanelet_map": lanelet_map, 
-                        "projector": projector})
+            properties={
+                "supported_position":
+                PointENUTransformer.SupportedPosition.Lane,
+                "lanelet_map": lanelet_map,
+                "projector": projector
+            })
         position = pointenu_transformer.transform((pose, heading))
-        
-        return Waypoint(
-            route_strategy=RouteStrategy.ROUTESTRATEGY_SHORTEST,
-            position=position)
 
-    def get_pose_from_apollo_waypoint(self, source: Source) -> Tuple[PointENU, float]:
+        return Waypoint(route_strategy=RouteStrategy.ROUTESTRATEGY_SHORTEST,
+                        position=position)
+
+    def get_pose_from_apollo_waypoint(
+            self, source: Source) -> Tuple[PointENU, float]:
         apollo_map = self.properties["apollo_map"]
 
-        assert isinstance(apollo_map, ApolloHDMap), "apollo_map should be of type apollo_msgs.Map"
+        assert isinstance(
+            apollo_map,
+            ApolloHDMap), "apollo_map should be of type apollo_msgs.Map"
 
         map_service = MapService()
         map_service.load_map_from_proto(apollo_map)
-        (point, heading) = map_service.get_lane_coord_and_heading(lane_id=source.id, s = source.s)
+        (point,
+         heading) = map_service.get_lane_coord_and_heading(lane_id=source.id,
+                                                           s=source.s)
         # print("res", res, dir(res[0]))
         # res.x
         return (PointENU(x=point.x, y=point.y, z=0), heading)
