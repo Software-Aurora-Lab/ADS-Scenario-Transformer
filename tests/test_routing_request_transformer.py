@@ -10,7 +10,6 @@ from openscenario_msgs import Route, LanePosition
 
 from scenario_transfer import RoutingRequestTransformer
 from scenario_transfer.apollo_map_io_handler import ApolloMapIOHandler as MapIOHandler
-from scenario_transfer import FormatTransformer
 
 
 class TestTransformer(unittest.TestCase):
@@ -44,29 +43,29 @@ class TestTransformer(unittest.TestCase):
         openscenario_route = routing_request_transformer.transform(
             routing_request)
 
-        print(openscenario_route)
         self.assertIsInstance(
             openscenario_route, Route,
             "The openscenario_route should be of type Route")
 
-        waypoint1 = openscenario_route.waypoints[0]
-        lane_position1 = waypoint1.position.lane_position
+        start_waypoint = openscenario_route.waypoints[0]
+        start_lane_position = start_waypoint.position.lane_position
         self.assertIsInstance(
-            lane_position1, LanePosition,
+            start_lane_position, LanePosition,
             "The waypoint.lane_position should be of type LanePosition.")
 
-        self.assertEqual(lane_position1.lane_id, "22")
-        self.assertEqual(lane_position1.offset, 0.1750399287494411)
-        self.assertEqual(lane_position1.s, 35.714714923990464)
-        self.assertEqual(lane_position1.orientation.h, 2.883901414579166)
+        self.assertEqual(start_lane_position.lane_id, "22")
+        self.assertEqual(start_lane_position.offset, 0.1750399287494411)
+        self.assertEqual(start_lane_position.s, 35.714714923990464)
+        self.assertEqual(start_lane_position.orientation.h, 2.883901414579166)
 
-        waypoint2 = openscenario_route.waypoints[-1]
-        lane_position2 = waypoint2.position.lane_position
+        end_waypoint = openscenario_route.waypoints[-1]
+        end_lane_position = end_waypoint.position.lane_position
 
-        self.assertEqual(lane_position2.lane_id, "149")
-        self.assertEqual(lane_position2.offset, 1.4604610803960605)
-        self.assertEqual(lane_position2.s, 26.739416492972932)
-        self.assertEqual(lane_position2.orientation.h, -1.9883158777364047)
+        self.assertEqual(end_lane_position.lane_id, "149")
+        self.assertEqual(end_lane_position.offset, 1.4604610803960605)
+        self.assertEqual(end_lane_position.s, 26.739416492972932)
+        self.assertEqual(end_lane_position.orientation.h, -1.9883158777364047)
+
 
 
 if __name__ == '__main__':
