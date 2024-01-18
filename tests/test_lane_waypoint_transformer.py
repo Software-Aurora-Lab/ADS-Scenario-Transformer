@@ -12,7 +12,7 @@ from scenario_transfer import LaneWaypointTransformer
 from scenario_transfer.apollo_map_io_handler import ApolloMapIOHandler as MapIOHandler
 
 
-class TestTransformer(unittest.TestCase):
+class TestLaneWaypointTransformer(unittest.TestCase):
 
     def setUp(self):
         origin = Origin(37.04622247590861, -123.00000000000001, 0)
