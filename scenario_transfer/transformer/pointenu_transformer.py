@@ -24,7 +24,8 @@ class PointENUTransformer(Transformer):
         self.properties = properties
 
     def transform(self, source: Source) -> Target:
-        if self.properties["supported_position"] == PointENUTransformer.SupportedPosition.Lane:
+        if self.properties[
+                "supported_position"] == PointENUTransformer.SupportedPosition.Lane:
             return Position(lane_position=self.transformToLanePosition(source))
         return Position(world_position=self.transformToWorldPosition(source))
 

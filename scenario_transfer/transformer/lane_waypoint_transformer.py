@@ -1,16 +1,13 @@
 from typing import Dict, Tuple
 import math
 
-import lanelet2
 from lanelet2.core import LaneletMap
 from lanelet2.projection import UtmProjector
 
 from apollo_msgs import (Map as ApolloHDMap, PointENU, LaneWaypoint)
-from openscenario_msgs import (Waypoint, RouteStrategy, Position)
+from openscenario_msgs import (Waypoint, RouteStrategy)
 from pkgs.scenorita.map_service import MapService
 
-from scenario_transfer.geometry import Geometry
-from scenario_transfer.apollo_map_io_handler import ApolloMapIOHandler
 from scenario_transfer.transformer import Transformer
 from scenario_transfer.transformer.pointenu_transformer import PointENUTransformer
 
@@ -68,6 +65,4 @@ class LaneWaypointTransformer(Transformer):
         (point,
          heading) = map_service.get_lane_coord_and_heading(lane_id=source.id,
                                                            s=source.s)
-        # print("res", res, dir(res[0]))
-        # res.x
         return (PointENU(x=point.x, y=point.y, z=0), heading)
