@@ -1,4 +1,3 @@
-from .format_transformer import FormatTransformer
 from .transformer import Transformer
 from .transform_rule_map import TransformRuleContainer
 from .pointenu_transformer import PointENUTransformer

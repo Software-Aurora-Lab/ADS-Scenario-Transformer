@@ -5,14 +5,14 @@ import lanelet2
 from lanelet2.projection import UtmProjector
 from lanelet2.io import Origin
 
-from apollo_msgs import Header, RoutingRequest
+from apollo_msgs import RoutingRequest
 from openscenario_msgs import Route, LanePosition
 
 from scenario_transfer import RoutingRequestTransformer
 from scenario_transfer.apollo_map_io_handler import ApolloMapIOHandler as MapIOHandler
 
 
-class TestTransformer(unittest.TestCase):
+class TestRoutingRequestTransformer(unittest.TestCase):
 
     def setUp(self):
         origin = Origin(37.04622247590861, -123.00000000000001, 0)
@@ -65,7 +65,6 @@ class TestTransformer(unittest.TestCase):
         self.assertEqual(end_lane_position.offset, 1.4604610803960605)
         self.assertEqual(end_lane_position.s, 26.739416492972932)
         self.assertEqual(end_lane_position.orientation.h, -1.9883158777364047)
-
 
 
 if __name__ == '__main__':
