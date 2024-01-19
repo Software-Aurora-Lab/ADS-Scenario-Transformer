@@ -6,13 +6,12 @@ version = "0.1.0"
 description = ""
 optional = false
 python-versions = ">=3.9,<3.12"
-files = [
-    {file = "apollo_msgs-0.1.0-py3-none-any.whl", hash = "sha256:880f449227e2beabc192a3b5a6aa5e7e93d4cff5b6a10feef0ec71658239ec83"},
-]
+files = []
+develop = false
 
 [package.source]
-type = "file"
-url = "apollo_msgs/dist/apollo_msgs-0.1.0-py3-none-any.whl"
+type = "directory"
+url = "apollo_msgs"
 
 [[package]]
 name = "autopep8"
@@ -375,13 +374,12 @@ version = "0.1.0"
 description = ""
 optional = false
 python-versions = ">=3.9,<3.12"
-files = [
-    {file = "openscenario_msgs-0.1.0-py3-none-any.whl", hash = "sha256:2a56ddfb942b2247b2e8890984aa481bc1e8c9e2ebb75a7861c1dc375f886741"},
-]
+files = []
+develop = false
 
 [package.source]
-type = "file"
-url = "openscenario_msgs/dist/openscenario_msgs-0.1.0-py3-none-any.whl"
+type = "directory"
+url = "openscenario_msgs"
 
 [[package]]
 name = "ordered-set"
@@ -756,4 +754,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "901855f600eb78731a4c5d6662a1cda9c49ebae2baac409dc1b526b2209ce7ef"
+content-hash = "f8ccd0767a8f08eca65590d87f99041f5178a3f9d2ab1c7e73839d307f34b8db"
