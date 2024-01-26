@@ -9,6 +9,7 @@ import math
 from protobuf_to_dict import protobuf_to_dict
 from cyber_record.record import Record
 
+
 class CyberRecordReader:
 
     class TargetChannels(Enum):
@@ -31,7 +32,7 @@ class CyberRecordReader:
         result = []
         for topic, message, t in messages:
             result.append(protobuf_to_dict(message, use_enum_labels=True))
-        
+
         py_dict = {channel.name: result}
         decoded_dict = self.decode_binary(py_dict)
         yaml_data = yaml.dump(decoded_dict, default_flow_style=False)
@@ -46,12 +47,12 @@ class CyberRecordReader:
             json.dump(decoded_dict, file, indent=2)
             print(f"Updated to {src_path.parent}/json/{file_name}.json")
 
-    def read_all_channels(self, file_path: str):
+    def read_all_channels(self, source_path: str):
         """
         Read all target channels
         """
         for channel in CyberRecordReader.TargetChannels:
-            self.read_channel(source_path=file_path, channel=channel)            
+            self.read_channel(source_path=source_path, channel=channel)
 
     def decode_binary(self, value):
         """
@@ -66,7 +67,10 @@ class CyberRecordReader:
         elif isinstance(value, list):
             return [self.decode_binary(item) for item in value]
         elif isinstance(value, dict):
-            return {key: self.decode_binary(sub_value) for key, sub_value in value.items()}
+            return {
+                key: self.decode_binary(sub_value)
+                for key, sub_value in value.items()
+            }
         elif isinstance(value, float) and math.isnan(value):
             return 0.0
         else:
