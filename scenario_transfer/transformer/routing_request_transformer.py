@@ -48,7 +48,7 @@ class RoutingRequestTransformer(Transformer):
             "route_name"] if "route_name" in self.properties else ""
         route = Route(closed=False,
                       name=route_name,
-                      parameter_declarations=[],
+                      parameterDeclarations=[],
                       waypoints=openscenario_waypoints)
 
         return route

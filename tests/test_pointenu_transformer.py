@@ -23,11 +23,11 @@ class TestPointENUTransformer(unittest.TestCase):
             properties={"supported_position": worldType})
         position = transformer.transform(source=(point, 0.0))
 
-        self.assertIsNotNone(position.world_position,
+        self.assertIsNotNone(position.worldPosition,
                              "The gpspoint should not be None.")
-        self.assertEqual(position.world_position.x, 37.416880423172465)
-        self.assertEqual(position.world_position.y, -122.01593194093681)
-        self.assertEqual(position.world_position.z, 0.0)
+        self.assertEqual(position.worldPosition.x, 37.416880423172465)
+        self.assertEqual(position.worldPosition.y, -122.01593194093681)
+        self.assertEqual(position.worldPosition.z, 0.0)
 
     def test_transform_lane_position(self):
         point = PointENU(x=587079.3045861976, y=4141574.299574421, z=0)
@@ -40,12 +40,12 @@ class TestPointENUTransformer(unittest.TestCase):
             })
         position = transformer.transform(source=(point, 0.0))
 
-        self.assertIsNotNone(position.lane_position,
+        self.assertIsNotNone(position.lanePosition,
                              "The lane_position should not be None.")
 
-        self.assertEqual(position.lane_position.lane_id, "22")
-        self.assertEqual(position.lane_position.s, 35.71471492399046)
-        self.assertEqual(position.lane_position.offset, 0.1750399287494411)
+        self.assertEqual(position.lanePosition.lane_id, "22")
+        self.assertEqual(position.lanePosition.s, 35.71471492399046)
+        self.assertEqual(position.lanePosition.offset, 0.1750399287494411)
 
 
 if __name__ == '__main__':

@@ -7,6 +7,6 @@ from .catalog_locations_builder import CatalogLocationsBuilder
 from .road_network_builder import RoadNetworkBuilder
 from .entities_builder import EntitiesBuilder
 from .file_header_builder import FileHeaderBuilder
-from .parameter_declaration_builder import ParameterDeclarationBuilder
+from .parameter_declarations_builder import ParameterDeclarationsBuilder, ParameterDeclarationBuilder
 from .scenario_definition_builder import ScenarioDefinitionBuilder
 from .storyboard_builder import StoryboardBuilder

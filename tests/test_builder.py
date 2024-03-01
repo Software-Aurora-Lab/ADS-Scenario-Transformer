@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime
-from openscenario_msgs import CatalogDefinition, FileHeader, Entities
-from scenario_transfer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder
+from openscenario_msgs import CatalogDefinition, FileHeader, Entities, ParameterDeclarations, ParameterDeclaration
+from scenario_transfer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder
 from scenario_transfer.builder.entities_builder import EntityType
 
 
@@ -42,6 +42,23 @@ class TestBuilder(unittest.TestCase):
         builder = CatalogDefinitionBuilder()
         catalog_definition = builder.get_result()
         self.assertIsInstance(catalog_definition, CatalogDefinition)
+
+    def test_parameter_declarations_builder(self):
+
+        declarations = [
+            ParameterDeclaration(name="__ego_dimensions_length__",
+                                 parameterType=2,
+                                 value='0'),
+            ParameterDeclaration(name="__ego_dimensions_width__",
+                                 parameterType=2,
+                                 value='0')
+        ]
+
+        builder = ParameterDeclarationsBuilder(
+            parameterDeclarations=declarations)
+        parameter_declarations = builder.get_result()
+        self.assertIsInstance(parameter_declarations, ParameterDeclarations)
+        self.assertEqual(len(parameter_declarations.parameterDeclarations), 2)
 
 
 if __name__ == '__main__':

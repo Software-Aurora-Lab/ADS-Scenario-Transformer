@@ -48,7 +48,7 @@ class TestRoutingRequestTransformer(unittest.TestCase):
             "The openscenario_route should be of type Route")
 
         start_waypoint = openscenario_route.waypoints[0]
-        start_lane_position = start_waypoint.position.lane_position
+        start_lane_position = start_waypoint.position.lanePosition
         self.assertIsInstance(
             start_lane_position, LanePosition,
             "The waypoint.lane_position should be of type LanePosition.")
@@ -59,7 +59,7 @@ class TestRoutingRequestTransformer(unittest.TestCase):
         self.assertEqual(start_lane_position.orientation.h, 2.883901414579166)
 
         end_waypoint = openscenario_route.waypoints[-1]
-        end_lane_position = end_waypoint.position.lane_position
+        end_lane_position = end_waypoint.position.lanePosition
 
         self.assertEqual(end_lane_position.lane_id, "149")
         self.assertEqual(end_lane_position.offset, 1.4604610803960605)

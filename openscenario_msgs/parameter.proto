@@ -39,7 +39,7 @@ message ParameterDeclaration {
 
 // Message for ParameterDeclarations
 message ParameterDeclarations {
-    repeated ParameterDeclaration parameter_declarations = 1; // 0..*
+    repeated ParameterDeclaration parameterDeclarations = 1; // 0..*
 }
 
 // Message for ParameterModifyAction (Deprecated/v1.2)

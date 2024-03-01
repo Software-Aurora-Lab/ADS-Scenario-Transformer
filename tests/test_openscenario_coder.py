@@ -2,7 +2,7 @@ import unittest
 import yaml
 import json
 
-from openscenario_msgs import Route, LanePosition, ObjectController, Vehicle, EntityObject, ScenarioObject, Entities
+from openscenario_msgs import Route, LanePosition, ObjectController, Vehicle, EntityObject, ScenarioObject, Entities, ParameterDeclarations
 
 from scenario_transfer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
 
@@ -16,11 +16,12 @@ class TestOpenScenarioCoder(unittest.TestCase):
         self.scenario_object_file_path = input_dir + "openscenario_scenario_object.yaml"
 
     def test_openscenario_encode_decode(self):
-        with open("./samples/test_data/openscenario_route.json", 'r') as file:
-            self.json_data = file.read()
+        with open(self.route_file_path, 'r') as file:
+            input = file.read()
 
-        raw_dict = json.loads(self.json_data)
-        openscenario_route = Route(**raw_dict)
+        dict = yaml.safe_load(input)
+        openscenario_route = OpenScenarioDecoder.decode_yaml_to_pyobject(
+            yaml_dict=dict, type_=Route, exclude_top_level_key=True)
         encoded_data = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
             openscenario_route)
 
@@ -39,7 +40,7 @@ class TestOpenScenarioCoder(unittest.TestCase):
         self.assertIsInstance(openscenario_route, Route)
 
         start_waypoint = openscenario_route.waypoints[0]
-        start_lane_position = start_waypoint.position.lane_position
+        start_lane_position = start_waypoint.position.lanePosition
         self.assertIsInstance(
             start_lane_position, LanePosition,
             "The waypoint.lane_position should be of type LanePosition.")
@@ -50,7 +51,7 @@ class TestOpenScenarioCoder(unittest.TestCase):
         self.assertEqual(start_lane_position.orientation.h, 2.883901414579166)
 
         end_waypoint = openscenario_route.waypoints[-1]
-        end_lane_position = end_waypoint.position.lane_position
+        end_lane_position = end_waypoint.position.lanePosition
 
         self.assertEqual(end_lane_position.lane_id, "149")
         self.assertEqual(end_lane_position.offset, 1.4604610803960605)
@@ -69,7 +70,7 @@ class TestOpenScenarioCoder(unittest.TestCase):
         self.assertIsInstance(openscenario_route, Route)
 
         start_waypoint = openscenario_route.waypoints[0]
-        start_lane_position = start_waypoint.position.lane_position
+        start_lane_position = start_waypoint.position.lanePosition
         self.assertIsInstance(
             start_lane_position, LanePosition,
             "The waypoint.lane_position should be of type LanePosition.")
@@ -80,7 +81,7 @@ class TestOpenScenarioCoder(unittest.TestCase):
         self.assertEqual(start_lane_position.orientation.h, 2.883901414579166)
 
         end_waypoint = openscenario_route.waypoints[-1]
-        end_lane_position = end_waypoint.position.lane_position
+        end_lane_position = end_waypoint.position.lanePosition
 
         self.assertEqual(end_lane_position.lane_id, "149")
         self.assertEqual(end_lane_position.offset, 1.4604610803960605)
@@ -229,6 +230,54 @@ class TestOpenScenarioCoder(unittest.TestCase):
         self.assert_vehicle(entities.scenarioObjects[0].entityObject.vehicle)
         self.assert_object_controller(
             entities.scenarioObjects[0].objectController)
+
+    def test_decoding_paramater_declarations(self):
+        input = """
+          ParameterDeclarations:
+              ParameterDeclaration:
+                - name: __ego_dimensions_length__
+                  parameterType: double
+                  value: '0'
+                - name: __ego_dimensions_width__
+                  parameterType: double
+                  value: '0'
+                - name: __ego_dimensions_height__
+                  parameterType: double
+                  value: '0'
+                - name: __ego_center_x__
+                  parameterType: double
+                  value: '0'
+                - name: __ego_center_y__
+                  parameterType: double
+                  value: '0'
+                - name: __ego_center_z__
+                  parameterType: double
+                  value: '0'
+        """
+
+        dict = yaml.safe_load(input)
+
+        parameter_declarations = OpenScenarioDecoder.decode_yaml_to_pyobject(
+            yaml_dict=dict,
+            type_=ParameterDeclarations,
+            exclude_top_level_key=True)
+
+        self.assertEqual(parameter_declarations.parameterDeclarations[0].name,
+                         "__ego_dimensions_length__")
+        self.assertEqual(
+            parameter_declarations.parameterDeclarations[0].parameterType, 2)
+        self.assertEqual(parameter_declarations.parameterDeclarations[1].name,
+                         "__ego_dimensions_width__")
+        self.assertEqual(
+            parameter_declarations.parameterDeclarations[1].parameterType, 2)
+        self.assertEqual(parameter_declarations.parameterDeclarations[1].value,
+                         "0")
+        self.assertEqual(parameter_declarations.parameterDeclarations[2].name,
+                         "__ego_dimensions_height__")
+        self.assertEqual(
+            parameter_declarations.parameterDeclarations[2].parameterType, 2)
+        self.assertEqual(parameter_declarations.parameterDeclarations[2].value,
+                         "0")
 
     # Assertion methods
 

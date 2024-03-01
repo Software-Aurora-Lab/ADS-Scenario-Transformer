@@ -36,7 +36,7 @@ class TestLaneWaypointTransformer(unittest.TestCase):
         self.assertIsInstance(openscenario_waypoint, Waypoint,
                               "The waypoint should be of type Waypoint.")
 
-        lane_position = openscenario_waypoint.position.lane_position
+        lane_position = openscenario_waypoint.position.lanePosition
         self.assertIsInstance(
             lane_position, LanePosition,
             "The waypoint.lane_position should be of type LanePosition.")
@@ -59,7 +59,7 @@ class TestLaneWaypointTransformer(unittest.TestCase):
         self.assertIsInstance(openscenario_waypoint, Waypoint,
                               "The waypoint should be of type Waypoint.")
 
-        lane_position = openscenario_waypoint.position.lane_position
+        lane_position = openscenario_waypoint.position.lanePosition
         self.assertIsInstance(
             lane_position, LanePosition,
             "The waypoint.lane_position should be of type LanePosition.")
