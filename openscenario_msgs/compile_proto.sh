@@ -1,4 +1,4 @@
 protoc \
-  -I=/Users/changnam/dev/ADS/q4/ADS-scenario-transfer \
-  -I=/Users/changnam/dev/ADS/q4/ADS-scenario-transfer/openscenario_msgs \
-   --python_out=/Users/changnam/dev/ADS/q4/ADS-scenario-transfer/ /Users/changnam/dev/ADS/q4/ADS-scenario-transfer/openscenario_msgs/*.proto
+  -I=/home/runner/ADS-scenario-transfer-1/ \
+  -I=/home/runner/ADS-scenario-transfer-1/openscenario_msgs \
+   --python_out=/home/runner/ADS-scenario-transfer-1/ /home/runner/ADS-scenario-transfer-1/openscenario_msgs/*.proto

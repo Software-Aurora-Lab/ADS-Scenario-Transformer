@@ -1,7 +1,0 @@
-syntax = "proto2";
-package openscenairo;
-
-// Message for File
-message File {
-    required string filepath = 1;        // 1..1
-}

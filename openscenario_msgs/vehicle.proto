@@ -1,5 +1,5 @@
 syntax = "proto2";
-package openscenairo;
+package openscenario;
 
 import "openscenario_msgs/boundingbox.proto";
 import "openscenario_msgs/parameter.proto";
