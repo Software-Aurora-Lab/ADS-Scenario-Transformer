@@ -28,9 +28,9 @@ class EntitiesBuilder(Builder):
 
     def __init__(self, entities: List[EntityType] = [EntityType.EGO]):
         self.not_ego_label = 1
-        self.load_default_scenario_objects()
+        self.load_default_scenario_objects(self.config_path())
 
-        scenario_objects = self.build_default_scenario_objects(
+        scenario_objects = self.make_default_scenario_objects(
             entities=entities)
 
         self.product = Entities(
@@ -42,9 +42,9 @@ class EntitiesBuilder(Builder):
         directory = os.path.dirname(os.path.realpath(__file__))
         return os.path.join(directory, 'entities.yaml')
 
-    def load_default_scenario_objects(self):
+    def load_default_scenario_objects(self, config_path: str):
 
-        with open(self.config_path(), 'r') as file:
+        with open(config_path, 'r') as file:
             default_scenario_object_data = file.read()
 
         dict = yaml.safe_load(default_scenario_object_data)
@@ -61,7 +61,7 @@ class EntitiesBuilder(Builder):
         self.default_scenario_objects[
             EntityType.PEDESTRIAN.value] = entities.scenarioObjects[2]
 
-    def build_default_scenario_objects(
+    def make_default_scenario_objects(
             self, entities: List[EntityType]) -> List[ScenarioObject]:
 
         ego = None

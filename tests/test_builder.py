@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime
-from openscenario_msgs import CatalogDefinition, FileHeader, Entities, ParameterDeclarations, ParameterDeclaration
-from scenario_transfer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, TrafficSignalControllerBuilder, TrafficSignalStateBuilder
+from openscenario_msgs import CatalogDefinition, FileHeader, Entities, ParameterDeclarations, ParameterDeclaration, ScenarioDefinition
+from scenario_transfer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, TrafficSignalControllerBuilder, TrafficSignalStateBuilder, ScenarioDefinitionBuilder
 from scenario_transfer.builder.entities_builder import EntityType
 from scenario_transfer.builder.road_network_builder import RoadNetworkBuilder
 
@@ -96,6 +96,32 @@ class TestBuilder(unittest.TestCase):
         self.assertEqual(
             traffic_signal.phases[1].trafficSignalStates[0].trafficSignalId,
             "12515")
+
+    def test_scenario_definition_builder(self):
+        parameter_declarations = [
+            ParameterDeclaration(name="__ego_dimensions_length__",
+                                 parameterType=2,
+                                 value='0'),
+            ParameterDeclaration(name="__ego_dimensions_width__",
+                                 parameterType=2,
+                                 value='0')
+        ]
+
+        builder = ScenarioDefinitionBuilder(
+            parameter_declarations=parameter_declarations)
+
+        builder.make_road_network(lanelet_map_path="lanelet_map.osm")
+        builder.make_default_entities(entities=[
+            EntityType.EGO, EntityType.NPC, EntityType.NPC,
+            EntityType.PEDESTRIAN
+        ])
+        builder.make_storyboard()
+        scenario_definition = builder.get_result()
+        self.assertIsInstance(scenario_definition, ScenarioDefinition)
+        self.assertIsNotNone(scenario_definition.roadNetwork)
+        self.assertIsNotNone(scenario_definition.catalogLocations)
+        self.assertIsNotNone(scenario_definition.entities)
+        self.assertIsNotNone(scenario_definition.storyboard)
 
 
 if __name__ == '__main__':
