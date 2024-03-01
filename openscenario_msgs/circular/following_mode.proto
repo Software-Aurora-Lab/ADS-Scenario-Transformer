@@ -1,8 +1,0 @@
-syntax = "proto2";
-package openscenairo;
-
-// Enum for FollowingMode
-enum FollowingMode {
-    FOLLOWINGMODE_FOLLOW = 0;
-    FOLLOWINGMODE_POSITION = 1;
-}
