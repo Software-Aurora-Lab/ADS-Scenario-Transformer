@@ -1,0 +1,1152 @@
+{
+  "MONITOR": [
+    {
+      "header": {
+        "timestamp_sec": 1679368101.7483842,
+        "module_name": "monitor",
+        "sequence_num": 26
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368101.764255,
+        "module_name": "monitor",
+        "sequence_num": 11
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368102.2479122,
+        "module_name": "monitor",
+        "sequence_num": 27
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368102.7480655,
+        "module_name": "monitor",
+        "sequence_num": 28
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368102.7651784,
+        "module_name": "monitor",
+        "sequence_num": 12
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368103.2478306,
+        "module_name": "monitor",
+        "sequence_num": 29
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368103.7484326,
+        "module_name": "monitor",
+        "sequence_num": 30
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368104.2479625,
+        "module_name": "monitor",
+        "sequence_num": 31
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368104.3664756,
+        "module_name": "monitor",
+        "sequence_num": 13
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368104.7477894,
+        "module_name": "monitor",
+        "sequence_num": 32
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368105.248863,
+        "module_name": "monitor",
+        "sequence_num": 33
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368105.3672886,
+        "module_name": "monitor",
+        "sequence_num": 14
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368105.7477999,
+        "module_name": "monitor",
+        "sequence_num": 34
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368106.247768,
+        "module_name": "monitor",
+        "sequence_num": 35
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368106.7482116,
+        "module_name": "monitor",
+        "sequence_num": 36
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368106.7684233,
+        "module_name": "monitor",
+        "sequence_num": 15
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368107.247782,
+        "module_name": "monitor",
+        "sequence_num": 37
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368107.7480023,
+        "module_name": "monitor",
+        "sequence_num": 38
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368107.7694356,
+        "module_name": "monitor",
+        "sequence_num": 16
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368108.2481925,
+        "module_name": "monitor",
+        "sequence_num": 39
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368108.7478113,
+        "module_name": "monitor",
+        "sequence_num": 40
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368109.248043,
+        "module_name": "monitor",
+        "sequence_num": 41
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368109.3705368,
+        "module_name": "monitor",
+        "sequence_num": 17
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368109.7477639,
+        "module_name": "monitor",
+        "sequence_num": 42
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368110.2480943,
+        "module_name": "monitor",
+        "sequence_num": 43
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368110.7478516,
+        "module_name": "monitor",
+        "sequence_num": 44
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368110.7715242,
+        "module_name": "monitor",
+        "sequence_num": 18
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368111.2477803,
+        "module_name": "monitor",
+        "sequence_num": 45
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368111.74829,
+        "module_name": "monitor",
+        "sequence_num": 46
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368111.7726018,
+        "module_name": "monitor",
+        "sequence_num": 19
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368112.2477481,
+        "module_name": "monitor",
+        "sequence_num": 47
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368112.7477694,
+        "module_name": "monitor",
+        "sequence_num": 48
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368113.2481673,
+        "module_name": "monitor",
+        "sequence_num": 49
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368113.3743315,
+        "module_name": "monitor",
+        "sequence_num": 20
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368113.747778,
+        "module_name": "monitor",
+        "sequence_num": 50
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368114.2477846,
+        "module_name": "monitor",
+        "sequence_num": 51
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368114.747955,
+        "module_name": "monitor",
+        "sequence_num": 52
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368114.7755089,
+        "module_name": "monitor",
+        "sequence_num": 21
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368115.2481434,
+        "module_name": "monitor",
+        "sequence_num": 53
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368115.747773,
+        "module_name": "monitor",
+        "sequence_num": 54
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368116.2479024,
+        "module_name": "monitor",
+        "sequence_num": 55
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368116.3767312,
+        "module_name": "monitor",
+        "sequence_num": 22
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368116.7481282,
+        "module_name": "monitor",
+        "sequence_num": 56
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368117.2477474,
+        "module_name": "monitor",
+        "sequence_num": 57
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368117.7478938,
+        "module_name": "monitor",
+        "sequence_num": 58
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368117.7778735,
+        "module_name": "monitor",
+        "sequence_num": 23
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368118.2478197,
+        "module_name": "monitor",
+        "sequence_num": 59
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368118.7481987,
+        "module_name": "monitor",
+        "sequence_num": 60
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368118.779223,
+        "module_name": "monitor",
+        "sequence_num": 24
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368119.247779,
+        "module_name": "monitor",
+        "sequence_num": 61
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368119.7478542,
+        "module_name": "monitor",
+        "sequence_num": 62
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368120.2483697,
+        "module_name": "monitor",
+        "sequence_num": 63
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368120.380573,
+        "module_name": "monitor",
+        "sequence_num": 25
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368120.7477698,
+        "module_name": "monitor",
+        "sequence_num": 64
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368121.2478034,
+        "module_name": "monitor",
+        "sequence_num": 65
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368121.7479284,
+        "module_name": "monitor",
+        "sequence_num": 66
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368121.7819688,
+        "module_name": "monitor",
+        "sequence_num": 26
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368122.2482448,
+        "module_name": "monitor",
+        "sequence_num": 67
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368122.7478771,
+        "module_name": "monitor",
+        "sequence_num": 68
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368122.7831619,
+        "module_name": "monitor",
+        "sequence_num": 27
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368123.2478068,
+        "module_name": "monitor",
+        "sequence_num": 69
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368123.7480881,
+        "module_name": "monitor",
+        "sequence_num": 70
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368124.2478805,
+        "module_name": "monitor",
+        "sequence_num": 71
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368124.3844273,
+        "module_name": "monitor",
+        "sequence_num": 28
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368124.7477915,
+        "module_name": "monitor",
+        "sequence_num": 72
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368125.2478664,
+        "module_name": "monitor",
+        "sequence_num": 73
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368125.748372,
+        "module_name": "monitor",
+        "sequence_num": 74
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368125.7853413,
+        "module_name": "monitor",
+        "sequence_num": 29
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368126.2477946,
+        "module_name": "monitor",
+        "sequence_num": 75
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368126.7477744,
+        "module_name": "monitor",
+        "sequence_num": 76
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368127.2483492,
+        "module_name": "monitor",
+        "sequence_num": 77
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368127.3863049,
+        "module_name": "monitor",
+        "sequence_num": 30
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368127.7477672,
+        "module_name": "monitor",
+        "sequence_num": 78
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368128.2478182,
+        "module_name": "monitor",
+        "sequence_num": 79
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368128.7479124,
+        "module_name": "monitor",
+        "sequence_num": 80
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368128.7872798,
+        "module_name": "monitor",
+        "sequence_num": 31
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368129.2480564,
+        "module_name": "monitor",
+        "sequence_num": 81
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368129.7478752,
+        "module_name": "monitor",
+        "sequence_num": 82
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368129.7880833,
+        "module_name": "monitor",
+        "sequence_num": 32
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368130.247912,
+        "module_name": "monitor",
+        "sequence_num": 83
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368130.7482042,
+        "module_name": "monitor",
+        "sequence_num": 84
+      },
+      "item": [
+        {
+          "source": "MONITOR",
+          "msg": "Radar triggers safe mode: ",
+          "log_level": "ERROR"
+        }
+      ]
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368130.7889125,
+        "module_name": "monitor",
+        "sequence_num": 33
+      },
+      "item": [
+        {
+          "source": "HMI",
+          "msg": "You haven't selected a vehicle yet!",
+          "log_level": "WARN"
+        }
+      ]
+    }
+  ]
+}

@@ -31,7 +31,7 @@ OpenSCENARIO:
     CatalogLocation: []
   RoadNetwork:
     LogicFile:
-      filepath: lanelet2_map.osm
+      filepath: /home/sora/Desktop/changnam/autoware_map/borregasave_map/lanelet2_map.osm
     SceneGraphFile:
       filepath: lanelet2_map.pcd
     TrafficSignals:

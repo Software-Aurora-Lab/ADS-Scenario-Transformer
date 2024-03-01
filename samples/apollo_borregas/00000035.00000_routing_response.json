@@ -1,0 +1,84 @@
+{
+  "ROUTING_RESPONSE": [
+    {
+      "header": {
+        "timestamp_sec": 1679373059.7615347,
+        "module_name": "routing",
+        "sequence_num": 66
+      },
+      "road": [
+        {
+          "id": "road_1",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_10",
+                  "start_s": 16.098162978037706,
+                  "end_s": 34.23181745694139
+                }
+              ],
+              "can_exit": false,
+              "change_lane_type": "LEFT"
+            },
+            {
+              "segment": [
+                {
+                  "id": "lane_11",
+                  "start_s": 16.406550498979655,
+                  "end_s": 34.8875857789099
+                }
+              ],
+              "can_exit": false,
+              "change_lane_type": "LEFT"
+            },
+            {
+              "segment": [
+                {
+                  "id": "lane_12",
+                  "start_s": 16.391230505559662,
+                  "end_s": 34.8550086942506
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 18.133880393987674
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679373059.7589328,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_10",
+            "s": 16.098162978037706,
+            "pose": {
+              "x": 587018.3435897827,
+              "y": 4141578.7627563477
+            }
+          },
+          {
+            "id": "lane_12",
+            "s": 34.8550086942506,
+            "pose": {
+              "x": 587037.8841552734,
+              "y": 4141579.5421562195
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    }
+  ]
+}

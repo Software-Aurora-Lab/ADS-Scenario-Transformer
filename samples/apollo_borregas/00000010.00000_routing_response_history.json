@@ -1,0 +1,3184 @@
+{
+  "ROUTING_RESPONSE_HISTORY": [
+    {
+      "header": {
+        "timestamp_sec": 1679368101.4644306,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368102.4643986,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368103.4643993,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368104.464437,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368105.4643948,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368106.4643438,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368107.464394,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368108.4644196,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368109.464391,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368110.4643795,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368111.4644184,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368112.4644253,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368113.4643884,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368114.4643927,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368115.4644074,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368116.4644377,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368117.4644237,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368118.4643924,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368119.464397,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368120.4644387,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368121.4643996,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368122.4643633,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368123.4643812,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368124.4643848,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368125.464375,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368126.4643803,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368127.4643974,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368128.464386,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368129.464368,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    },
+    {
+      "header": {
+        "timestamp_sec": 1679368130.4644048,
+        "module_name": "routing",
+        "sequence_num": 0
+      },
+      "road": [
+        {
+          "id": "road_3",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_18",
+                  "start_s": 163.32170122025374,
+                  "end_s": 217.78500366210938
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_7",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_28",
+                  "start_s": 0.0,
+                  "end_s": 46.85179901123047
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_35",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_58",
+                  "start_s": 0.0,
+                  "end_s": 39.992523193359375
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        },
+        {
+          "id": "road_6",
+          "passage": [
+            {
+              "segment": [
+                {
+                  "id": "lane_24",
+                  "start_s": 0.0,
+                  "end_s": 125.31284549594358
+                }
+              ],
+              "can_exit": true,
+              "change_lane_type": "FORWARD"
+            }
+          ]
+        }
+      ],
+      "measurement": {
+        "distance": 266.6204701423891
+      },
+      "routing_request": {
+        "header": {
+          "timestamp_sec": 1679368100.6494691,
+          "module_name": "routing routing...",
+          "sequence_num": 0
+        },
+        "waypoint": [
+          {
+            "id": "lane_18",
+            "s": 163.32170122025374,
+            "pose": {
+              "x": 586994.006767273,
+              "y": 4141363.143676758
+            }
+          },
+          {
+            "id": "lane_24",
+            "s": 125.31284549594358,
+            "pose": {
+              "x": 587103.4415359497,
+              "y": 4141202.8861083984
+            }
+          }
+        ]
+      },
+      "map_version": "1.500000",
+      "status": {
+        "error_code": "OK",
+        "msg": "Success!"
+      }
+    }
+  ]
+}
