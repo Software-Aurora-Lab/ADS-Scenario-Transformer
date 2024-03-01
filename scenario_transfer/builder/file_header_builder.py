@@ -6,6 +6,8 @@ from scenario_transfer.builder import Builder
 
 class FileHeaderBuilder(Builder):
     """
+    - Check usage at test_builder.py
+    
     message FileHeader {
         required uint32 revMajor = 1;                   // 1..1
         required uint32 revMinor = 2;                   // 1..1
