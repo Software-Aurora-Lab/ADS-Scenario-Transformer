@@ -1,8 +1,9 @@
 import unittest
 from datetime import datetime
 from openscenario_msgs import CatalogDefinition, FileHeader, Entities, ParameterDeclarations, ParameterDeclaration
-from scenario_transfer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder
+from scenario_transfer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, TrafficSignalControllerBuilder, TrafficSignalStateBuilder
 from scenario_transfer.builder.entities_builder import EntityType
+from scenario_transfer.builder.road_network_builder import RoadNetworkBuilder
 
 
 class TestBuilder(unittest.TestCase):
@@ -59,6 +60,42 @@ class TestBuilder(unittest.TestCase):
         parameter_declarations = builder.get_result()
         self.assertIsInstance(parameter_declarations, ParameterDeclarations)
         self.assertEqual(len(parameter_declarations.parameterDeclarations), 2)
+
+    def test_road_network_builder(self):
+        controller_builder = TrafficSignalControllerBuilder(
+            name="StraghtSignal")
+        state_builder = TrafficSignalStateBuilder(
+            id_states=[('12515',
+                        "red;solidOn;circle"), ('12504',
+                                                "red;solidOn;circle")])
+        controller_builder.add_phase(name="RED",
+                                     states=state_builder.get_result())
+
+        state_builder = TrafficSignalStateBuilder(id_states=[(
+            '12515', "green;solidOn;circle"), ('12504',
+                                               "green;solidOn;circle")])
+
+        controller_builder.add_phase(name="RED",
+                                     states=state_builder.get_result())
+
+        builder = RoadNetworkBuilder(
+            lanelet_map_path="/home/users/lanelet_map.osm",
+            trafficSignals=[controller_builder.get_result()])
+
+        road_network = builder.get_result()
+
+        self.assertEqual(road_network.logicFile.filepath,
+                         "/home/users/lanelet_map.osm")
+        self.assertEqual(len(road_network.trafficSignals), 1)
+
+        traffic_signal = road_network.trafficSignals[0]
+
+        self.assertEqual(len(traffic_signal.phases), 2)
+
+        self.assertEqual(traffic_signal.phases[0].name, "RED")
+        self.assertEqual(
+            traffic_signal.phases[1].trafficSignalStates[0].trafficSignalId,
+            "12515")
 
 
 if __name__ == '__main__':
