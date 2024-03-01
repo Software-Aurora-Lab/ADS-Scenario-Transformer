@@ -203,18 +203,18 @@ message TimeOfDayCondition {}
 
 // Message for CatalogReference
 message CatalogReference {
-    required string catalog_name = 1;           // 1..1
-    required string entry_name = 2;            // 1..1
-    repeated ParameterAssignment parameter_assignments = 3;  // 0..*
+    required string catalogName = 1;           // 1..1
+    required string entryName = 2;            // 1..1
+    repeated ParameterAssignment parameterAssignments = 3;  // 0..*
     required CatalogElement ref = 4;           // 1..1
 }
 
 message CatalogElement {
     oneof implementation {
-        ControllerVehicle controller_vehicle = 4;
+        ControllerVehicle controllerVehicle = 4;
         Environment environment = 5;
         Maneuver maneuver = 6;
-        MiscObject misc_object = 7;
+        MiscObject miscObject = 7;
         Pedestrian pedestrian = 8;
         Route route = 9;
         Trajectory trajectory = 10;
@@ -229,7 +229,7 @@ message ControllerVehicle {}
 // Message for RouteRef
 message RouteRef {
     optional Route route = 1;                // 0..1
-    optional CatalogReference catalog_reference = 2;  // 0..1
+    optional CatalogReference catalogReference = 2;  // 0..1
 }
 
 // Message for TrajectoryRef
@@ -252,7 +252,7 @@ message AssignControllerAction {
     required bool activateLongitudinal = 3;   // 0..1
     required Controller controller = 4;           // 0..1
     required CatalogReference catalogReference = 5;  // 0..1
-    required ControllerAction controller_action = 6;  // 1..1
+    required ControllerAction controllerAction = 6;  // 1..1
 }
 // Message for OverrideControllerValueAction (Unsupported)
 message OverrideControllerValueAction {}
@@ -317,7 +317,7 @@ message EntityAction {
 // Message for AddEntityAction
 message AddEntityAction {
     required Position position = 1;      // 1..1
-    required EntityAction entity_action = 2;  // 1..1
+    required EntityAction entityAction = 2;  // 1..1
 }
 
 // Message for DeleteEntityAction
@@ -456,9 +456,9 @@ message RelativeDistanceCondition {}
 
 message Entity {
     oneof implementation {
-    EntitySelection entity_selection = 1;
-    ScenarioObject scenario_object = 2;
-    SpawnedObject spawned_object = 3;
+    EntitySelection entitySelection = 1;
+    ScenarioObject scenarioObject = 2;
+    SpawnedObject spawnedObject = 3;
     }
 }
 
@@ -580,13 +580,13 @@ message LaneChangeAction {
 
 // Message for LaneChangeTarget
 message LaneChangeTarget {
-    optional RelativeTargetLane relative_target_lane = 1;  // 0..1
-    optional AbsoluteTargetLane absolute_target_lane = 2;  // 0..1
+    optional RelativeTargetLane relativeTargetLane = 1;  // 0..1
+    optional AbsoluteTargetLane absoluteTargetLane = 2;  // 0..1
 }
 
 // Message for RelativeTargetLane
 message RelativeTargetLane {
-    required EntityRef entity_ref = 1;  // 1..1
+    required EntityRef entityRef = 1;  // 1..1
     required int32 value = 2;           // 1..1
 }
 
@@ -717,7 +717,7 @@ message FollowTrajectoryAction {
 // Message for AcquirePositionAction
 message AcquirePositionAction {
     required Position position = 1;      // 1..1
-    required RoutingAction routing_action = 2;  // 1..1
+    required RoutingAction routingAction = 2;  // 1..1
 }
 
 // Message for SpeedAction
@@ -760,7 +760,7 @@ message StoryboardElement {
         Action action = 13;
         Event event = 14;
         Maneuver maneuver = 15;
-        ManeuverGroup maneuver_group = 16;
+        ManeuverGroup maneuverGroup = 16;
         Story story = 17;
     }
 }
@@ -817,7 +817,7 @@ message TrajectoryFollowingMode {
 message Trajectory {
     required bool closed = 1;                   // 1..1
     required string name = 2;                   // 1..1
-    repeated ParameterDeclaration parameter_declarations = 3;  // 0..*
+    repeated ParameterDeclaration parameterDeclarations = 3;  // 0..*
     required Shape shape = 4;                   // 1..1
 }
 

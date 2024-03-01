@@ -32,9 +32,14 @@ message ParameterCondition {
 // Message for ParameterDeclaration
 message ParameterDeclaration {
     required string name = 1;                  // 1..1
-    required ParameterType parameter_type = 2; // 1..1
+    required ParameterType parameterType = 2; // 1..1
     required string value = 3;                 // 1..1
     repeated ValueConstraintGroup constraint_groups = 4;  // 0..*
+}
+
+// Message for ParameterDeclarations
+message ParameterDeclarations {
+    repeated ParameterDeclaration parameter_declarations = 1; // 0..*
 }
 
 // Message for ParameterModifyAction (Deprecated/v1.2)

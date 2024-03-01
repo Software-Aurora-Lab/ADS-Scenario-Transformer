@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from openscenario_msgs import orientation_pb2 as openscenario__msgs_dot_orientation__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n openscenario_msgs/position.proto\x12\x0copenscenario\x1a#openscenario_msgs/orientation.proto\"\xe0\x04\n\x08Position\x12\x33\n\x0eworld_position\x18\x01 \x01(\x0b\x32\x1b.openscenario.WorldPosition\x12\x44\n\x17relative_world_position\x18\x02 \x01(\x0b\x32#.openscenario.RelativeWorldPosition\x12\x46\n\x18relative_object_position\x18\x03 \x01(\x0b\x32$.openscenario.RelativeObjectPosition\x12\x31\n\rroad_position\x18\x04 \x01(\x0b\x32\x1a.openscenario.RoadPosition\x12\x42\n\x16relative_road_position\x18\x05 \x01(\x0b\x32\".openscenario.RelativeRoadPosition\x12\x31\n\rlane_position\x18\x06 \x01(\x0b\x32\x1a.openscenario.LanePosition\x12\x42\n\x16relative_lane_position\x18\x07 \x01(\x0b\x32\".openscenario.RelativeLanePosition\x12\x33\n\x0eroute_position\x18\x08 \x01(\x0b\x32\x1b.openscenario.RoutePosition\x12/\n\x0cgeo_position\x18\t \x01(\x0b\x32\x19.openscenario.GeoPosition\x12=\n\x13trajectory_position\x18\n \x01(\x0b\x32 .openscenario.TrajectoryPosition\"Q\n\rWorldPosition\x12\t\n\x01h\x18\x01 \x01(\x01\x12\t\n\x01p\x18\x02 \x01(\x01\x12\t\n\x01r\x18\x03 \x01(\x01\x12\t\n\x01x\x18\x04 \x02(\x01\x12\t\n\x01y\x18\x05 \x02(\x01\x12\t\n\x01z\x18\x06 \x01(\x01\"{\n\x0cLanePosition\x12\x0f\n\x07lane_id\x18\x01 \x02(\t\x12\x0e\n\x06offset\x18\x02 \x01(\x01\x12\x0f\n\x07road_id\x18\x03 \x02(\t\x12\t\n\x01s\x18\x04 \x02(\x01\x12.\n\x0borientation\x18\x05 \x01(\x0b\x32\x19.openscenario.Orientation\"\x17\n\x15RelativeWorldPosition\"\r\n\x0bGeoPosition\"\x18\n\x16RelativeObjectPosition\"\x16\n\x14RelativeLanePosition\"\x0f\n\rRoutePosition\"\x0e\n\x0cRoadPosition\"\x16\n\x14RelativeRoadPosition\"\x14\n\x12TrajectoryPosition')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n openscenario_msgs/position.proto\x12\x0copenscenario\x1a#openscenario_msgs/orientation.proto\"\xd2\x04\n\x08Position\x12\x32\n\rworldPosition\x18\x01 \x01(\x0b\x32\x1b.openscenario.WorldPosition\x12\x42\n\x15relativeWorldPosition\x18\x02 \x01(\x0b\x32#.openscenario.RelativeWorldPosition\x12\x44\n\x16relativeObjectPosition\x18\x03 \x01(\x0b\x32$.openscenario.RelativeObjectPosition\x12\x30\n\x0croadPosition\x18\x04 \x01(\x0b\x32\x1a.openscenario.RoadPosition\x12@\n\x14relativeRoadPosition\x18\x05 \x01(\x0b\x32\".openscenario.RelativeRoadPosition\x12\x30\n\x0clanePosition\x18\x06 \x01(\x0b\x32\x1a.openscenario.LanePosition\x12@\n\x14relativeLanePosition\x18\x07 \x01(\x0b\x32\".openscenario.RelativeLanePosition\x12\x32\n\rroutePosition\x18\x08 \x01(\x0b\x32\x1b.openscenario.RoutePosition\x12.\n\x0bgeoPosition\x18\t \x01(\x0b\x32\x19.openscenario.GeoPosition\x12<\n\x12trajectoryPosition\x18\n \x01(\x0b\x32 .openscenario.TrajectoryPosition\"Q\n\rWorldPosition\x12\t\n\x01h\x18\x01 \x01(\x01\x12\t\n\x01p\x18\x02 \x01(\x01\x12\t\n\x01r\x18\x03 \x01(\x01\x12\t\n\x01x\x18\x04 \x02(\x01\x12\t\n\x01y\x18\x05 \x02(\x01\x12\t\n\x01z\x18\x06 \x01(\x01\"{\n\x0cLanePosition\x12\x0f\n\x07lane_id\x18\x01 \x02(\t\x12\x0e\n\x06offset\x18\x02 \x01(\x01\x12\x0f\n\x07road_id\x18\x03 \x02(\t\x12\t\n\x01s\x18\x04 \x02(\x01\x12.\n\x0borientation\x18\x05 \x01(\x0b\x32\x19.openscenario.Orientation\"\x17\n\x15RelativeWorldPosition\"\r\n\x0bGeoPosition\"\x18\n\x16RelativeObjectPosition\"\x16\n\x14RelativeLanePosition\"\x0f\n\rRoutePosition\"\x0e\n\x0cRoadPosition\"\x16\n\x14RelativeRoadPosition\"\x14\n\x12TrajectoryPosition')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'openscenario_msgs.position_pb2', globals())
@@ -22,25 +22,25 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   _POSITION._serialized_start=88
-  _POSITION._serialized_end=696
-  _WORLDPOSITION._serialized_start=698
-  _WORLDPOSITION._serialized_end=779
-  _LANEPOSITION._serialized_start=781
-  _LANEPOSITION._serialized_end=904
-  _RELATIVEWORLDPOSITION._serialized_start=906
-  _RELATIVEWORLDPOSITION._serialized_end=929
-  _GEOPOSITION._serialized_start=931
-  _GEOPOSITION._serialized_end=944
-  _RELATIVEOBJECTPOSITION._serialized_start=946
-  _RELATIVEOBJECTPOSITION._serialized_end=970
-  _RELATIVELANEPOSITION._serialized_start=972
-  _RELATIVELANEPOSITION._serialized_end=994
-  _ROUTEPOSITION._serialized_start=996
-  _ROUTEPOSITION._serialized_end=1011
-  _ROADPOSITION._serialized_start=1013
-  _ROADPOSITION._serialized_end=1027
-  _RELATIVEROADPOSITION._serialized_start=1029
-  _RELATIVEROADPOSITION._serialized_end=1051
-  _TRAJECTORYPOSITION._serialized_start=1053
-  _TRAJECTORYPOSITION._serialized_end=1073
+  _POSITION._serialized_end=682
+  _WORLDPOSITION._serialized_start=684
+  _WORLDPOSITION._serialized_end=765
+  _LANEPOSITION._serialized_start=767
+  _LANEPOSITION._serialized_end=890
+  _RELATIVEWORLDPOSITION._serialized_start=892
+  _RELATIVEWORLDPOSITION._serialized_end=915
+  _GEOPOSITION._serialized_start=917
+  _GEOPOSITION._serialized_end=930
+  _RELATIVEOBJECTPOSITION._serialized_start=932
+  _RELATIVEOBJECTPOSITION._serialized_end=956
+  _RELATIVELANEPOSITION._serialized_start=958
+  _RELATIVELANEPOSITION._serialized_end=980
+  _ROUTEPOSITION._serialized_start=982
+  _ROUTEPOSITION._serialized_end=997
+  _ROADPOSITION._serialized_start=999
+  _ROADPOSITION._serialized_end=1013
+  _RELATIVEROADPOSITION._serialized_start=1015
+  _RELATIVEROADPOSITION._serialized_end=1037
+  _TRAJECTORYPOSITION._serialized_start=1039
+  _TRAJECTORYPOSITION._serialized_end=1059
 # @@protoc_insertion_point(module_scope)

@@ -15,23 +15,25 @@ from openscenario_msgs import rule_pb2 as openscenario__msgs_dot_rule__pb2
 from openscenario_msgs import valueconstraint_group_pb2 as openscenario__msgs_dot_valueconstraint__group__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!openscenario_msgs/parameter.proto\x12\x0copenscenario\x1a\x1copenscenario_msgs/rule.proto\x1a-openscenario_msgs/valueconstraint_group.proto\"_\n\x13ParameterAssignment\x12\x39\n\rparameter_ref\x18\x01 \x02(\x0b\x32\".openscenario.ParameterDeclaration\x12\r\n\x05value\x18\x02 \x02(\t\"\x7f\n\x12ParameterCondition\x12\x38\n\x0cparameterRef\x18\x01 \x02(\x0b\x32\".openscenario.ParameterDeclaration\x12 \n\x04rule\x18\x02 \x02(\x0e\x32\x12.openscenario.Rule\x12\r\n\x05value\x18\x03 \x02(\t\"\xa7\x01\n\x14ParameterDeclaration\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x33\n\x0eparameter_type\x18\x02 \x02(\x0e\x32\x1b.openscenario.ParameterType\x12\r\n\x05value\x18\x03 \x02(\t\x12=\n\x11\x63onstraint_groups\x18\x04 \x03(\x0b\x32\".openscenario.ValueConstraintGroup\"\x17\n\x15ParameterModifyAction\"\x14\n\x12ParameterSetAction*\xee\x01\n\rParameterType\x12\x19\n\x15PARAMETERTYPE_BOOLEAN\x10\x00\x12\x1a\n\x16PARAMETERTYPE_DATETIME\x10\x01\x12\x18\n\x14PARAMETERTYPE_DOUBLE\x10\x02\x12\x19\n\x15PARAMETERTYPE_INTEGER\x10\x03\x12\x18\n\x14PARAMETERTYPE_STRING\x10\x04\x12\x1e\n\x1aPARAMETERTYPE_UNSIGNED_INT\x10\x05\x12 \n\x1cPARAMETERTYPE_UNSIGNED_SHORT\x10\x06\x12\x15\n\x11PARAMETERTYPE_INT\x10\x07')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!openscenario_msgs/parameter.proto\x12\x0copenscenario\x1a\x1copenscenario_msgs/rule.proto\x1a-openscenario_msgs/valueconstraint_group.proto\"_\n\x13ParameterAssignment\x12\x39\n\rparameter_ref\x18\x01 \x02(\x0b\x32\".openscenario.ParameterDeclaration\x12\r\n\x05value\x18\x02 \x02(\t\"\x7f\n\x12ParameterCondition\x12\x38\n\x0cparameterRef\x18\x01 \x02(\x0b\x32\".openscenario.ParameterDeclaration\x12 \n\x04rule\x18\x02 \x02(\x0e\x32\x12.openscenario.Rule\x12\r\n\x05value\x18\x03 \x02(\t\"\xa6\x01\n\x14ParameterDeclaration\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x32\n\rparameterType\x18\x02 \x02(\x0e\x32\x1b.openscenario.ParameterType\x12\r\n\x05value\x18\x03 \x02(\t\x12=\n\x11\x63onstraint_groups\x18\x04 \x03(\x0b\x32\".openscenario.ValueConstraintGroup\"[\n\x15ParameterDeclarations\x12\x42\n\x16parameter_declarations\x18\x01 \x03(\x0b\x32\".openscenario.ParameterDeclaration\"\x17\n\x15ParameterModifyAction\"\x14\n\x12ParameterSetAction*\xee\x01\n\rParameterType\x12\x19\n\x15PARAMETERTYPE_BOOLEAN\x10\x00\x12\x1a\n\x16PARAMETERTYPE_DATETIME\x10\x01\x12\x18\n\x14PARAMETERTYPE_DOUBLE\x10\x02\x12\x19\n\x15PARAMETERTYPE_INTEGER\x10\x03\x12\x18\n\x14PARAMETERTYPE_STRING\x10\x04\x12\x1e\n\x1aPARAMETERTYPE_UNSIGNED_INT\x10\x05\x12 \n\x1cPARAMETERTYPE_UNSIGNED_SHORT\x10\x06\x12\x15\n\x11PARAMETERTYPE_INT\x10\x07')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'openscenario_msgs.parameter_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _PARAMETERTYPE._serialized_start=572
-  _PARAMETERTYPE._serialized_end=810
+  _PARAMETERTYPE._serialized_start=664
+  _PARAMETERTYPE._serialized_end=902
   _PARAMETERASSIGNMENT._serialized_start=128
   _PARAMETERASSIGNMENT._serialized_end=223
   _PARAMETERCONDITION._serialized_start=225
   _PARAMETERCONDITION._serialized_end=352
   _PARAMETERDECLARATION._serialized_start=355
-  _PARAMETERDECLARATION._serialized_end=522
-  _PARAMETERMODIFYACTION._serialized_start=524
-  _PARAMETERMODIFYACTION._serialized_end=547
-  _PARAMETERSETACTION._serialized_start=549
-  _PARAMETERSETACTION._serialized_end=569
+  _PARAMETERDECLARATION._serialized_end=521
+  _PARAMETERDECLARATIONS._serialized_start=523
+  _PARAMETERDECLARATIONS._serialized_end=614
+  _PARAMETERMODIFYACTION._serialized_start=616
+  _PARAMETERMODIFYACTION._serialized_end=639
+  _PARAMETERSETACTION._serialized_start=641
+  _PARAMETERSETACTION._serialized_end=661
 # @@protoc_insertion_point(module_scope)

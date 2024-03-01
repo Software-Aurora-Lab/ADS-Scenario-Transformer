@@ -5,16 +5,16 @@ import "openscenario_msgs/orientation.proto";
 
 // Message for Position
 message Position {
-    optional WorldPosition world_position = 1;                    // 0..1
-    optional RelativeWorldPosition relative_world_position = 2;    // Unsupported
-    optional RelativeObjectPosition relative_object_position = 3;  // 0..1
-    optional RoadPosition road_position = 4;                      // Unsupported
-    optional RelativeRoadPosition relative_road_position = 5;     // Unsupported
-    optional LanePosition lane_position = 6;                      // 0..1
-    optional RelativeLanePosition relative_lane_position = 7;     // Unsupported
-    optional RoutePosition route_position = 8;                    // Unsupported
-    optional GeoPosition geo_position = 9;                        // Not Listed
-    optional TrajectoryPosition trajectory_position = 10;         // Not Listed
+    optional WorldPosition worldPosition = 1;                    // 0..1
+    optional RelativeWorldPosition relativeWorldPosition = 2;    // Unsupported
+    optional RelativeObjectPosition relativeObjectPosition = 3;  // 0..1
+    optional RoadPosition roadPosition = 4;                      // Unsupported
+    optional RelativeRoadPosition relativeRoadPosition = 5;     // Unsupported
+    optional LanePosition lanePosition= 6;                      // 0..1
+    optional RelativeLanePosition relativeLanePosition= 7;     // Unsupported
+    optional RoutePosition routePosition= 8;                    // Unsupported
+    optional GeoPosition geoPosition= 9;                        // Not Listed
+    optional TrajectoryPosition trajectoryPosition= 10;         // Not Listed
 }
 
 // Message for WorldPosition

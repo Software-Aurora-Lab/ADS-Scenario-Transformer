@@ -16,7 +16,7 @@ enum RouteStrategy {
 message Route {
     required bool closed = 1;                  // 1..1
     required string name = 2;                  // 1..1
-    repeated ParameterDeclaration parameter_declarations = 3;  // 0..*
+    repeated ParameterDeclaration parameterDeclarations = 3;  // 0..*
     repeated Waypoint waypoints = 4;           // 2..*
 }
 
