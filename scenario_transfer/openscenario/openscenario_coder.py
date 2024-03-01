@@ -1,10 +1,10 @@
 import yaml
 import difflib
-from typing import Optional, TypeVar, Dict, Type
-
+from typing import Optional, TypeVar, Dict, Type, Tuple
+import os
+import importlib
 from protobuf_to_dict import protobuf_to_dict
 from google.protobuf.descriptor import Descriptor
-
 from scenario_transfer.openscenario.openscenario_attributes_name_mapper import OpenScenarioAttributesNameMapper
 
 
@@ -56,70 +56,75 @@ class OpenScenarioEncoder:
 
 
 class OpenScenarioDecoder:
-
     T = TypeVar('T')
+    field_name_cache = {}
 
     @staticmethod
     def decode_yaml_to_pyobject(yaml_dict: Dict, type_: Type[T],
                                 exclude_top_level_key: bool) -> T:
-        name_dict = OpenScenarioDecoder.get_all_fields_name(type_)
-        data_dict = OpenScenarioDecoder.convert_to_compatible_element(
-            yaml_dict, name_dict, type_.__name__)
+
+        OpenScenarioDecoder.update_field_names_in_proto_files()
 
         if exclude_top_level_key:
-            data_dict = data_dict[list(data_dict.keys())[0]]
+            yaml_dict = yaml_dict[list(yaml_dict.keys())[0]]
+
+        data_dict = OpenScenarioDecoder.convert_to_compatible_element(
+            yaml_dict, OpenScenarioDecoder.field_name_cache, type_.__name__)
 
         return type_(**data_dict)
 
     @staticmethod
-    def get_all_fields_name(protobuf_type) -> dict:
-        """
-        Recursively get all fields name of a protobuf type. Values are saved based on below rules.
+    def update_field_names_in_proto_files(
+            openscenario_protobuf_directory="./openscenario_msgs"):
+        if OpenScenarioDecoder.field_name_cache:
+            return
 
-        Object
-        - Type: List[(field_name, field_type)])]
-        - Example: {'Route': [('closed', 8), ('name', 9), ('parameter_declarations', 'ParameterDeclaration'), ('waypoints', 'Waypoint')]}
+        proto_files = [
+            file for file in os.listdir(openscenario_protobuf_directory)
+            if file.endswith(".proto")
+        ]
 
-        Enum
-        - Type: Dict[field_name: Dict[openscenario_applicable_name, original_name]]]
-        - Example: {'route_strategy': {'FASTEST': 'ROUTESTRATEGY_FASTEST', 'LEAST_INTERSECTIONS': 'ROUTESTRATEGY_LEAST_INTERSECTIONS', 'RANDOM': 'ROUTESTRATEGY_RANDOM', 'SHORTEST': 'ROUTESTRATEGY_SHORTEST'}}
-        
-        """
+        for proto_file in proto_files:
+            module_name = proto_file.replace(".proto", "_pb2")
+            try:
+                package_module = importlib.import_module(module_name)
+                field_names = OpenScenarioDecoder.list_field_names_in_protobuf_package(
+                    package_module)
+                OpenScenarioDecoder.field_name_cache.update(field_names)
+            except ImportError as e:
+                print(f"Failed to import {module_name}: {e}")
 
-        message_descriptor = protobuf_type
-        if not isinstance(protobuf_type, Descriptor):
-            message_descriptor = protobuf_type.DESCRIPTOR
+    @staticmethod
+    def list_field_names_in_protobuf_package(package_module):
+        results = {}
+        for obj_name in dir(package_module):
+            obj = getattr(package_module, obj_name)
 
-        key = message_descriptor.name
-        attributes_names = {}
+            if isinstance(obj, Descriptor):
+                fields = []
+                for field_descriptor in obj.fields:
+                    if field_descriptor.message_type:
+                        fields.append((field_descriptor.name,
+                                       field_descriptor.message_type.name))
 
-        if len(message_descriptor.fields) != 0:
-            attributes_names = {key: []}
+                    elif field_descriptor.enum_type:
+                        typename = field_descriptor.enum_type.name.upper()
+                        enum_name_map = {}
+                        for enum_value_descriptor in field_descriptor.enum_type.values:
+                            defined_name = enum_value_descriptor.name
+                            if defined_name.startswith(typename):
+                                saved_value = defined_name[len(typename) + 1:]
+                                enum_name_map[saved_value] = defined_name
+                            else:
+                                enum_name_map[defined_name] = defined_name
+                        fields.append((field_descriptor.name, enum_name_map))
+                    else:
+                        fields.append(
+                            (field_descriptor.name, field_descriptor.type))
 
-        for field_descriptor in message_descriptor.fields:
-            if field_descriptor.message_type:
-                attributes_names[key].append(
-                    (field_descriptor.name,
-                     field_descriptor.message_type.name))
-                sub_dict = OpenScenarioDecoder.get_all_fields_name(
-                    field_descriptor.message_type)
-                attributes_names |= sub_dict
-            elif field_descriptor.enum_type:
-                typename = field_descriptor.enum_type.name.upper()
-                enum_name_map = {}
-                for enum_value_descriptor in field_descriptor.enum_type.values:
-                    if enum_value_descriptor.name.startswith(typename):
-                        saved_value = enum_value_descriptor.name[len(typename
-                                                                     ) + 1:]
-                        enum_name_map[saved_value] = enum_value_descriptor.name
+                results[obj.name] = fields
 
-                attributes_names[key].append(
-                    {field_descriptor.name: enum_name_map})
-            else:
-                attributes_names[key].append(
-                    (field_descriptor.name, field_descriptor.type))
-
-        return attributes_names
+        return results
 
     @staticmethod
     def decode_enum(name_dict, root_type_name, target: str) -> Optional[str]:
@@ -128,15 +133,30 @@ class OpenScenarioDecoder:
         e.g. If root_type_name is ROUTESTRATEGY and target is fastest, it returns ROUTESTRATEGY_FASTEST
         
         """
+
+        if target == "":
+            return None
+
         for pair in name_dict[root_type_name]:
-            if isinstance(pair, dict):
-                typename = list(pair.keys())[0]
-                if target.upper() in pair[typename].keys():
-                    return pair[typename][target.upper()]
+            if isinstance(pair[1], dict):
+                enum_map = pair[1]
+                enum_key = target.upper()
+                if enum_key in enum_map.keys():
+                    return enum_map[enum_key]
+
         return None
 
     @staticmethod
-    def convert_to_compatible_element(input_dict, name_dict, root_type_name):
+    def is_oneof_type(type_name) -> bool:
+        return type_name in [
+            "StoryboardElement", "CatalogElement", "Entity", "EntityObject"
+        ]
+
+    @staticmethod
+    def convert_to_compatible_element(input_dict,
+                                      name_dict,
+                                      root_type_name,
+                                      parenet_type_name=""):
         """
         Convert key of a dictionary to a compatible one which enable initializing object.
         
@@ -144,9 +164,8 @@ class OpenScenarioDecoder:
 
         @staticmethod
         def create_key(name_dict, key, root_name) -> str:
-
             attr_names = []
-            for x in name_dict[root_type_name]:
+            for x in name_dict[root_name]:
                 if isinstance(x, tuple):
                     attr_names.append(x[0])
                 else:
@@ -155,27 +174,101 @@ class OpenScenarioDecoder:
             matches = difflib.get_close_matches(key, attr_names)
             return matches[0] if matches else key
 
+        @staticmethod
+        def search_oneof(
+                searching_type_name: str,
+                type_pair: Dict[str, str]) -> Optional[Tuple[str, str, str]]:
+            one_of_wrapper_field = ""
+            for field_name, type_name in type_pair:
+                if OpenScenarioDecoder.is_oneof_type(type_name):
+                    one_of_wrapper_field = field_name
+
+                    for one_of_field, one_of_type_name in name_dict[type_name]:
+                        if one_of_type_name == searching_type_name:
+                            return (one_of_wrapper_field, one_of_field,
+                                    one_of_type_name)
+
+            return None
+
+        # Code starts here
         res_dict = {}
+
+        if parenet_type_name == "":
+            parenet_type_name = root_type_name
+
+        if root_type_name == "":
+            return input_dict
+
         for key, value in input_dict.items():
             new_key = create_key(name_dict, key, root_type_name)
             new_value = value
+
+            # find type information
+            new_root_type_name = ""
+            one_of_wrapper_field = ""
+            one_of_field_name = ""
+            for field_name, type_name in name_dict[root_type_name]:
+                if new_key == field_name:
+                    new_root_type_name = type_name
+                    break
+
+                one_of_result = search_oneof(
+                    searching_type_name=new_key,
+                    type_pair=name_dict[root_type_name])
+                if one_of_result:
+                    one_of_wrapper_field = one_of_result[0]
+                    one_of_field_name = one_of_result[1]
+                    new_root_type_name = one_of_result[2]
+                    break
+
+            if new_root_type_name == "":
+                if isinstance(parenet_type_name, str):
+                    one_of_result = search_oneof(
+                        searching_type_name=new_key,
+                        type_pair=name_dict[parenet_type_name])
+                    if one_of_result:
+                        one_of_wrapper_field = one_of_result[0]
+                        one_of_field_name = one_of_result[1]
+                        new_root_type_name = one_of_result[2]
+
             if isinstance(value, dict):
                 new_value = OpenScenarioDecoder.convert_to_compatible_element(
-                    value, name_dict, key)
+                    input_dict=value,
+                    name_dict=name_dict,
+                    root_type_name=new_root_type_name,
+                    parenet_type_name=root_type_name)
+
+                # wrap one_of type
+                if one_of_wrapper_field != "":
+                    new_value = {one_of_field_name: new_value}
+                    res_dict[one_of_wrapper_field] = new_value
+                else:
+                    res_dict[new_key] = new_value
+
             elif isinstance(value, list):
                 new_value = [
                     OpenScenarioDecoder.convert_to_compatible_element(
-                        item, name_dict, key)
-                    if isinstance(item, dict) else item for item in value
+                        input_dict=value_element,
+                        name_dict=name_dict,
+                        root_type_name=new_root_type_name,
+                        parenet_type_name=root_type_name)
+                    for value_element in value
                 ]
+                res_dict[new_key] = new_value
             elif isinstance(value, str):
+                # enum + string value
                 decoded_enum = OpenScenarioDecoder.decode_enum(
                     name_dict, root_type_name, value)
+
                 if decoded_enum:
                     new_value = decoded_enum
                 else:
+                    if value.upper() == 'INF':
+                        value = float('inf')
                     new_value = value
+                res_dict[new_key] = new_value
             else:
                 new_value = value
-            res_dict[new_key] = new_value
+                res_dict[new_key] = new_value
+
         return res_dict

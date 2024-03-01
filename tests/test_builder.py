@@ -1,10 +1,29 @@
 import unittest
 from datetime import datetime
-from openscenario_msgs import CatalogDefinition, FileHeader
-from scenario_transfer.builder import CatalogDefinitionBuilder, FileHeaderBuilder
+from openscenario_msgs import CatalogDefinition, FileHeader, Entities
+from scenario_transfer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder
+from scenario_transfer.builder.entities_builder import EntityType
 
 
 class TestBuilder(unittest.TestCase):
+
+    def test_entities_builder(self):
+        builder = EntitiesBuilder(entities=[
+            EntityType.NPC, EntityType.NPC, EntityType.EGO,
+            EntityType.PEDESTRIAN, EntityType.NPC
+        ])
+
+        builder.add_default_entity(EntityType.NPC)
+
+        entities = builder.get_result()
+        self.assertIsInstance(entities, Entities)
+        self.assertEqual(len(entities.scenarioObjects), 6)
+        self.assertEqual(entities.scenarioObjects[0].name, "ego")
+        self.assertEqual(entities.scenarioObjects[1].name, "npc_1")
+        self.assertEqual(entities.scenarioObjects[2].name, "npc_2")
+        self.assertEqual(entities.scenarioObjects[3].name, "npc_3")
+        self.assertEqual(entities.scenarioObjects[4].name, "pedestrian_4")
+        self.assertEqual(entities.scenarioObjects[5].name, "npc_5")
 
     def test_file_header_builder(self):
         builder = FileHeaderBuilder()

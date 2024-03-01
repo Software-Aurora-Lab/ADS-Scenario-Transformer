@@ -1,0 +1,64 @@
+Route:
+  Waypoint:
+  - Position:
+      LanePosition:
+        Orientation:
+          h: 2.883901414579166
+          p: 0.0
+          r: 0.0
+          type: relative
+        laneId: '22'
+        offset: 0.1750399287494411
+        roadId: ''
+        s: 35.71471492399046
+    routeStrategy: shortest
+  - Position:
+      LanePosition:
+        Orientation:
+          h: 2.9157261658958027
+          p: 0.0
+          r: 0.0
+          type: relative
+        laneId: '210'
+        offset: 0.06300170676238262
+        roadId: ''
+        s: 2.538858550080951
+    routeStrategy: shortest
+  - Position:
+      LanePosition:
+        Orientation:
+          h: -1.807509475733681
+          p: 0.0
+          r: 0.0
+          type: relative
+        laneId: '192'
+        offset: 0.03822575755460798
+        roadId: ''
+        s: 8.520772720141439
+    routeStrategy: shortest
+  - Position:
+      LanePosition:
+        Orientation:
+          h: -1.8280984144348627
+          p: 0.0
+          r: 0.0
+          type: relative
+        laneId: '192'
+        offset: 0.1543493711405309
+        roadId: ''
+        s: 40.16484284485389
+    routeStrategy: shortest
+  - Position:
+      LanePosition:
+        Orientation:
+          h: -1.9883158777364047
+          p: 0.0
+          r: 0.0
+          type: relative
+        laneId: '149'
+        offset: 1.4604610803960605
+        roadId: ''
+        s: 26.739416492972932
+    routeStrategy: shortest
+  closed: false
+  name: route
