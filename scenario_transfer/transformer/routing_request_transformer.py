@@ -1,18 +1,21 @@
 from typing import Dict
-
 from lanelet2.core import LaneletMap
 from lanelet2.projection import UtmProjector
-
 from apollo_msgs import RoutingRequest
 from openscenario_msgs import Route
-
 from scenario_transfer.transformer import Transformer
 from scenario_transfer.transformer.lane_waypoint_transformer import LaneWaypointTransformer
 
 
-# properties = ["lanelet_map": lanelet2.core.LaneletMap, "projector": lanelet2.projection.UtmProjector, "apollo_map": apollo_msgs.Map, "route_name": str]
 class RoutingRequestTransformer(Transformer):
-
+    """
+    = properties = [
+        "lanelet_map": lanelet2.core.LaneletMap, 
+        "projector": lanelet2.projection.UtmProjector, 
+        "apollo_map_service": ApolloMapService, 
+        "route_name": str
+    ]
+    """
     Source = RoutingRequest
     Target = Route
 
@@ -36,9 +39,9 @@ class RoutingRequestTransformer(Transformer):
             "projector": projector
         })
 
-        if "apollo_map" in self.properties:
-            transformer.properties["apollo_map"] = self.properties[
-                "apollo_map"]
+        if "apollo_map_service" in self.properties:
+            transformer.properties["apollo_map_service"] = self.properties[
+                "apollo_map_service"]
 
         openscenario_waypoints = map(
             lambda lane_waypoint:

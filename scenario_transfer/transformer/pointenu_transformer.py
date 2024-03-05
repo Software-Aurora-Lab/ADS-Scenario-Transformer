@@ -1,17 +1,21 @@
 from typing import Dict, Tuple
 from enum import Enum
-
 import lanelet2
-
 from apollo_msgs.basic_msgs import PointENU
 from openscenario_msgs import Position, LanePosition, WorldPosition
+from scenario_transfer.transformer import Transformer
+from scenario_transfer.tools.geometry import Geometry
 
-from .transformer import Transformer
-from ..geometry import Geometry
 
-
-# properties = ["supported_position": PointENUTransformer.SupportedPosition, "lanelet_map": lanelet2.core.LaneletMap, "projector": lanelet2.projection.UtmProjector]
+#
 class PointENUTransformer(Transformer):
+    """
+    - properties = [
+        "supported_position": PointENUTransformer.SupportedPosition, 
+        "lanelet_map": lanelet2.core.LaneletMap, 
+        "projector": lanelet2.projection.UtmProjector
+    ]
+    """
 
     class SupportedPosition(Enum):
         Lane = 1

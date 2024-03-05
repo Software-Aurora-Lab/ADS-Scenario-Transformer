@@ -1,20 +1,22 @@
 from typing import Dict, Tuple
 import math
-
 from lanelet2.core import LaneletMap
 from lanelet2.projection import UtmProjector
-
-from apollo_msgs import (Map as ApolloHDMap, PointENU, LaneWaypoint)
+from apollo_msgs import PointENU, LaneWaypoint
 from openscenario_msgs import (Waypoint, RouteStrategy)
-from pkgs.scenorita.map_service import MapService
-
 from scenario_transfer.transformer import Transformer
 from scenario_transfer.transformer.pointenu_transformer import PointENUTransformer
+from scenario_transfer.tools.apollo_map_service import ApolloMapService
 
 
-# properties = ["lanelet_map": lanelet2.core.LaneletMap, "projector": lanelet2.projection.UtmProjector, "apollo_map": apollo_msgs.Map]
 class LaneWaypointTransformer(Transformer):
-
+    """
+    - properties = [
+        "lanelet_map": lanelet2.core.LaneletMap, 
+        "projector": lanelet2.projection.UtmProjector, 
+        "apollo_map_service": tools.apollo_map_service.ApolloMapService
+    ]
+    """
     Source = LaneWaypoint
     Target = Waypoint
 
@@ -54,15 +56,12 @@ class LaneWaypointTransformer(Transformer):
 
     def get_pose_from_apollo_waypoint(
             self, source: Source) -> Tuple[PointENU, float]:
-        apollo_map = self.properties["apollo_map"]
+        apollo_map_service = self.properties["apollo_map_service"]
 
         assert isinstance(
-            apollo_map,
-            ApolloHDMap), "apollo_map should be of type apollo_msgs.Map"
+            apollo_map_service, ApolloMapService
+        ), "apollo_map_service should be of type ApolloMapService"
 
-        map_service = MapService()
-        map_service.load_map_from_proto(apollo_map)
-        (point,
-         heading) = map_service.get_lane_coord_and_heading(lane_id=source.id,
-                                                           s=source.s)
+        (point, heading) = apollo_map_service.get_lane_coord_and_heading(
+            lane_id=source.id, s=source.s)
         return (PointENU(x=point.x, y=point.y, z=0), heading)

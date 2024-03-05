@@ -1,15 +1,12 @@
 import unittest
-
 import lanelet2
 from lanelet2.projection import UtmProjector
 from lanelet2.io import Origin
-
 from apollo_msgs.basic_msgs import PointENU
 from apollo_msgs.routing_msgs import LaneWaypoint
 from openscenario_msgs import Waypoint, LanePosition
-
 from scenario_transfer import LaneWaypointTransformer
-from scenario_transfer.apollo_map_io_handler import ApolloMapIOHandler as MapIOHandler
+from scenario_transfer.tools.apollo_map_service import ApolloMapService
 
 
 class TestLaneWaypointTransformer(unittest.TestCase):
@@ -19,8 +16,8 @@ class TestLaneWaypointTransformer(unittest.TestCase):
         self.utm_projector = UtmProjector(origin)
         self.lanelet_map = lanelet2.io.load(
             "./samples/map/BorregasAve/lanelet2_map.osm", self.utm_projector)
-        map_io_handler = MapIOHandler()
-        self.apollo_map = map_io_handler.load_map(
+        self.apollo_map_service = ApolloMapService()
+        self.apollo_map_service.load_map_from_file(
             "./samples/map/BorregasAve/base_map.bin")
 
     def test_utm_type_lane_waypoint_transformer(self):
@@ -52,7 +49,7 @@ class TestLaneWaypointTransformer(unittest.TestCase):
             properties={
                 "lanelet_map": self.lanelet_map,
                 "projector": self.utm_projector,
-                "apollo_map": self.apollo_map
+                "apollo_map_service": self.apollo_map_service
             })
 
         openscenario_waypoint = transformer.transform(source=lane_waypoint)

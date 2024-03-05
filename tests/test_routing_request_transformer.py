@@ -4,12 +4,10 @@ import json
 import lanelet2
 from lanelet2.projection import UtmProjector
 from lanelet2.io import Origin
-
 from apollo_msgs import RoutingRequest
 from openscenario_msgs import Route, LanePosition
-
 from scenario_transfer import RoutingRequestTransformer
-from scenario_transfer.apollo_map_io_handler import ApolloMapIOHandler as MapIOHandler
+from scenario_transfer.tools.apollo_map_service import ApolloMapService
 
 
 class TestRoutingRequestTransformer(unittest.TestCase):
@@ -19,8 +17,8 @@ class TestRoutingRequestTransformer(unittest.TestCase):
         self.utm_projector = UtmProjector(origin)
         self.lanelet_map = lanelet2.io.load(
             "./samples/map/BorregasAve/lanelet2_map.osm", self.utm_projector)
-        map_io_handler = MapIOHandler()
-        self.apollo_map = map_io_handler.load_map(
+        self.apollo_map_service = ApolloMapService()
+        self.apollo_map_service.load_map_from_file(
             "./samples/map/BorregasAve/base_map.bin")
 
     def test_routing_request(self):
@@ -28,7 +26,7 @@ class TestRoutingRequestTransformer(unittest.TestCase):
             properties={
                 "lanelet_map": self.lanelet_map,
                 "projector": self.utm_projector,
-                "apollo_map": self.apollo_map,
+                "apollo_map_service": self.apollo_map_service,
                 "route_name": "test_route"
             })
         with open(
