@@ -66,10 +66,15 @@ class OpenScenarioCoder:
         return results
 
     @staticmethod
-    def is_oneof_type(type_name) -> bool:
-        return type_name in [
-            "StoryboardElement", "CatalogElement", "Entity", "EntityObject"
+    def is_oneof_type_or_skipped_type(type_name) -> bool:
+        one_of_type = [
+            "StoryboardElement",
+            "CatalogElement",
+            "Entity",
+            "EntityObject",
         ]
+        skipped_type = ["PrivateAction"]
+        return type_name in one_of_type or type_name in skipped_type
 
 
 class OpenScenarioEncoder:
@@ -113,18 +118,20 @@ class OpenScenarioEncoder:
                 # object
                 new_key = type_name
 
-                if OpenScenarioCoder.is_oneof_type(type_name):
-                    # unwrap dictionary
-                    for k, t in name_dict[type_name]:
-                        if k == list(value.keys())[0]:
-                            new_key = t
-                            new_value = value[k]
-                            break
-                    new_value = OpenScenarioEncoder.convert_to_compatible_element(
-                        new_value, name_dict, new_key)
-                elif isinstance(value, dict):
-                    new_value = OpenScenarioEncoder.convert_to_compatible_element(
-                        value, name_dict, new_key)
+                if isinstance(value, dict):
+                    if OpenScenarioCoder.is_oneof_type_or_skipped_type(
+                            type_name):
+                        # unwrap dictionary
+                        for k, t in name_dict[type_name]:
+                            if k == list(value.keys())[0]:
+                                new_key = t
+                                new_value = value[k]
+                                break
+                        new_value = OpenScenarioEncoder.convert_to_compatible_element(
+                            new_value, name_dict, new_key)
+                    else:
+                        new_value = OpenScenarioEncoder.convert_to_compatible_element(
+                            value, name_dict, new_key)
                 elif isinstance(value, list):
                     new_value = [
                         OpenScenarioEncoder.convert_to_compatible_element(
@@ -215,7 +222,7 @@ class OpenScenarioDecoder:
                 type_pair: Dict[str, str]) -> Optional[Tuple[str, str, str]]:
             one_of_wrapper_field = ""
             for field_name, type_name in type_pair:
-                if OpenScenarioCoder.is_oneof_type(type_name):
+                if OpenScenarioCoder.is_oneof_type_or_skipped_type(type_name):
                     one_of_wrapper_field = field_name
 
                     for one_of_field, one_of_type_name in name_dict[type_name]:

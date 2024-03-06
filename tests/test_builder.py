@@ -1,12 +1,19 @@
 import unittest
+import yaml
 from datetime import datetime
-from openscenario_msgs import CatalogDefinition, FileHeader, Entities, ParameterDeclarations, ParameterDeclaration, ScenarioDefinition
-from scenario_transfer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, TrafficSignalControllerBuilder, TrafficSignalStateBuilder, ScenarioDefinitionBuilder
+from openscenario_msgs import CatalogDefinition, FileHeader, Entities, ParameterDeclarations, ParameterDeclaration, ScenarioDefinition, Route, Private, ScenarioObject, TeleportAction, RoutingAction, AssignRouteAction, AcquirePositionAction
+from scenario_transfer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, TrafficSignalControllerBuilder, TrafficSignalStateBuilder, ScenarioDefinitionBuilder, PrivateBuilder
 from scenario_transfer.builder.entities_builder import EntityType
 from scenario_transfer.builder.road_network_builder import RoadNetworkBuilder
 
+from scenario_transfer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
+
 
 class TestBuilder(unittest.TestCase):
+
+    def setUp(self):
+        input_dir = "./tests/data/"
+        self.route_file_path = input_dir + "openscenario_route.yaml"
 
     def test_entities_builder(self):
         builder = EntitiesBuilder(entities=[
@@ -117,11 +124,62 @@ class TestBuilder(unittest.TestCase):
         ])
         builder.make_storyboard()
         scenario_definition = builder.get_result()
+
         self.assertIsInstance(scenario_definition, ScenarioDefinition)
         self.assertIsNotNone(scenario_definition.roadNetwork)
         self.assertIsNotNone(scenario_definition.catalogLocations)
         self.assertIsNotNone(scenario_definition.entities)
         self.assertIsNotNone(scenario_definition.storyboard)
+
+    def test_private_builder(self):
+        with open(self.route_file_path, 'r') as file:
+            input = file.read()
+
+        dict = yaml.safe_load(input)
+
+        openscenario_route = OpenScenarioDecoder.decode_yaml_to_pyobject(
+            yaml_dict=dict, type_=Route, exclude_top_level_key=True)
+
+        entities_builder = EntitiesBuilder(entities=[EntityType.EGO])
+        ego = entities_builder.get_result().scenarioObjects[0]
+
+        self.assertIsInstance(openscenario_route, Route)
+        self.assertIsInstance(ego, ScenarioObject)
+
+        private_builder = PrivateBuilder(
+            waypoints=openscenario_route.waypoints)
+        private_builder.make_entity(ego)
+        private_builder.make_teleport_action()
+        private_builder.make_routing_action()
+
+        openscenario_private = private_builder.get_result()
+
+        self.assertIsInstance(openscenario_private, Private,
+                              "The private should be of type Private")
+
+        self.assertEqual(openscenario_private.entityRef, "ego")
+
+        teleport_action = openscenario_private.privateActions[0].teleportAction
+        routing_action = openscenario_private.privateActions[1].routingAction
+        self.assertIsInstance(teleport_action, TeleportAction)
+        self.assertIsInstance(routing_action, RoutingAction)
+
+        start_lane_position = teleport_action.position.lanePosition
+        self.assertEqual(start_lane_position.lane_id, "22")
+        self.assertEqual(start_lane_position.offset, 0.1750399287494411)
+        self.assertEqual(start_lane_position.s, 35.714714923990464)
+        self.assertEqual(start_lane_position.orientation.h, 2.883901414579166)
+
+        self.assertIsInstance(routing_action.assignRouteAction,
+                              AssignRouteAction)
+
+        end_waypoint = routing_action.assignRouteAction.route.waypoints[-1]
+        end_lane_position = end_waypoint.position.lanePosition
+
+        self.assertEqual(end_lane_position.lane_id, "149")
+        self.assertEqual(end_lane_position.offset, 1.4604610803960605)
+        self.assertEqual(end_lane_position.s, 26.739416492972932)
+        self.assertEqual(end_lane_position.orientation.h, -1.9883158777364047)
 
 
 if __name__ == '__main__':

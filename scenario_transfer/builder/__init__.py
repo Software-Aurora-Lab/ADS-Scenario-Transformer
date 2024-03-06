@@ -11,3 +11,4 @@ from .parameter_declarations_builder import ParameterDeclarationsBuilder, Parame
 from .scenario_definition_builder import ScenarioDefinitionBuilder
 from .storyboard_builder import StoryboardBuilder
 from .traffic_signal_controller_builder import TrafficSignalControllerBuilder, TrafficSignalStateBuilder
+from .private_builder import PrivateBuilder

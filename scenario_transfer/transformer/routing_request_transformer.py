@@ -2,9 +2,10 @@ from typing import Dict
 from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
 from apollo_msgs import RoutingRequest
-from openscenario_msgs import Route
+from openscenario_msgs import Route, Private, ScenarioObject
 from scenario_transfer.transformer import Transformer
 from scenario_transfer.transformer.lane_waypoint_transformer import LaneWaypointTransformer
+from scenario_transfer.builder.private_builder import PrivateBuilder
 
 
 class RoutingRequestTransformer(Transformer):
@@ -13,11 +14,12 @@ class RoutingRequestTransformer(Transformer):
         "lanelet_map": lanelet2.core.LaneletMap, 
         "projector": lanelet2.projection.MGRSProjector, 
         "apollo_map_service": ApolloMapService, 
-        "route_name": str
+        "route_name": str,
+        "ego_scenario_object": ScenarioObject
     ]
     """
     Source = RoutingRequest
-    Target = Route
+    Target = Private
 
     def __init__(self, properties: Dict = {}):
         self.properties = properties
@@ -26,6 +28,7 @@ class RoutingRequestTransformer(Transformer):
 
         lanelet_map = self.properties["lanelet_map"]
         projector = self.properties["projector"]
+        ego = self.properties["ego_scenario_object"]
 
         assert isinstance(
             lanelet_map,
@@ -33,6 +36,9 @@ class RoutingRequestTransformer(Transformer):
         assert isinstance(
             projector, MGRSProjector
         ), "projector should be of type lanelet2.projection.MGRSProjector"
+
+        assert isinstance(
+            ego, ScenarioObject), "ego should be of type ScenarioObject"
 
         transformer = LaneWaypointTransformer(properties={
             "lanelet_map": lanelet_map,
@@ -47,11 +53,16 @@ class RoutingRequestTransformer(Transformer):
             lambda lane_waypoint:
             (transformer.transform(source=lane_waypoint)), source.waypoint)
 
+        private_builder = PrivateBuilder(
+            waypoints=list(openscenario_waypoints))
+        private_builder.make_entity(ego)
+        private_builder.make_teleport_action()
+        private_builder.make_routing_action()
+
         route_name = self.properties[
             "route_name"] if "route_name" in self.properties else ""
-        route = Route(closed=False,
-                      name=route_name,
-                      parameterDeclarations=[],
-                      waypoints=openscenario_waypoints)
 
-        return route
+        private_builder.update_route_name(name=route_name)
+
+        private = private_builder.get_result()
+        return private
