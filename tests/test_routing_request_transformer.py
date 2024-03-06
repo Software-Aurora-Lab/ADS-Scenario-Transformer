@@ -2,7 +2,7 @@ import unittest
 import json
 
 import lanelet2
-from lanelet2.projection import UtmProjector
+from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
 from apollo_msgs import RoutingRequest
 from openscenario_msgs import Route, LanePosition
@@ -14,9 +14,9 @@ class TestRoutingRequestTransformer(unittest.TestCase):
 
     def setUp(self):
         origin = Origin(37.04622247590861, -123.00000000000001, 0)
-        self.utm_projector = UtmProjector(origin)
+        self.mgrs_Projector = MGRSProjector(origin)
         self.lanelet_map = lanelet2.io.load(
-            "./samples/map/BorregasAve/lanelet2_map.osm", self.utm_projector)
+            "./samples/map/BorregasAve/lanelet2_map.osm", self.mgrs_Projector)
         self.apollo_map_service = ApolloMapService()
         self.apollo_map_service.load_map_from_file(
             "./samples/map/BorregasAve/base_map.bin")
@@ -25,7 +25,7 @@ class TestRoutingRequestTransformer(unittest.TestCase):
         routing_request_transformer = RoutingRequestTransformer(
             properties={
                 "lanelet_map": self.lanelet_map,
-                "projector": self.utm_projector,
+                "projector": self.mgrs_Projector,
                 "apollo_map_service": self.apollo_map_service,
                 "route_name": "test_route"
             })

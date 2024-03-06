@@ -12,7 +12,7 @@ pyproj = "^3.6.1"
 pyecore = "^0.14.0"
 pyecoregen = "^0.5.1"
 plantuml = "^0.3.0"
-lanelet2 = "^1.2.1"
+lanelet2 = {path = "pkgs/lanelet2-1.2.1-cp310-cp310-manylinux_2_31_x86_64.whl"}
 pyyaml = "^6.0.1"
 protobuf3-to-dict = "^0.1.5"
 shapely = "^2.0.2"

@@ -1,7 +1,7 @@
 import unittest
 
 import lanelet2
-from lanelet2.projection import UtmProjector
+from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
 
 from apollo_msgs.basic_msgs import PointENU
@@ -12,9 +12,9 @@ class TestPointENUTransformer(unittest.TestCase):
 
     def setUp(self):
         origin = Origin(37.04622247590861, -123.00000000000001, 0)
-        self.utm_projector = UtmProjector(origin)
+        self.mgrs_Projector = MGRSProjector(origin)
         self.map = lanelet2.io.load(
-            "./samples/map/BorregasAve/lanelet2_map.osm", self.utm_projector)
+            "./samples/map/BorregasAve/lanelet2_map.osm", self.mgrs_Projector)
 
     def test_transform_world_position(self):
         point = PointENU(x=587079.3045861976, y=4141574.299574421, z=0)
@@ -36,7 +36,7 @@ class TestPointENUTransformer(unittest.TestCase):
             properties={
                 "supported_position": laneType,
                 "lanelet_map": self.map,
-                "projector": self.utm_projector
+                "projector": self.mgrs_Projector
             })
         position = transformer.transform(source=(point, 0.0))
 

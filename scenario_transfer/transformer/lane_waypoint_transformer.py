@@ -1,7 +1,7 @@
 from typing import Dict, Tuple
 import math
 from lanelet2.core import LaneletMap
-from lanelet2.projection import UtmProjector
+from lanelet2.projection import MGRSProjector
 from apollo_msgs import PointENU, LaneWaypoint
 from openscenario_msgs import (Waypoint, RouteStrategy)
 from scenario_transfer.transformer import Transformer
@@ -13,7 +13,7 @@ class LaneWaypointTransformer(Transformer):
     """
     - properties = [
         "lanelet_map": lanelet2.core.LaneletMap, 
-        "projector": lanelet2.projection.UtmProjector, 
+        "projector": lanelet2.projection.MGRSProjector, 
         "apollo_map_service": tools.apollo_map_service.ApolloMapService
     ]
     """
@@ -39,8 +39,8 @@ class LaneWaypointTransformer(Transformer):
             lanelet_map,
             LaneletMap), "lanelet should be of type lanelet2.core.Lanelet"
         assert isinstance(
-            projector, UtmProjector
-        ), "projector should be of type lanelet2.projection.UtmProjector"
+            projector, MGRSProjector
+        ), "projector should be of type lanelet2.projection.MGRSProjector"
 
         pointenu_transformer = PointENUTransformer(
             properties={
@@ -51,7 +51,7 @@ class LaneWaypointTransformer(Transformer):
             })
         position = pointenu_transformer.transform((pose, heading))
 
-        return Waypoint(route_strategy=RouteStrategy.ROUTESTRATEGY_SHORTEST,
+        return Waypoint(routeStrategy=RouteStrategy.ROUTESTRATEGY_SHORTEST,
                         position=position)
 
     def get_pose_from_apollo_waypoint(

@@ -1,7 +1,7 @@
 from typing import Optional
 
 import lanelet2
-from lanelet2.projection import UtmProjector
+from lanelet2.projection import MGRSProjector
 from lanelet2.core import (Lanelet, LaneletMap, GPSPoint, BasicPoint2d,
                            BasicPoint3d, getId, Point2d, Point3d)
 from lanelet2.io import Origin
@@ -52,7 +52,7 @@ class Geometry:
         return GPSPoint(lat=lat, lon=lon, ele=0)
 
     @staticmethod
-    def project_UTM_to_lanelet(projector: UtmProjector,
+    def project_UTM_to_lanelet(projector: MGRSProjector,
                                pose: PointENU) -> BasicPoint3d:
         gps_point = Geometry.utm_to_WGS(pose)
         return projector.forward(gps_point)

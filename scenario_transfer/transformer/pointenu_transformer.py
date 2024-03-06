@@ -1,6 +1,8 @@
 from typing import Dict, Tuple
 from enum import Enum
 import lanelet2
+from lanelet2.core import LaneletMap
+from lanelet2.projection import MGRSProjector
 from apollo_msgs.basic_msgs import PointENU
 from openscenario_msgs import Position, LanePosition, WorldPosition
 from scenario_transfer.transformer import Transformer
@@ -13,7 +15,7 @@ class PointENUTransformer(Transformer):
     - properties = [
         "supported_position": PointENUTransformer.SupportedPosition, 
         "lanelet_map": lanelet2.core.LaneletMap, 
-        "projector": lanelet2.projection.UtmProjector
+        "projector": lanelet2.projection.MGRSProjector
     ]
     """
 
@@ -38,11 +40,11 @@ class PointENUTransformer(Transformer):
         projector = self.properties["projector"]
 
         assert isinstance(
-            lanelet_map, lanelet2.core.LaneletMap
+            lanelet_map, LaneletMap
         ), "lanelet_map should be of type lanelet2.core.LaneletMap"
         assert isinstance(
-            projector, lanelet2.projection.UtmProjector
-        ), "projector should be of type lanelet2.projection.UtmProjector"
+            projector, MGRSProjector
+        ), "projector should be of type lanelet2.projection.MGRSProjector"
 
         projected_point = Geometry.project_UTM_to_lanelet(projector=projector,
                                                           pose=source[0])

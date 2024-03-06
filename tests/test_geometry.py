@@ -1,7 +1,7 @@
 import unittest
 
 import lanelet2
-from lanelet2.projection import UtmProjector
+from lanelet2.projection import MGRSProjector
 from lanelet2.core import BasicPoint3d
 from lanelet2.io import Origin
 
@@ -14,9 +14,9 @@ class TestGeometry(unittest.TestCase):
 
     def setUp(self):
         origin = Origin(37.04622247590861, -123.00000000000001, 0)
-        self.utm_projector = UtmProjector(origin)
+        self.mgrs_Projector = MGRSProjector(origin)
         self.map = lanelet2.io.load(
-            "./samples/map/BorregasAve/lanelet2_map.osm", self.utm_projector)
+            "./samples/map/BorregasAve/lanelet2_map.osm", self.mgrs_Projector)
 
     def test_load_map(self):
         self.assertIsNotNone(self.map, "Map should not be None")
@@ -38,7 +38,7 @@ class TestGeometry(unittest.TestCase):
 
         for pose, expectation in zip(poses, expectations):
             projected = Geometry.project_UTM_to_lanelet(
-                projector=self.utm_projector, pose=pose)
+                projector=self.mgrs_Projector, pose=pose)
             self.assertAlmostEqual(
                 abs(projected.x - expectation.x),
                 second=1.0,

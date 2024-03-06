@@ -8,75 +8,14 @@ from google.protobuf.descriptor import Descriptor
 from scenario_transfer.openscenario.openscenario_attributes_name_mapper import OpenScenarioAttributesNameMapper
 
 
-class OpenScenarioEncoder:
-
-    @staticmethod
-    def encode_proto_pyobject_to_yaml(proto_pyobject):
-        proto_dict = protobuf_to_dict(proto_pyobject, use_enum_labels=True)
-
-        toplevel_name_included_dict = {
-            type(proto_pyobject).__name__: proto_dict
-        }
-
-        name_dict = OpenScenarioAttributesNameMapper().parse_definition()
-
-        result_dict = OpenScenarioEncoder.convert_to_compatible_element(
-            toplevel_name_included_dict, name_dict,
-            type(proto_pyobject).__name__)
-
-        yaml_data = yaml.dump(result_dict, default_flow_style=False)
-        return yaml_data
-
-    @staticmethod
-    def convert_to_compatible_element(input_dict, name_dict, root_type_name):
-        res_dict = {}
-        for key, value in input_dict.items():
-            matches = difflib.get_close_matches(key, name_dict[root_type_name])
-
-            new_key = key if len(matches) == 0 else matches[0]
-            new_value = value
-            if isinstance(value, dict):
-                new_value = OpenScenarioEncoder.convert_to_compatible_element(
-                    value, name_dict, new_key)
-            elif isinstance(value, list):
-                new_value = [
-                    OpenScenarioEncoder.convert_to_compatible_element(
-                        item, name_dict, new_key)
-                    if isinstance(item, dict) else item for item in value
-                ]
-            elif isinstance(value, str):
-                if '_' in value:  # enum value
-                    new_value = value.split('_')[-1].lower()
-                else:
-                    new_value = value
-            else:
-                new_value = value
-            res_dict[new_key] = new_value
-        return res_dict
-
-
-class OpenScenarioDecoder:
-    T = TypeVar('T')
+class OpenScenarioCoder:
     field_name_cache = {}
-
-    @staticmethod
-    def decode_yaml_to_pyobject(yaml_dict: Dict, type_: Type[T],
-                                exclude_top_level_key: bool) -> T:
-
-        OpenScenarioDecoder.update_field_names_in_proto_files()
-
-        if exclude_top_level_key:
-            yaml_dict = yaml_dict[list(yaml_dict.keys())[0]]
-
-        data_dict = OpenScenarioDecoder.convert_to_compatible_element(
-            yaml_dict, OpenScenarioDecoder.field_name_cache, type_.__name__)
-
-        return type_(**data_dict)
 
     @staticmethod
     def update_field_names_in_proto_files(
             openscenario_protobuf_directory="./openscenario_msgs"):
-        if OpenScenarioDecoder.field_name_cache:
+
+        if OpenScenarioCoder.field_name_cache:
             return
 
         proto_files = [
@@ -88,9 +27,9 @@ class OpenScenarioDecoder:
             module_name = proto_file.replace(".proto", "_pb2")
             try:
                 package_module = importlib.import_module(module_name)
-                field_names = OpenScenarioDecoder.list_field_names_in_protobuf_package(
+                field_names = OpenScenarioCoder.list_field_names_in_protobuf_package(
                     package_module)
-                OpenScenarioDecoder.field_name_cache.update(field_names)
+                OpenScenarioCoder.field_name_cache.update(field_names)
             except ImportError as e:
                 print(f"Failed to import {module_name}: {e}")
 
@@ -127,6 +66,101 @@ class OpenScenarioDecoder:
         return results
 
     @staticmethod
+    def is_oneof_type(type_name) -> bool:
+        return type_name in [
+            "StoryboardElement", "CatalogElement", "Entity", "EntityObject"
+        ]
+
+
+class OpenScenarioEncoder:
+
+    @staticmethod
+    def encode_proto_pyobject_to_yaml(proto_pyobject):
+        proto_dict = protobuf_to_dict(proto_pyobject, use_enum_labels=True)
+
+        OpenScenarioCoder.update_field_names_in_proto_files()
+
+        result_dict = OpenScenarioEncoder.convert_to_compatible_element(
+            input_dict=proto_dict,
+            name_dict=OpenScenarioCoder.field_name_cache,
+            root_type_name=type(proto_pyobject).__name__)
+
+        toplevel_name_included_dict = {
+            type(proto_pyobject).__name__: result_dict
+        }
+        yaml_data = yaml.dump(toplevel_name_included_dict,
+                              default_flow_style=False)
+        return yaml_data
+
+    @staticmethod
+    def convert_to_compatible_element(input_dict, name_dict, root_type_name):
+
+        def search_type_name(field_name: str,
+                             root_type_name: str) -> Optional[str]:
+            for field_name_key, type_name in name_dict[root_type_name]:
+                if field_name == field_name_key:
+                    return type_name
+            return None
+
+        res_dict = {}
+        for key, value in input_dict.items():
+            type_name = search_type_name(field_name=key,
+                                         root_type_name=root_type_name)
+            new_key = key
+            new_value = value
+
+            if isinstance(type_name, str):
+                # object
+                new_key = type_name
+
+                if OpenScenarioCoder.is_oneof_type(type_name):
+                    # unwrap dictionary
+                    for k, t in name_dict[type_name]:
+                        if k == list(value.keys())[0]:
+                            new_key = t
+                            new_value = value[k]
+                            break
+                    new_value = OpenScenarioEncoder.convert_to_compatible_element(
+                        new_value, name_dict, new_key)
+                elif isinstance(value, dict):
+                    new_value = OpenScenarioEncoder.convert_to_compatible_element(
+                        value, name_dict, new_key)
+                elif isinstance(value, list):
+                    new_value = [
+                        OpenScenarioEncoder.convert_to_compatible_element(
+                            input_dict=item,
+                            name_dict=name_dict,
+                            root_type_name=new_key) for item in value
+                    ]
+            elif isinstance(type_name, dict):
+                # enum
+                for enum_key, enum_value in type_name.items():
+                    if value == enum_value:
+                        new_value = enum_key.lower()
+                        break
+
+            res_dict[new_key] = new_value
+        return res_dict
+
+
+class OpenScenarioDecoder:
+    T = TypeVar('T')
+
+    @staticmethod
+    def decode_yaml_to_pyobject(yaml_dict: Dict, type_: Type[T],
+                                exclude_top_level_key: bool) -> T:
+
+        OpenScenarioCoder.update_field_names_in_proto_files()
+
+        if exclude_top_level_key:
+            yaml_dict = yaml_dict[list(yaml_dict.keys())[0]]
+
+        data_dict = OpenScenarioDecoder.convert_to_compatible_element(
+            yaml_dict, OpenScenarioCoder.field_name_cache, type_.__name__)
+
+        return type_(**data_dict)
+
+    @staticmethod
     def decode_enum(name_dict, root_type_name, target: str) -> Optional[str]:
         """
         Decode enum value from yaml to original name.
@@ -147,10 +181,11 @@ class OpenScenarioDecoder:
         return None
 
     @staticmethod
-    def is_oneof_type(type_name) -> bool:
-        return type_name in [
-            "StoryboardElement", "CatalogElement", "Entity", "EntityObject"
-        ]
+    def is_enum(name_dict, root_type_name, key) -> bool:
+        for k, t in name_dict[root_type_name]:
+            if k == key and isinstance(t, dict):
+                return True
+        return False
 
     @staticmethod
     def convert_to_compatible_element(input_dict,
@@ -180,7 +215,7 @@ class OpenScenarioDecoder:
                 type_pair: Dict[str, str]) -> Optional[Tuple[str, str, str]]:
             one_of_wrapper_field = ""
             for field_name, type_name in type_pair:
-                if OpenScenarioDecoder.is_oneof_type(type_name):
+                if OpenScenarioCoder.is_oneof_type(type_name):
                     one_of_wrapper_field = field_name
 
                     for one_of_field, one_of_type_name in name_dict[type_name]:
@@ -257,10 +292,10 @@ class OpenScenarioDecoder:
                 res_dict[new_key] = new_value
             elif isinstance(value, str):
                 # enum + string value
-                decoded_enum = OpenScenarioDecoder.decode_enum(
-                    name_dict, root_type_name, value)
 
-                if decoded_enum:
+                if OpenScenarioDecoder.is_enum(name_dict, root_type_name, key):
+                    decoded_enum = OpenScenarioDecoder.decode_enum(
+                        name_dict, root_type_name, value)
                     new_value = decoded_enum
                 else:
                     if value.upper() == 'INF':

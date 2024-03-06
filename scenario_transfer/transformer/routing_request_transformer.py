@@ -1,6 +1,6 @@
 from typing import Dict
 from lanelet2.core import LaneletMap
-from lanelet2.projection import UtmProjector
+from lanelet2.projection import MGRSProjector
 from apollo_msgs import RoutingRequest
 from openscenario_msgs import Route
 from scenario_transfer.transformer import Transformer
@@ -11,7 +11,7 @@ class RoutingRequestTransformer(Transformer):
     """
     = properties = [
         "lanelet_map": lanelet2.core.LaneletMap, 
-        "projector": lanelet2.projection.UtmProjector, 
+        "projector": lanelet2.projection.MGRSProjector, 
         "apollo_map_service": ApolloMapService, 
         "route_name": str
     ]
@@ -31,8 +31,8 @@ class RoutingRequestTransformer(Transformer):
             lanelet_map,
             LaneletMap), "lanelet should be of type lanelet2.core.Lanelet"
         assert isinstance(
-            projector, UtmProjector
-        ), "projector should be of type lanelet2.projection.UtmProjector"
+            projector, MGRSProjector
+        ), "projector should be of type lanelet2.projection.MGRSProjector"
 
         transformer = LaneWaypointTransformer(properties={
             "lanelet_map": lanelet_map,

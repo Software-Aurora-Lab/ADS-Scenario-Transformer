@@ -22,6 +22,6 @@ message Route {
 
 // Message for Waypoint
 message Waypoint {
-    required RouteStrategy route_strategy = 1;  // 1..1
+    required RouteStrategy routeStrategy = 1;  // 1..1
     required Position position = 2;             // 1..1
 }

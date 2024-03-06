@@ -1,6 +1,6 @@
 import unittest
 import lanelet2
-from lanelet2.projection import UtmProjector
+from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
 from apollo_msgs.basic_msgs import PointENU
 from apollo_msgs.routing_msgs import LaneWaypoint
@@ -13,9 +13,10 @@ class TestLaneWaypointTransformer(unittest.TestCase):
 
     def setUp(self):
         origin = Origin(37.04622247590861, -123.00000000000001, 0)
-        self.utm_projector = UtmProjector(origin)
+        print(dir(MGRSProjector))
+        self.mgrs_projector = MGRSProjector(Origin(0, 0, 0))
         self.lanelet_map = lanelet2.io.load(
-            "./samples/map/BorregasAve/lanelet2_map.osm", self.utm_projector)
+            "./samples/map/BorregasAve/lanelet2_map.osm", self.mgrs_projector)
         self.apollo_map_service = ApolloMapService()
         self.apollo_map_service.load_map_from_file(
             "./samples/map/BorregasAve/base_map.bin")
@@ -26,7 +27,7 @@ class TestLaneWaypointTransformer(unittest.TestCase):
         lane_waypoint = LaneWaypoint(pose=point)
         transformer = LaneWaypointTransformer(properties={
             "lanelet_map": self.lanelet_map,
-            "projector": self.utm_projector
+            "projector": self.mgrs_projector
         })
 
         openscenario_waypoint = transformer.transform(source=lane_waypoint)
@@ -48,7 +49,7 @@ class TestLaneWaypointTransformer(unittest.TestCase):
         transformer = LaneWaypointTransformer(
             properties={
                 "lanelet_map": self.lanelet_map,
-                "projector": self.utm_projector,
+                "projector": self.mgrs_projector,
                 "apollo_map_service": self.apollo_map_service
             })
 

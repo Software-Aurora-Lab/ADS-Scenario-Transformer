@@ -127,11 +127,12 @@ description = "Map handling framework for automated driving."
 optional = false
 python-versions = "*"
 files = [
-    {file = "lanelet2-1.2.1-cp310-cp310-manylinux_2_31_x86_64.whl", hash = "sha256:2ed515c4e0fdfb341f1858d1ca4fa64829c9c6d440fd323acc9420b914ea0621"},
-    {file = "lanelet2-1.2.1-cp311-cp311-manylinux_2_31_x86_64.whl", hash = "sha256:c06bfca859b1454da9799f33091a3e1cb72ee195fb893dd2b30f9ca733e35381"},
-    {file = "lanelet2-1.2.1-cp38-cp38-manylinux_2_27_x86_64.whl", hash = "sha256:6b1647511e512ae588edeb1607f14f098bae3163d4fe215930b9f3ccd8e85c9a"},
-    {file = "lanelet2-1.2.1-cp39-cp39-manylinux_2_27_x86_64.whl", hash = "sha256:7658f5e0254652f70b70c76af2a1d837a4a645a0675525fb4485d2cd8e15a627"},
+    {file = "lanelet2-1.2.1-cp310-cp310-manylinux_2_31_x86_64.whl", hash = "sha256:ce6e1b7572e0de653157f5bd4eb352674c4ce77d7422539e79d95ec3215caf13"},
 ]
+
+[package.source]
+type = "file"
+url = "pkgs/lanelet2-1.2.1-cp310-cp310-manylinux_2_31_x86_64.whl"
 
 [[package]]
 name = "lxml"
@@ -745,4 +746,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "f8ccd0767a8f08eca65590d87f99041f5178a3f9d2ab1c7e73839d307f34b8db"
+content-hash = "c0055746c162b7b01e46d3742032d9dd36a5be62adda619c680ba964bc591254"

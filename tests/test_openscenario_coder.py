@@ -58,6 +58,40 @@ class TestOpenScenarioCoder(unittest.TestCase):
         self.assertEqual(end_lane_position.s, 26.739416492972932)
         self.assertEqual(end_lane_position.orientation.h, -1.9883158777364047)
 
+    def test_encoding_scenario_object(self):
+        with open(self.scenario_object_file_path, 'r') as file:
+            input = file.read()
+
+        dict = yaml.safe_load(input)
+
+        scenario_object = OpenScenarioDecoder.decode_yaml_to_pyobject(
+            yaml_dict=dict, type_=ScenarioObject, exclude_top_level_key=False)
+        encoded_data = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
+            scenario_object)
+        print("encoded_data", encoded_data)
+
+        decoded_data = yaml.safe_load(encoded_data)
+
+        self.assertIsNotNone(decoded_data["ScenarioObject"])
+        self.assertIsNotNone(decoded_data["ScenarioObject"]["Vehicle"])
+
+    def test_encoding_openscenario_entities(self):
+        with open(self.entities_file_path, 'r') as file:
+            input = file.read()
+
+        dict = yaml.safe_load(input)
+
+        entities = OpenScenarioDecoder.decode_yaml_to_pyobject(
+            yaml_dict=dict, type_=Entities, exclude_top_level_key=True)
+        encoded_data = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
+            entities)
+        print("encoded_data", encoded_data)
+
+        decoded_data = yaml.safe_load(encoded_data)
+
+        # TODO: Properties
+        # assert dict == decoded_data
+
     def test_decoding_route(self):
         with open(self.route_file_path, 'r') as file:
             input = file.read()
@@ -217,7 +251,7 @@ class TestOpenScenarioCoder(unittest.TestCase):
         self.assert_vehicle(scenario_object.entityObject.vehicle)
         self.assert_object_controller(scenario_object.objectController)
 
-    def test_openscenario_entities(self):
+    def test_decoding_openscenario_entities(self):
         with open(self.entities_file_path, 'r') as file:
             input = file.read()
 
