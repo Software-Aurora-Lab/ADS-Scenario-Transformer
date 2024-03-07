@@ -1,9 +1,6 @@
 import unittest
 import yaml
-import json
-
 from openscenario_msgs import Route, LanePosition, ObjectController, Vehicle, EntityObject, ScenarioObject, Entities, ParameterDeclarations
-
 from scenario_transfer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
 
 

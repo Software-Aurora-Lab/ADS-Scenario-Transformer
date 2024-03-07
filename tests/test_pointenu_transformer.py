@@ -1,9 +1,7 @@
 import unittest
-
 import lanelet2
 from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
-
 from modules.common.proto.geometry_pb2 import PointENU
 from scenario_transfer import PointENUTransformer
 
