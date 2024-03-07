@@ -13,9 +13,9 @@ pyyaml = "^6.0.1"
 protobuf3-to-dict = "^0.1.5"
 shapely = "^2.0.2"
 networkx = "^3.2.1"
-openscenario-msgs = {path = "openscenario_msgs"}
 protobuf = "3.19.4"
 cyber-record = "^0.1.12"
+openscenario-msgs = {path = "openscenario_msgs"}
 
 
 [tool.poetry.group.dev.dependencies]

@@ -109,8 +109,10 @@ class OpenScenarioEncoder:
 
         res_dict = {}
         for key, value in input_dict.items():
+            
             type_name = search_type_name(field_name=key,
                                          root_type_name=root_type_name)
+            print("key:", key, "value:", value, "type_name:", type_name)
             new_key = key
             new_value = value
 

@@ -1,5 +1,5 @@
 from typing import List
-from openscenario_msgs import RoadNetwork, File, TrafficSignalController
+from openscenario_msgs import RoadNetwork, LogicFile, SceneGraphFile, TrafficSignals, TrafficSignalController
 from scenario_transfer.builder import Builder
 
 
@@ -10,11 +10,12 @@ class RoadNetworkBuilder(Builder):
     def __init__(self,
                  lanelet_map_path: str = "lanelet_map.osm",
                  pcd_map_path: str = "point_cloud.pcd",
-                 trafficSignals: List[TrafficSignalController] = []):
+                 trafficSignalControllers: List[TrafficSignalController] = []):
 
-        lanelet_map_file = File(filepath=lanelet_map_path)
-        pcd_map_file = File(filepath=pcd_map_path)
-
+        lanelet_map_file = LogicFile(filepath=lanelet_map_path)
+        pcd_map_file = SceneGraphFile(filepath=pcd_map_path)
+        trafficSignals = TrafficSignals(trafficSignalControllers=trafficSignalControllers)
+        
         self.product = RoadNetwork(logicFile=lanelet_map_file,
                                    sceneGraphFile=pcd_map_file,
                                    trafficSignals=trafficSignals)

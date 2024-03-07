@@ -38,6 +38,10 @@ message TrafficSignalControllerCondition {
     repeated Phase phaseRef = 3;  // 0..*
 }
 
+message TrafficSignals {
+    repeated TrafficSignalController trafficSignalControllers = 1; // 0..*
+}
+
 // Message for TrafficSignalController
 message TrafficSignalController {
     optional double delay = 1;   // 0..1

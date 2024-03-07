@@ -50,9 +50,17 @@ message ScenarioDefinition {
 
 // Message for RoadNetwork
 message RoadNetwork {
-    optional File logicFile = 1;  // 0..1
-    optional File sceneGraphFile = 2;  // 0..1
-    repeated TrafficSignalController trafficSignals = 3;  // 0..*
+    optional LogicFile logicFile = 1;  // 0..1
+    optional SceneGraphFile sceneGraphFile = 2;  // 0..1
+    optional TrafficSignals trafficSignals = 3;  // 0..*
+}
+
+message LogicFile {
+    required string filepath = 1; // 1..1
+}
+
+message SceneGraphFile {
+    required string filepath = 1; // 1..1
 }
 
 // Message for CatalogDefinition

@@ -85,15 +85,15 @@ class TestBuilder(unittest.TestCase):
 
         builder = RoadNetworkBuilder(
             lanelet_map_path="/home/users/lanelet_map.osm",
-            trafficSignals=[controller_builder.get_result()])
+            trafficSignalControllers=[controller_builder.get_result()])
 
         road_network = builder.get_result()
-
+        
         self.assertEqual(road_network.logicFile.filepath,
                          "/home/users/lanelet_map.osm")
-        self.assertEqual(len(road_network.trafficSignals), 1)
+        self.assertEqual(len(road_network.trafficSignals.trafficSignalControllers), 1)
 
-        traffic_signal = road_network.trafficSignals[0]
+        traffic_signal = road_network.trafficSignals.trafficSignalControllers[0]
 
         self.assertEqual(len(traffic_signal.phases), 2)
 
@@ -101,7 +101,7 @@ class TestBuilder(unittest.TestCase):
         self.assertEqual(
             traffic_signal.phases[1].trafficSignalStates[0].trafficSignalId,
             "12515")
-
+    
     def test_scenario_definition_builder(self):
         parameter_declarations = [
             ParameterDeclaration(name="__ego_dimensions_length__",
@@ -178,7 +178,13 @@ class TestBuilder(unittest.TestCase):
 
     def assert_proto_type_equal(self, reflection_type, pb2_type):
         self.assertEqual(str(reflection_type.__class__), str(pb2_type))
+
+    def write_proto_pyobject_to_yaml(self, file_path, proto_pyobject):
+        encoded_data = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(proto_pyobject)
+        with open(file_path, "w") as file:
+            file.write(encoded_data)
     
+
 
 if __name__ == '__main__':
     unittest.main()
