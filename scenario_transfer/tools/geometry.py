@@ -1,5 +1,4 @@
 from typing import Optional
-
 import lanelet2
 from lanelet2.projection import MGRSProjector
 from lanelet2.core import (Lanelet, LaneletMap, GPSPoint, BasicPoint2d,
@@ -8,8 +7,7 @@ from lanelet2.io import Origin
 from lanelet2.geometry import (findNearest, distanceToCenterline2d, distance,
                                findWithin3d)
 from pyproj import Proj, transform
-
-from apollo_msgs import PointENU
+from modules.common.proto.geometry_pb2 import PointENU
 from openscenario_msgs import (LanePosition, Orientation, ReferenceContext)
 
 
@@ -37,8 +35,8 @@ class Geometry:
         t_attribute = distanceToCenterline2d(lanelet, basic_point2d)
 
         return LanePosition(
-            road_id='',
-            lane_id=str(lanelet.id),
+            roadId='',
+            laneId=str(lanelet.id),
             s=s_attribute,
             offset=t_attribute,
             orientation=Orientation(

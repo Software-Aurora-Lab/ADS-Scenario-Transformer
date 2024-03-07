@@ -7,15 +7,15 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
-protobuf = "^4.25.0"
 pyproj = "^3.6.1"
 lanelet2 = {path = "pkgs/lanelet2-1.2.1-cp310-cp310-manylinux_2_31_x86_64.whl"}
 pyyaml = "^6.0.1"
 protobuf3-to-dict = "^0.1.5"
 shapely = "^2.0.2"
 networkx = "^3.2.1"
-apollo-msgs = {path = "apollo_msgs"}
 openscenario-msgs = {path = "openscenario_msgs"}
+protobuf = "3.19.4"
+cyber-record = "^0.1.12"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -1,7 +1,7 @@
 import unittest
 import json
 
-from apollo_msgs import PerceptionObstacle
+from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacle
 
 
 class ObstacleTransformerTest(unittest.TestCase):

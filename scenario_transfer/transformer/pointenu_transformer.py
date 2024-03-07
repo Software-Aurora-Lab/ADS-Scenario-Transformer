@@ -3,7 +3,7 @@ from enum import Enum
 import lanelet2
 from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
-from apollo_msgs.basic_msgs import PointENU
+from modules.common.proto.geometry_pb2 import PointENU
 from openscenario_msgs import Position, LanePosition, WorldPosition
 from scenario_transfer.transformer import Transformer
 from scenario_transfer.tools.geometry import Geometry

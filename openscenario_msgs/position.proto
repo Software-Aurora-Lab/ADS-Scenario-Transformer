@@ -29,9 +29,9 @@ message WorldPosition {
 
 // Message for LanePosition
 message LanePosition {
-    required string lane_id = 1;        // 1..1
+    required string laneId = 1;        // 1..1
     optional double offset = 2;         // 0..1
-    required string road_id = 3;        // 1..1
+    required string roadId = 3;        // 1..1
     required double s = 4;              // 1..1
     optional Orientation orientation = 5;  // 0..1
 }

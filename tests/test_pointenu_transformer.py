@@ -4,7 +4,7 @@ import lanelet2
 from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
 
-from apollo_msgs.basic_msgs import PointENU
+from modules.common.proto.geometry_pb2 import PointENU
 from scenario_transfer import PointENUTransformer
 
 
@@ -43,7 +43,7 @@ class TestPointENUTransformer(unittest.TestCase):
         self.assertIsNotNone(position.lanePosition,
                              "The lane_position should not be None.")
 
-        self.assertEqual(position.lanePosition.lane_id, "22")
+        self.assertEqual(position.lanePosition.laneId, "22")
         self.assertEqual(position.lanePosition.s, 35.71471492399046)
         self.assertEqual(position.lanePosition.offset, 0.1750399287494411)
 

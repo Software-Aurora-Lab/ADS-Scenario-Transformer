@@ -14,7 +14,13 @@ import networkx as nx
 from shapely.geometry import LineString, Point
 from shapely.geometry.base import BaseGeometry
 
-from apollo_msgs import (Map, Crosswalk, Junction, Lane, LaneBoundary, Overlap, Signal, StopSign)
+from modules.map.proto.map_pb2 import Map
+from modules.map.proto.map_crosswalk_pb2 import Crosswalk
+from modules.map.proto.map_junction_pb2 import Junction
+from modules.map.proto.map_lane_pb2 import Lane, LaneBoundary
+from modules.map.proto.map_overlap_pb2 import Overlap
+from modules.map.proto.map_stop_sign_pb2 import StopSign
+from modules.map.proto.map_signal_pb2 import Signal
 
 from .kdtree.kdtree import KDTree
 from .kdtree.kdtree_params import KDTreeParams

@@ -2,8 +2,8 @@ import unittest
 import lanelet2
 from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
-from apollo_msgs.basic_msgs import PointENU
-from apollo_msgs.routing_msgs import LaneWaypoint
+from modules.common.proto.geometry_pb2 import PointENU
+from modules.routing.proto.routing_pb2 import LaneWaypoint
 from openscenario_msgs import Waypoint, LanePosition
 from scenario_transfer import LaneWaypointTransformer
 from scenario_transfer.tools.apollo_map_service import ApolloMapService
@@ -12,8 +12,6 @@ from scenario_transfer.tools.apollo_map_service import ApolloMapService
 class TestLaneWaypointTransformer(unittest.TestCase):
 
     def setUp(self):
-        origin = Origin(37.04622247590861, -123.00000000000001, 0)
-        print(dir(MGRSProjector))
         self.mgrs_projector = MGRSProjector(Origin(0, 0, 0))
         self.lanelet_map = lanelet2.io.load(
             "./samples/map/BorregasAve/lanelet2_map.osm", self.mgrs_projector)
@@ -31,20 +29,16 @@ class TestLaneWaypointTransformer(unittest.TestCase):
         })
 
         openscenario_waypoint = transformer.transform(source=lane_waypoint)
-        self.assertIsInstance(openscenario_waypoint, Waypoint,
-                              "The waypoint should be of type Waypoint.")
+        self.assert_proto_type_equal(openscenario_waypoint, Waypoint)
 
         lane_position = openscenario_waypoint.position.lanePosition
-        self.assertIsInstance(
-            lane_position, LanePosition,
-            "The waypoint.lane_position should be of type LanePosition.")
-
-        self.assertEqual(lane_position.lane_id, "22")
+        self.assert_proto_type_equal(lane_position, LanePosition)
+        self.assertEqual(lane_position.laneId, "22")
         self.assertEqual(lane_position.offset, 0.1750399287494411)
         self.assertEqual(lane_position.s, 35.714714923990464)
         self.assertEqual(lane_position.orientation.h, 0)
 
-    def test_lane_id_type_lane_waypoint_transformer(self):
+    def test_laneId_type_lane_waypoint_transformer(self):
         lane_waypoint = LaneWaypoint(id="lane_26", s=26.2)
         transformer = LaneWaypointTransformer(
             properties={
@@ -54,19 +48,17 @@ class TestLaneWaypointTransformer(unittest.TestCase):
             })
 
         openscenario_waypoint = transformer.transform(source=lane_waypoint)
-        self.assertIsInstance(openscenario_waypoint, Waypoint,
-                              "The waypoint should be of type Waypoint.")
-
+        self.assert_proto_type_equal(openscenario_waypoint, Waypoint)
         lane_position = openscenario_waypoint.position.lanePosition
-        self.assertIsInstance(
-            lane_position, LanePosition,
-            "The waypoint.lane_position should be of type LanePosition.")
-
-        self.assertEqual(lane_position.lane_id, "149")
+        
+        self.assert_proto_type_equal(lane_position, LanePosition)
+        self.assertEqual(lane_position.laneId, "149")
         self.assertEqual(lane_position.offset, 1.4604610803960605)
         self.assertEqual(lane_position.s, 26.739416492972932)
         self.assertEqual(lane_position.orientation.h, -1.9883158777364047)
 
+    def assert_proto_type_equal(self, reflection_type, pb2_type):
+        self.assertEqual(str(reflection_type.__class__), str(pb2_type))
 
 if __name__ == '__main__':
     unittest.main()

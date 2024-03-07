@@ -2,7 +2,8 @@ from typing import Dict, Tuple
 import math
 from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
-from apollo_msgs import PointENU, LaneWaypoint
+from modules.common.proto.geometry_pb2 import PointENU
+from modules.routing.proto.routing_pb2 import LaneWaypoint
 from openscenario_msgs import (Waypoint, RouteStrategy)
 from scenario_transfer.transformer import Transformer
 from scenario_transfer.transformer.pointenu_transformer import PointENUTransformer
@@ -29,7 +30,7 @@ class LaneWaypointTransformer(Transformer):
 
         if math.isnan(
                 pose.x
-        ):  # if pose.x and pose.y are nan, then it will check lane_id and s
+        ):  # if pose.x and pose.y are nan, then it will check laneId and s
             (pose, heading) = self.get_pose_from_apollo_waypoint(source)
 
         lanelet_map = self.properties["lanelet_map"]

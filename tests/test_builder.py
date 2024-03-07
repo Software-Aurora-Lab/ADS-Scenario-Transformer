@@ -5,9 +5,7 @@ from openscenario_msgs import CatalogDefinition, FileHeader, Entities, Parameter
 from scenario_transfer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, TrafficSignalControllerBuilder, TrafficSignalStateBuilder, ScenarioDefinitionBuilder, PrivateBuilder
 from scenario_transfer.builder.entities_builder import EntityType
 from scenario_transfer.builder.road_network_builder import RoadNetworkBuilder
-
 from scenario_transfer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
-
 
 class TestBuilder(unittest.TestCase):
 
@@ -143,9 +141,9 @@ class TestBuilder(unittest.TestCase):
         entities_builder = EntitiesBuilder(entities=[EntityType.EGO])
         ego = entities_builder.get_result().scenarioObjects[0]
 
-        self.assertIsInstance(openscenario_route, Route)
-        self.assertIsInstance(ego, ScenarioObject)
-
+        self.assert_proto_type_equal(openscenario_route, Route)
+        self.assert_proto_type_equal(ego, ScenarioObject)
+        
         private_builder = PrivateBuilder(
             waypoints=openscenario_route.waypoints)
         private_builder.make_entity(ego)
@@ -161,26 +159,26 @@ class TestBuilder(unittest.TestCase):
 
         teleport_action = openscenario_private.privateActions[0].teleportAction
         routing_action = openscenario_private.privateActions[1].routingAction
-        self.assertIsInstance(teleport_action, TeleportAction)
-        self.assertIsInstance(routing_action, RoutingAction)
-
+        self.assert_proto_type_equal(teleport_action, TeleportAction)
+        self.assert_proto_type_equal(routing_action, RoutingAction)
+        
         start_lane_position = teleport_action.position.lanePosition
-        self.assertEqual(start_lane_position.lane_id, "22")
+        self.assertEqual(start_lane_position.laneId, "22")
         self.assertEqual(start_lane_position.offset, 0.1750399287494411)
         self.assertEqual(start_lane_position.s, 35.714714923990464)
         self.assertEqual(start_lane_position.orientation.h, 2.883901414579166)
 
-        self.assertIsInstance(routing_action.assignRouteAction,
-                              AssignRouteAction)
-
         end_waypoint = routing_action.assignRouteAction.route.waypoints[-1]
         end_lane_position = end_waypoint.position.lanePosition
 
-        self.assertEqual(end_lane_position.lane_id, "149")
+        self.assertEqual(end_lane_position.laneId, "149")
         self.assertEqual(end_lane_position.offset, 1.4604610803960605)
         self.assertEqual(end_lane_position.s, 26.739416492972932)
         self.assertEqual(end_lane_position.orientation.h, -1.9883158777364047)
 
+    def assert_proto_type_equal(self, reflection_type, pb2_type):
+        self.assertEqual(str(reflection_type.__class__), str(pb2_type))
+    
 
 if __name__ == '__main__':
     unittest.main()

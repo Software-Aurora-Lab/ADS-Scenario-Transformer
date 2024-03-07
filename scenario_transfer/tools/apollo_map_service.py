@@ -1,7 +1,8 @@
 from enum import Enum
 from typing import Tuple
 from pathlib import Path
-from apollo_msgs import Map, PointENU
+from modules.common.proto.geometry_pb2 import PointENU
+from modules.map.proto.map_pb2 import Map
 from pkgs.scenorita.map_service import MapService
 
 

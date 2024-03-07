@@ -3,8 +3,8 @@ from collections import defaultdict
 from typing import List, Set, Tuple
 import networkx as nx
 from shapely.geometry import LineString, Point
-from apollo_msgs.map_msgs import Map
-from apollo_msgs.basic_msgs import PointENU
+from modules.map.proto.map_pb2 import Map
+from modules.common.proto.geometry_pb2 import PointENU
 
 
 class ApolloMapParser:

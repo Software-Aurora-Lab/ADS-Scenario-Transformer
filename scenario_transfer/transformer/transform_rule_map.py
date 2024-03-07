@@ -1,7 +1,6 @@
 from dataclasses import dataclass
-
-from apollo_msgs.basic_msgs import PointENU
-from apollo_msgs.routing_msgs import LaneWaypoint, RoutingRequest
+from modules.common.proto.geometry_pb2 import PointENU
+from modules.routing.proto.routing_pb2 import RoutingRequest, LaneWaypoint
 from openscenario_msgs import Position, Waypoint, Route, Private
 
 

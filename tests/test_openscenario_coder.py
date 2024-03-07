@@ -37,15 +37,13 @@ class TestOpenScenarioCoder(unittest.TestCase):
         openscenario_route = OpenScenarioDecoder.decode_yaml_to_pyobject(
             yaml_dict=decoded_data, type_=Route, exclude_top_level_key=True)
 
-        self.assertIsInstance(openscenario_route, Route)
+        self.assert_proto_type_equal(openscenario_route, Route)
 
         start_waypoint = openscenario_route.waypoints[0]
         start_lane_position = start_waypoint.position.lanePosition
-        self.assertIsInstance(
-            start_lane_position, LanePosition,
-            "The waypoint.lane_position should be of type LanePosition.")
+        self.assert_proto_type_equal(start_lane_position, LanePosition)
 
-        self.assertEqual(start_lane_position.lane_id, "22")
+        self.assertEqual(start_lane_position.laneId, "22")
         self.assertEqual(start_lane_position.offset, 0.1750399287494411)
         self.assertEqual(start_lane_position.s, 35.714714923990464)
         self.assertEqual(start_lane_position.orientation.h, 2.883901414579166)
@@ -53,7 +51,7 @@ class TestOpenScenarioCoder(unittest.TestCase):
         end_waypoint = openscenario_route.waypoints[-1]
         end_lane_position = end_waypoint.position.lanePosition
 
-        self.assertEqual(end_lane_position.lane_id, "149")
+        self.assertEqual(end_lane_position.laneId, "149")
         self.assertEqual(end_lane_position.offset, 1.4604610803960605)
         self.assertEqual(end_lane_position.s, 26.739416492972932)
         self.assertEqual(end_lane_position.orientation.h, -1.9883158777364047)
@@ -101,15 +99,13 @@ class TestOpenScenarioCoder(unittest.TestCase):
         openscenario_route = OpenScenarioDecoder.decode_yaml_to_pyobject(
             yaml_dict=dict, type_=Route, exclude_top_level_key=True)
 
-        self.assertIsInstance(openscenario_route, Route)
+        self.assert_proto_type_equal(openscenario_route, Route)
 
         start_waypoint = openscenario_route.waypoints[0]
         start_lane_position = start_waypoint.position.lanePosition
-        self.assertIsInstance(
-            start_lane_position, LanePosition,
-            "The waypoint.lane_position should be of type LanePosition.")
+        self.assert_proto_type_equal(start_lane_position, LanePosition)
 
-        self.assertEqual(start_lane_position.lane_id, "22")
+        self.assertEqual(start_lane_position.laneId, "22")
         self.assertEqual(start_lane_position.offset, 0.1750399287494411)
         self.assertEqual(start_lane_position.s, 35.714714923990464)
         self.assertEqual(start_lane_position.orientation.h, 2.883901414579166)
@@ -117,7 +113,7 @@ class TestOpenScenarioCoder(unittest.TestCase):
         end_waypoint = openscenario_route.waypoints[-1]
         end_lane_position = end_waypoint.position.lanePosition
 
-        self.assertEqual(end_lane_position.lane_id, "149")
+        self.assertEqual(end_lane_position.laneId, "149")
         self.assertEqual(end_lane_position.offset, 1.4604610803960605)
         self.assertEqual(end_lane_position.s, 26.739416492972932)
         self.assertEqual(end_lane_position.orientation.h, -1.9883158777364047)
@@ -139,9 +135,7 @@ class TestOpenScenarioCoder(unittest.TestCase):
         object_controller = OpenScenarioDecoder.decode_yaml_to_pyobject(
             yaml_dict=dict, type_=ObjectController, exclude_top_level_key=True)
 
-        self.assertIsInstance(
-            object_controller, ObjectController,
-            "The object_controller should be of type ObjectController.")
+        self.assert_proto_type_equal(object_controller, ObjectController)
         self.assert_object_controller(object_controller)
 
     def test_decoding_openscenario_vehicle(self):
@@ -185,8 +179,7 @@ class TestOpenScenarioCoder(unittest.TestCase):
         vehicle = OpenScenarioDecoder.decode_yaml_to_pyobject(
             yaml_dict=dict, type_=Vehicle, exclude_top_level_key=True)
 
-        self.assertIsInstance(vehicle, Vehicle,
-                              "The vehicle should be of type Vehicle.")
+        self.assert_proto_type_equal(vehicle, Vehicle)
         self.assert_vehicle(vehicle)
 
     def test_decoding_oneof_openscenario_entity_object(self):
@@ -230,9 +223,7 @@ class TestOpenScenarioCoder(unittest.TestCase):
         entity_object = OpenScenarioDecoder.decode_yaml_to_pyobject(
             yaml_dict=dict, type_=EntityObject, exclude_top_level_key=False)
 
-        self.assertIsInstance(
-            entity_object, EntityObject,
-            "The entity_object should be of type EntityObject.")
+        self.assertIsInstance(entity_object, EntityObject)
         self.assert_vehicle(entity_object.vehicle)
 
     def test_decoding_openscenario_scenario_object(self):
@@ -244,9 +235,7 @@ class TestOpenScenarioCoder(unittest.TestCase):
         scenario_object = OpenScenarioDecoder.decode_yaml_to_pyobject(
             yaml_dict=dict, type_=ScenarioObject, exclude_top_level_key=False)
 
-        self.assertIsInstance(
-            scenario_object, ScenarioObject,
-            "The scenario_object should be of type ScenarioObject.")
+        self.assert_proto_type_equal(scenario_object, ScenarioObject)
 
         self.assert_vehicle(scenario_object.entityObject.vehicle)
         self.assert_object_controller(scenario_object.objectController)
@@ -259,8 +248,7 @@ class TestOpenScenarioCoder(unittest.TestCase):
 
         entities = OpenScenarioDecoder.decode_yaml_to_pyobject(
             yaml_dict=dict, type_=Entities, exclude_top_level_key=True)
-        self.assertIsInstance(entities, Entities,
-                              "The entities should be of type Entities.")
+        self.assert_proto_type_equal(entities, Entities)
         self.assert_vehicle(entities.scenarioObjects[0].entityObject.vehicle)
         self.assert_object_controller(
             entities.scenarioObjects[0].objectController)
@@ -329,3 +317,6 @@ class TestOpenScenarioCoder(unittest.TestCase):
         self.assertEqual(vehicle.boundingBox.center.x, 1.355)
         self.assertEqual(vehicle.boundingBox.dimensions.length, 4.77)
         self.assertEqual(vehicle.axles.frontAxle.maxSteering, 0.5236)
+
+    def assert_proto_type_equal(self, reflection_type, pb2_type):
+        self.assertEqual(str(reflection_type.__class__), str(pb2_type))
