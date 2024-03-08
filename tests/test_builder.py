@@ -37,9 +37,6 @@ class TestBuilder(unittest.TestCase):
         self.assert_proto_type_equal(scenario.openScenario.fileHeader,
                                      FileHeader)
 
-        self.write_proto_pyobject_to_yaml("res.yaml", scenario, False)
-        self.assertEqual(True, False)
-
     def test_entities_builder(self):
         builder = EntitiesBuilder(entities=[
             EntityType.NPC, EntityType.NPC, EntityType.EGO,
