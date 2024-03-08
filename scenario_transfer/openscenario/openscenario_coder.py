@@ -76,6 +76,17 @@ class OpenScenarioCoder:
         skipped_type = ["PrivateAction"]
         return type_name in one_of_type or type_name in skipped_type
 
+    plural_singular_types = {
+        "Properties": "Property",
+        "ScenarioModifiers": "ScenarioModifier",
+        "CatalogLocations": "CatalogLocation",
+        "TrafficSignals": "TrafficSignalController"
+    }
+
+    @staticmethod
+    def is_plural_type(type_name) -> bool:
+        return type_name in OpenScenarioCoder.plural_singular_types.keys()
+
 
 class OpenScenarioEncoder:
 
@@ -131,6 +142,12 @@ class OpenScenarioEncoder:
                                 break
                         new_value = OpenScenarioEncoder.convert_to_compatible_element(
                             new_value, name_dict, new_key)
+                    elif OpenScenarioCoder.is_plural_type(
+                            type_name) and value == {}:
+
+                        sub_key = OpenScenarioCoder.plural_singular_types[
+                            type_name]
+                        new_value = {sub_key: []}
                     else:
                         new_value = OpenScenarioEncoder.convert_to_compatible_element(
                             value, name_dict, new_key)

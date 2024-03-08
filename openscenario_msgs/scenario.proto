@@ -24,5 +24,5 @@ message ScenarioModifier {
 }
 
 message ScenarioModifiers {
-    repeated ScenarioModifier scenarioModifier = 1;
+    repeated ScenarioModifier scenarioModifiers = 1;
 }
