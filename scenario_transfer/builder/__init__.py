@@ -1,6 +1,6 @@
 from .builder import Builder
 from .open_scenario_director import OpenScenarioDirector
-from .open_scenario_builder import OpenScenarioBuilder
+from .scenario_builder import ScenarioBuilder
 from .open_scenario_category_builder import OpenScenarioCategoryBuilder
 from .catalog_definition_builder import CatalogDefinitionBuilder
 from .catalog_locations_builder import CatalogLocationsBuilder

@@ -1,0 +1,28 @@
+syntax = "proto2";
+package openscenario;
+
+import "openscenario_msgs/common.proto";
+import "openscenario_msgs/parameter.proto";
+
+// TIER IV Scenario container
+message Scenario {
+    optional ScenarioModifiers scenarioModifiers = 1;
+    required OpenSCENARIO openScenario = 2;
+}
+
+message OpenSCENARIO {
+    optional FileHeader fileHeader = 1;                       // 1..1
+    repeated ParameterDeclaration parameterDeclarations = 2;  // 0..*
+    required CatalogLocations catalogLocations = 3;           // 1..1
+    required RoadNetwork roadNetwork = 4;                     // 1..1
+    required Entities entities = 5;                           // 1..1
+    required Storyboard storyboard = 6;                       // 1..1
+}
+
+message ScenarioModifier {
+
+}
+
+message ScenarioModifiers {
+    repeated ScenarioModifier scenarioModifier = 1;
+}

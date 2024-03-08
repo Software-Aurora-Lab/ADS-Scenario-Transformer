@@ -2,16 +2,40 @@ import unittest
 import yaml
 from datetime import datetime
 from openscenario_msgs import CatalogDefinition, FileHeader, Entities, ParameterDeclarations, ParameterDeclaration, ScenarioDefinition, Route, Private, ScenarioObject, TeleportAction, RoutingAction, AssignRouteAction, AcquirePositionAction
+from openscenario_msgs.scenario_pb2 import Scenario, OpenSCENARIO
+
 from scenario_transfer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, TrafficSignalControllerBuilder, TrafficSignalStateBuilder, ScenarioDefinitionBuilder, PrivateBuilder
+
+from scenario_transfer.builder.scenario_builder import ScenarioConfiguration, ScenarioBuilder
 from scenario_transfer.builder.entities_builder import EntityType
 from scenario_transfer.builder.road_network_builder import RoadNetworkBuilder
 from scenario_transfer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
+
 
 class TestBuilder(unittest.TestCase):
 
     def setUp(self):
         input_dir = "./tests/data/"
         self.route_file_path = input_dir + "openscenario_route.yaml"
+
+    def test_scenario_builder(self):
+
+        configuration = ScenarioConfiguration(
+            entities=[EntityType.EGO, EntityType.NPC],
+            lanelet_map_path="/home/user/lanelet_map.osm")
+
+        builder = ScenarioBuilder(scenario_configuration=configuration)
+
+        builder.make_file_header()
+        builder.make_scenario_definition()
+        builder.make_scenario_modifiers()
+        builder.make_scenario_definition()
+        scenario = builder.get_result()
+
+        self.assert_proto_type_equal(scenario, Scenario)
+        self.assert_proto_type_equal(scenario.openScenario, OpenSCENARIO)
+        self.assert_proto_type_equal(scenario.openScenario.fileHeader,
+                                     FileHeader)
 
     def test_entities_builder(self):
         builder = EntitiesBuilder(entities=[
@@ -42,7 +66,7 @@ class TestBuilder(unittest.TestCase):
         except ValueError:
             self.fail(f"Date format should be {expected_format}")
         self.assertEqual(file_header.description, "Default FileHeader")
-        self.assertEqual(file_header.author, "ADS Scenario Tranferer")
+        self.assertEqual(file_header.author, "ADS Scenario Tranferrer")
 
     def test_catalog_definition_builder(self):
         builder = CatalogDefinitionBuilder()
@@ -88,12 +112,14 @@ class TestBuilder(unittest.TestCase):
             trafficSignalControllers=[controller_builder.get_result()])
 
         road_network = builder.get_result()
-        
+
         self.assertEqual(road_network.logicFile.filepath,
                          "/home/users/lanelet_map.osm")
-        self.assertEqual(len(road_network.trafficSignals.trafficSignalControllers), 1)
+        self.assertEqual(
+            len(road_network.trafficSignals.trafficSignalControllers), 1)
 
-        traffic_signal = road_network.trafficSignals.trafficSignalControllers[0]
+        traffic_signal = road_network.trafficSignals.trafficSignalControllers[
+            0]
 
         self.assertEqual(len(traffic_signal.phases), 2)
 
@@ -101,7 +127,7 @@ class TestBuilder(unittest.TestCase):
         self.assertEqual(
             traffic_signal.phases[1].trafficSignalStates[0].trafficSignalId,
             "12515")
-    
+
     def test_scenario_definition_builder(self):
         parameter_declarations = [
             ParameterDeclaration(name="__ego_dimensions_length__",
@@ -143,7 +169,7 @@ class TestBuilder(unittest.TestCase):
 
         self.assert_proto_type_equal(openscenario_route, Route)
         self.assert_proto_type_equal(ego, ScenarioObject)
-        
+
         private_builder = PrivateBuilder(
             waypoints=openscenario_route.waypoints)
         private_builder.make_entity(ego)
@@ -161,7 +187,7 @@ class TestBuilder(unittest.TestCase):
         routing_action = openscenario_private.privateActions[1].routingAction
         self.assert_proto_type_equal(teleport_action, TeleportAction)
         self.assert_proto_type_equal(routing_action, RoutingAction)
-        
+
         start_lane_position = teleport_action.position.lanePosition
         self.assertEqual(start_lane_position.laneId, "22")
         self.assertEqual(start_lane_position.offset, 0.1750399287494411)
@@ -179,11 +205,13 @@ class TestBuilder(unittest.TestCase):
     def assert_proto_type_equal(self, reflection_type, pb2_type):
         self.assertEqual(str(reflection_type.__class__), str(pb2_type))
 
-    def write_proto_pyobject_to_yaml(self, file_path, proto_pyobject):
-        encoded_data = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(proto_pyobject)
+    def write_proto_pyobject_to_yaml(self, file_path, proto_pyobject,
+                                     wrap_result_with_typename):
+        encoded_data = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
+            proto_pyobject, wrap_result_with_typename)
+
         with open(file_path, "w") as file:
             file.write(encoded_data)
-    
 
 
 if __name__ == '__main__':

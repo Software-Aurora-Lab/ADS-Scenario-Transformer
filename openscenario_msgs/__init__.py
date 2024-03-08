@@ -19,3 +19,4 @@ from .traffic_signal_pb2 import *
 from .transition_dynamics_pb2 import *
 from .valueconstraint_group_pb2 import *
 from .vehicle_pb2 import *
+from .scenario_pb2 import *

@@ -1,6 +1,9 @@
 from typing import List
 from openscenario_msgs import ScenarioDefinition, ParameterDeclaration, RoadNetwork, Entities, Storyboard, TrafficSignalController
-from scenario_transfer.builder import Builder, ParameterDeclarationBuilder, CatalogLocationsBuilder, RoadNetworkBuilder
+from scenario_transfer.builder import Builder
+from scenario_transfer.builder.catalog_locations_builder import CatalogLocationsBuilder
+from scenario_transfer.builder.road_network_builder import RoadNetworkBuilder
+from scenario_transfer.builder.parameter_declarations_builder import ParameterDeclarationBuilder
 from scenario_transfer.builder.entities_builder import EntitiesBuilder, EntityType
 from openscenario_msgs import Init, InitActions  # TODO: Remove after implement Storyboard builder
 
@@ -52,7 +55,7 @@ class ScenarioDefinitionBuilder(Builder):
         assert self.road_network is not None
         assert self.entities is not None
         assert self.storyboard is not None
-        
+
         self.product = ScenarioDefinition(
             parameterDeclarations=self.parameter_declarations,
             catalogLocations=CatalogLocationsBuilder().get_result(),

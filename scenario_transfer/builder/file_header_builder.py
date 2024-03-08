@@ -29,7 +29,7 @@ class FileHeaderBuilder(Builder):
                 revMinor=1,
                 date=datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
                 description="Default FileHeader",
-                author="ADS Scenario Tranferer")
+                author="ADS Scenario Tranferrer")
 
     def get_result(self) -> FileHeader:
         return self.product

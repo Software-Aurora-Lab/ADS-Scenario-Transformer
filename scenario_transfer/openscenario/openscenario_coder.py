@@ -80,7 +80,8 @@ class OpenScenarioCoder:
 class OpenScenarioEncoder:
 
     @staticmethod
-    def encode_proto_pyobject_to_yaml(proto_pyobject):
+    def encode_proto_pyobject_to_yaml(proto_pyobject,
+                                      wrap_result_with_typename=True):
         proto_dict = protobuf_to_dict(proto_pyobject, use_enum_labels=True)
 
         OpenScenarioCoder.update_field_names_in_proto_files()
@@ -90,11 +91,10 @@ class OpenScenarioEncoder:
             name_dict=OpenScenarioCoder.field_name_cache,
             root_type_name=type(proto_pyobject).__name__)
 
-        toplevel_name_included_dict = {
-            type(proto_pyobject).__name__: result_dict
-        }
-        yaml_data = yaml.dump(toplevel_name_included_dict,
-                              default_flow_style=False)
+        if wrap_result_with_typename:
+            result_dict = {type(proto_pyobject).__name__: result_dict}
+
+        yaml_data = yaml.dump(result_dict, default_flow_style=False)
         return yaml_data
 
     @staticmethod
@@ -109,7 +109,7 @@ class OpenScenarioEncoder:
 
         res_dict = {}
         for key, value in input_dict.items():
-            
+
             type_name = search_type_name(field_name=key,
                                          root_type_name=root_type_name)
             print("key:", key, "value:", value, "type_name:", type_name)
