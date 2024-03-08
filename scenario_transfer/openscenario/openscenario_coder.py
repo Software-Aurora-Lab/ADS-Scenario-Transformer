@@ -97,15 +97,20 @@ class OpenScenarioEncoder:
 
         OpenScenarioCoder.update_field_names_in_proto_files()
 
+        print(proto_dict)
         result_dict = OpenScenarioEncoder.convert_to_compatible_element(
             input_dict=proto_dict,
             name_dict=OpenScenarioCoder.field_name_cache,
             root_type_name=type(proto_pyobject).__name__)
 
+        print("after encoding", result_dict)
         if wrap_result_with_typename:
             result_dict = {type(proto_pyobject).__name__: result_dict}
 
-        yaml_data = yaml.dump(result_dict, default_flow_style=False)
+        yaml_data = yaml.dump(result_dict,
+                              sort_keys=False,
+                              default_flow_style=False)
+
         return yaml_data
 
     @staticmethod
