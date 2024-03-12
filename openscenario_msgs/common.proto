@@ -633,7 +633,7 @@ message ManeuverGroup {
 // Message for Actors
 message Actors {
     required bool selectTriggeringEntities = 1;  // 1..1
-    repeated EntityRef entityRefs = 2;  // 0..*
+    repeated string entityRef = 2;  // 0..*
 }
 
 // Message for Maneuver
