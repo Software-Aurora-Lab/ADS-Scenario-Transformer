@@ -151,7 +151,7 @@ message InitActions {
 
 // Message for Private
 message Private {
-    required string entityRef = 1;  // 1..1
+    required string entityRef = 1;  // 1..1, It does not use EntityRef type.
     repeated PrivateAction privateActions = 2;  // 1..*
 }
 
@@ -175,19 +175,19 @@ message TriggeringEntities {
         ANY = 1;
     }
     required TriggeringEntitiesRule triggeringEntitiesRule = 1;  // 1..1
-    repeated EntityRef entityRefs = 2;  // 1..*
+    repeated EntityRef entityRef = 2;  // 1..*
 }
 
 // Message for ByValueCondition
 message ByValueCondition {
     optional ParameterCondition parameterCondition = 1;  // 0..1
-    optional TimeOfDayCondition timeOfDayCondition = 2;  // 0..1
+    optional TimeOfDayCondition timeOfDayCondition = 2;  // 0..1, (Unsupported)
     optional SimulationTimeCondition simulationTimeCondition = 3;  // 0..1
     optional StoryboardElementStateCondition storyboardElementStateCondition = 4;  // 0..1
     optional UserDefinedValueCondition userDefinedValueCondition = 5;  // 0..1
     optional TrafficSignalCondition trafficSignalCondition = 6;  // 0..1
     optional TrafficSignalControllerCondition trafficSignalControllerCondition = 7;  // 0..1
-    optional VariableCondition variableCondition = 8;  // 0..1
+    optional VariableCondition variableCondition = 8;  // 0..1, (Unsupported)
 }
 
 // Message for SimulationTimeCondition
@@ -365,18 +365,18 @@ enum DirectionalDimension {
 
 // Message for EntityCondition
 message EntityCondition {
-    optional EndOfRoadCondition endOfRoadCondition = 1;  // 0..1
+    optional EndOfRoadCondition endOfRoadCondition = 1;  // 0..1, (Unsupported)
     optional CollisionCondition collisionCondition = 2;  // 0..1
-    optional OffroadCondition offroadCondition = 3;  // 0..1
+    optional OffroadCondition offroadCondition = 3;  // 0..1, (Unsupported)
     optional TimeHeadwayCondition timeHeadwayCondition = 4;  // 0..1
     optional TimeToCollisionCondition timeToCollisionCondition = 5;  // 0..1
     optional AccelerationCondition accelerationCondition = 6;  // 0..1
     optional StandStillCondition standStillCondition = 7;  // 0..1
     optional SpeedCondition speedCondition = 8;  // 0..1
-    optional RelativeSpeedCondition relativeSpeedCondition = 9;  // 0..1
-    optional TraveledDistanceCondition traveledDistanceCondition = 10;  // 0..1
+    optional RelativeSpeedCondition relativeSpeedCondition = 9;  // 0..1, (Unsupported)
+    optional TraveledDistanceCondition traveledDistanceCondition = 10;  // 0..1, (Unsupported)
     optional DistanceCondition distanceCondition = 11;  // 0..1
-    optional RelativeDistanceCondition relativeDistanceCondition = 12;  // 0..1
+    optional RelativeDistanceCondition relativeDistanceCondition = 12;  // 0..1, (Unsupported)
     optional RelativeClearanceCondition relativeClearanceCondition = 13;  // 0..1
 }
 
@@ -488,7 +488,7 @@ message EntityObject {
 
 // Message for EntityRef
 message EntityRef {
-    required Entity entityRef = 1;	// 1..1
+    required string entityRef = 1;	// 1..1, Change type to string 
 }
 
 // Message for SpawnedObject, Unsupported
