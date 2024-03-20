@@ -5,7 +5,7 @@ from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuild
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
 
 
-class TestBuilder(unittest.TestCase):
+class TestConditionBuilder(unittest.TestCase):
 
     def setUp(self):
         input_dir = "./tests/data/"
@@ -81,3 +81,21 @@ class TestBuilder(unittest.TestCase):
         assert by_entity_condition.triggeringEntities.entityRef[
             0].entityRef == "ego"
         assert by_entity_condition.entityCondition.reachPositionCondition.position.lanePosition.laneId == "154"
+
+    def test_entity_condition_builder_distance(self):
+
+        lane_position = LanePosition(laneId="154", s=10.9835, offset=-0.5042)
+
+        builder = ByEntityConditionBuilder(triggering_entity=self.ego_name)
+        builder.make_distance_condition(
+            value_in_meter=5,
+            freespace=True,
+            rule=Rule.LESS_THAN,
+            position=Position(lanePosition=lane_position))
+        by_entity_condition = builder.get_result()
+
+        assert by_entity_condition is not None
+        assert by_entity_condition.triggeringEntities.entityRef[
+            0].entityRef == "ego"
+        assert by_entity_condition.entityCondition.distanceCondition.position.lanePosition.laneId == "154"
+        assert by_entity_condition.entityCondition.distanceCondition.value == 5

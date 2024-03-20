@@ -51,9 +51,17 @@ class ByEntityConditionBuilder(Builder):
         self.entity_condition = EntityCondition(
             reachPositionCondition=condition)
 
-    def make_distance_condition(self):
-        # Implement the logic for distance_condition
-        return DistanceCondition()
+    def make_distance_condition(self, value_in_meter: float, freespace: bool,
+                                rule: Rule, position: Position):
+        assert position.worldPosition is not None or position.lanePosition is not None
+
+        condition = DistanceCondition(
+            value=value_in_meter,
+            freespace=freespace,
+            alongRoute=False,  # always false
+            rule=rule,
+            position=position)
+        self.entity_condition = EntityCondition(distanceCondition=condition)
 
     def make_relative_distance_condition(self):
         # Implement the logic for relative_distance_condition
