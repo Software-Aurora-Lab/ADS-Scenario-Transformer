@@ -34,14 +34,9 @@ class ByEntityConditionBuilder(Builder):
         self.entity_condition = EntityCondition(
             accelerationCondition=condition)
 
-    # // Message for StandStillCondition
-    # message StandStillCondition {
-    #     required double duration = 1;  // 1..1
-    #     required EntityCondition condition = 2;  // 1..1
-    # }
-    def make_stand_still_condition(self):
-        # Implement the logic for stand_still_condition
-        return StandStillCondition()
+    def make_stand_still_condition(self, duration_in_sec: float):
+        condition = StandStillCondition(duration=duration_in_sec)
+        self.entity_condition = EntityCondition(standStillCondition=condition)
 
     def make_speed_condition(self, value_in_ms: float, rule: Rule):
         condition = SpeedCondition(rule=rule, value=value_in_ms)

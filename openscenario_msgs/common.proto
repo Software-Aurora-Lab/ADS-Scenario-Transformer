@@ -415,8 +415,7 @@ message SpeedCondition {
 
 // Message for StandStillCondition
 message StandStillCondition {
-    required double duration = 1;  // 1..1
-    required EntityCondition condition = 2;  // 1..1
+    required double duration = 1;  // 1..1, in second
 }
 
 // Message for RelativeClearanceCondition
