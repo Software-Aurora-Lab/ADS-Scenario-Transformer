@@ -374,10 +374,11 @@ message EntityCondition {
     optional StandStillCondition standStillCondition = 7;  // 0..1
     optional SpeedCondition speedCondition = 8;  // 0..1
     optional RelativeSpeedCondition relativeSpeedCondition = 9;  // 0..1, (Unsupported)
-    optional TraveledDistanceCondition traveledDistanceCondition = 10;  // 0..1, (Unsupported)
-    optional DistanceCondition distanceCondition = 11;  // 0..1
-    optional RelativeDistanceCondition relativeDistanceCondition = 12;  // 0..1, (Unsupported)
-    optional RelativeClearanceCondition relativeClearanceCondition = 13;  // 0..1
+    optional ReachPositionCondition reachPositionCondition = 10;  // 0..1, (Deprecated in v1.2)
+    optional TraveledDistanceCondition traveledDistanceCondition = 11;  // 0..1, (Unsupported)
+    optional DistanceCondition distanceCondition = 12;  // 0..1
+    optional RelativeDistanceCondition relativeDistanceCondition = 13;  // 0..1, (Unsupported)
+    optional RelativeClearanceCondition relativeClearanceCondition = 14;  // 0..1
 }
 
 // Message for CollisionCondition
@@ -416,6 +417,12 @@ message SpeedCondition {
 // Message for StandStillCondition
 message StandStillCondition {
     required double duration = 1;  // 1..1, in second
+}
+
+// Message for ReachPositionCondition
+message ReachPositionCondition {
+    required double tolerance = 1; // 1..1
+    required Position position = 2; // 1..1
 }
 
 // Message for RelativeClearanceCondition

@@ -1,8 +1,8 @@
 from typing import List
 
-from openscenario_msgs import Condition, TriggeringEntities
+from openscenario_msgs import Condition, TriggeringEntities, Position
 import openscenario_msgs.common_pb2 as common_pb2
-from openscenario_msgs.common_pb2 import ByEntityCondition, EntityCondition, EndOfRoadCondition, CollisionCondition, OffroadCondition, TimeHeadwayCondition, TimeToCollisionCondition, AccelerationCondition, StandStillCondition, SpeedCondition, RelativeSpeedCondition, TraveledDistanceCondition, DistanceCondition, RelativeDistanceCondition, RelativeClearanceCondition
+from openscenario_msgs.common_pb2 import ByEntityCondition, EntityCondition, EndOfRoadCondition, CollisionCondition, OffroadCondition, TimeHeadwayCondition, TimeToCollisionCondition, AccelerationCondition, StandStillCondition, SpeedCondition, RelativeSpeedCondition, TraveledDistanceCondition, ReachPositionCondition, DistanceCondition, RelativeDistanceCondition, RelativeClearanceCondition
 from scenario_transfer.builder import Builder
 from openscenario_msgs import Rule, EntityRef
 
@@ -41,6 +41,15 @@ class ByEntityConditionBuilder(Builder):
     def make_speed_condition(self, value_in_ms: float, rule: Rule):
         condition = SpeedCondition(rule=rule, value=value_in_ms)
         self.entity_condition = EntityCondition(speedCondition=condition)
+
+    def make_reach_position_condition(self, tolerance: float,
+                                      position: Position):
+        assert position.worldPosition is not None or position.lanePosition is not None
+
+        condition = ReachPositionCondition(tolerance=tolerance,
+                                           position=position)
+        self.entity_condition = EntityCondition(
+            reachPositionCondition=condition)
 
     def make_distance_condition(self):
         # Implement the logic for distance_condition

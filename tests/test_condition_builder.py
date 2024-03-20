@@ -1,6 +1,6 @@
 import unittest
 import yaml
-from openscenario_msgs import Actors, Condition, ByEntityCondition, Rule
+from openscenario_msgs import Actors, Condition, ByEntityCondition, Rule, LanePosition, Position
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
 
@@ -67,3 +67,17 @@ class TestBuilder(unittest.TestCase):
         assert by_entity_condition.triggeringEntities.entityRef[
             0].entityRef == "ego"
         assert by_entity_condition.entityCondition.standStillCondition.duration == 3
+
+    def test_entity_condition_builder_standstill(self):
+
+        lane_position = LanePosition(laneId="154", s=10.9835, offset=-0.5042)
+
+        builder = ByEntityConditionBuilder(triggering_entity=self.ego_name)
+        builder.make_reach_position_condition(
+            tolerance=1, position=Position(lanePosition=lane_position))
+        by_entity_condition = builder.get_result()
+
+        assert by_entity_condition is not None
+        assert by_entity_condition.triggeringEntities.entityRef[
+            0].entityRef == "ego"
+        assert by_entity_condition.entityCondition.reachPositionCondition.position.lanePosition.laneId == "154"
