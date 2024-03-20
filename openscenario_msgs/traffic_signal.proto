@@ -34,8 +34,7 @@ message TrafficSignalState {
 // Message for TrafficSignalControllerCondition
 message TrafficSignalControllerCondition {
     required string phase = 1;  // 1..1
-    required TrafficSignalController trafficSignalControllerRef = 2;  // 1..1
-    repeated Phase phaseRef = 3;  // 0..*
+    required string trafficSignalControllerRef = 2;  // 1..1
 }
 
 message TrafficSignals {

@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n&openscenario_msgs/traffic_signal.proto\x12\x0copenscenario\"\xb3\x01\n\x13TrafficSignalAction\x12R\n\x1dtrafficSignalControllerAction\x18\x01 \x01(\x0b\x32+.openscenario.TrafficSignalControllerAction\x12H\n\x18trafficSignalStateAction\x18\x02 \x01(\x0b\x32&.openscenario.TrafficSignalStateAction\"\xa0\x01\n\x1dTrafficSignalControllerAction\x12\r\n\x05phase\x18\x01 \x02(\t\x12I\n\x1atrafficSignalControllerRef\x18\x02 \x02(\x0b\x32%.openscenario.TrafficSignalController\x12%\n\x08phaseRef\x18\x03 \x02(\x0b\x32\x13.openscenario.Phase\"7\n\x18TrafficSignalStateAction\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\r\n\x05state\x18\x02 \x02(\t\"(\n\x17TrafficSignalGroupState\x12\r\n\x05state\x18\x01 \x02(\t\"<\n\x12TrafficSignalState\x12\r\n\x05state\x18\x01 \x02(\t\x12\x17\n\x0ftrafficSignalId\x18\x02 \x02(\t\"\xa3\x01\n TrafficSignalControllerCondition\x12\r\n\x05phase\x18\x01 \x02(\t\x12I\n\x1atrafficSignalControllerRef\x18\x02 \x02(\x0b\x32%.openscenario.TrafficSignalController\x12%\n\x08phaseRef\x18\x03 \x03(\x0b\x32\x13.openscenario.Phase\"Y\n\x0eTrafficSignals\x12G\n\x18trafficSignalControllers\x18\x01 \x03(\x0b\x32%.openscenario.TrafficSignalController\"n\n\x17TrafficSignalController\x12\r\n\x05\x64\x65lay\x18\x01 \x01(\x01\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x11\n\treference\x18\x03 \x01(\t\x12#\n\x06phases\x18\x04 \x03(\x0b\x32\x13.openscenario.Phase\"5\n\x16TrafficSignalCondition\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\r\n\x05state\x18\x02 \x02(\t\"\xaf\x01\n\x05Phase\x12\x10\n\x08\x64uration\x18\x01 \x02(\x01\x12\x0c\n\x04name\x18\x02 \x02(\t\x12=\n\x13trafficSignalStates\x18\x03 \x03(\x0b\x32 .openscenario.TrafficSignalState\x12G\n\x18trafficeSignalGroupState\x18\x04 \x01(\x0b\x32%.openscenario.TrafficSignalGroupState')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n&openscenario_msgs/traffic_signal.proto\x12\x0copenscenario\"\xb3\x01\n\x13TrafficSignalAction\x12R\n\x1dtrafficSignalControllerAction\x18\x01 \x01(\x0b\x32+.openscenario.TrafficSignalControllerAction\x12H\n\x18trafficSignalStateAction\x18\x02 \x01(\x0b\x32&.openscenario.TrafficSignalStateAction\"\xa0\x01\n\x1dTrafficSignalControllerAction\x12\r\n\x05phase\x18\x01 \x02(\t\x12I\n\x1atrafficSignalControllerRef\x18\x02 \x02(\x0b\x32%.openscenario.TrafficSignalController\x12%\n\x08phaseRef\x18\x03 \x02(\x0b\x32\x13.openscenario.Phase\"7\n\x18TrafficSignalStateAction\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\r\n\x05state\x18\x02 \x02(\t\"(\n\x17TrafficSignalGroupState\x12\r\n\x05state\x18\x01 \x02(\t\"<\n\x12TrafficSignalState\x12\r\n\x05state\x18\x01 \x02(\t\x12\x17\n\x0ftrafficSignalId\x18\x02 \x02(\t\"U\n TrafficSignalControllerCondition\x12\r\n\x05phase\x18\x01 \x02(\t\x12\"\n\x1atrafficSignalControllerRef\x18\x02 \x02(\t\"Y\n\x0eTrafficSignals\x12G\n\x18trafficSignalControllers\x18\x01 \x03(\x0b\x32%.openscenario.TrafficSignalController\"n\n\x17TrafficSignalController\x12\r\n\x05\x64\x65lay\x18\x01 \x01(\x01\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x11\n\treference\x18\x03 \x01(\t\x12#\n\x06phases\x18\x04 \x03(\x0b\x32\x13.openscenario.Phase\"5\n\x16TrafficSignalCondition\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\r\n\x05state\x18\x02 \x02(\t\"\xaf\x01\n\x05Phase\x12\x10\n\x08\x64uration\x18\x01 \x02(\x01\x12\x0c\n\x04name\x18\x02 \x02(\t\x12=\n\x13trafficSignalStates\x18\x03 \x03(\x0b\x32 .openscenario.TrafficSignalState\x12G\n\x18trafficeSignalGroupState\x18\x04 \x01(\x0b\x32%.openscenario.TrafficSignalGroupState')
 
 
 
@@ -111,14 +111,14 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _TRAFFICSIGNALGROUPSTATE._serialized_end=498
   _TRAFFICSIGNALSTATE._serialized_start=500
   _TRAFFICSIGNALSTATE._serialized_end=560
-  _TRAFFICSIGNALCONTROLLERCONDITION._serialized_start=563
-  _TRAFFICSIGNALCONTROLLERCONDITION._serialized_end=726
-  _TRAFFICSIGNALS._serialized_start=728
-  _TRAFFICSIGNALS._serialized_end=817
-  _TRAFFICSIGNALCONTROLLER._serialized_start=819
-  _TRAFFICSIGNALCONTROLLER._serialized_end=929
-  _TRAFFICSIGNALCONDITION._serialized_start=931
-  _TRAFFICSIGNALCONDITION._serialized_end=984
-  _PHASE._serialized_start=987
-  _PHASE._serialized_end=1162
+  _TRAFFICSIGNALCONTROLLERCONDITION._serialized_start=562
+  _TRAFFICSIGNALCONTROLLERCONDITION._serialized_end=647
+  _TRAFFICSIGNALS._serialized_start=649
+  _TRAFFICSIGNALS._serialized_end=738
+  _TRAFFICSIGNALCONTROLLER._serialized_start=740
+  _TRAFFICSIGNALCONTROLLER._serialized_end=850
+  _TRAFFICSIGNALCONDITION._serialized_start=852
+  _TRAFFICSIGNALCONDITION._serialized_end=905
+  _PHASE._serialized_start=908
+  _PHASE._serialized_end=1083
 # @@protoc_insertion_point(module_scope)

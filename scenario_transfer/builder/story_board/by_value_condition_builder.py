@@ -2,8 +2,9 @@ from typing import List
 
 from openscenario_msgs import Rule
 
-from openscenario_msgs.common_pb2 import ByValueCondition, SimulationTimeCondition, StoryboardElementStateCondition, TimeOfDayCondition, VariableCondition
+from openscenario_msgs.common_pb2 import ByValueCondition, SimulationTimeCondition, StoryboardElementStateCondition, TimeOfDayCondition, VariableCondition, UserDefinedValueCondition
 from openscenario_msgs.parameter_pb2 import ParameterCondition, ParameterDeclaration
+from openscenario_msgs.traffic_signal_pb2 import TrafficSignalCondition, TrafficSignalControllerCondition
 from scenario_transfer.builder import Builder
 
 
@@ -37,14 +38,26 @@ class ByValueConditionBuilder(Builder):
         self.product = ByValueCondition(
             storyboardElementStateCondition=self.condition)
 
-    def make_user_defined_value_condition(self):
-        pass
+    def make_user_defined_value_condition(self, name: str, rule: Rule,
+                                          value: str):
+        self.condition = UserDefinedValueCondition(name=name,
+                                                   rule=rule,
+                                                   value=value)
+        self.product = ByValueCondition(
+            userDefinedValueCondition=self.condition)
 
-    def make_traffic_signal_condition(self):
-        pass
+    def make_traffic_signal_condition(self, name: str, state: str):
+        self.condition = TrafficSignalCondition(name=name, state=state)
+        self.product = ByValueCondition(trafficSignalCondition=self.condition)
 
-    def make_traffic_signal_controller_condition(self):
-        pass
+    def make_traffic_signal_controller_condition(
+            self, phase: str, traffic_signal_controller_name: str):
+
+        self.condition = TrafficSignalControllerCondition(
+            phase=phase,
+            trafficSignalControllerRef=traffic_signal_controller_name)
+        self.product = ByValueCondition(
+            trafficSignalControllerCondition=self.condition)
 
     def get_result(self) -> ByValueCondition:
         assert self.product is not None

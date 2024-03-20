@@ -198,3 +198,37 @@ class TestConditionBuilder(unittest.TestCase):
         assert by_value_condition.storyboardElementStateCondition.state == StoryboardElementStateCondition.State.COMPLETE_STATE
         assert by_value_condition.storyboardElementStateCondition.storyboardElementRef == "act_ego_testspeed_check"
         assert by_value_condition.storyboardElementStateCondition.storyboardElementType == StoryboardElementStateCondition.Type.MANEUVER
+
+    def test_value_condition_builder_user_defined_value_condition(self):
+        builder = ByValueConditionBuilder()
+        builder.make_user_defined_value_condition(name="test_name",
+                                                  rule=Rule.GREATER_THAN,
+                                                  value="test_value")
+        by_value_condition = builder.get_result()
+
+        assert by_value_condition is not None
+        assert by_value_condition.userDefinedValueCondition.name == "test_name"
+        assert by_value_condition.userDefinedValueCondition.rule == Rule.GREATER_THAN
+        assert by_value_condition.userDefinedValueCondition.value == "test_value"
+
+    def test_value_condition_builder_traffic_signal_condition(self):
+        builder = ByValueConditionBuilder()
+        builder.make_traffic_signal_condition(name="test_name",
+                                              state="test_state")
+        by_value_condition = builder.get_result()
+
+        assert by_value_condition is not None
+        assert by_value_condition.trafficSignalCondition.name == "test_name"
+        assert by_value_condition.trafficSignalCondition.state == "test_state"
+
+    def test_value_condition_builder_traffic_signal_controller_condition(self):
+
+        builder = ByValueConditionBuilder()
+        builder.make_traffic_signal_controller_condition(
+            phase="test_phase", traffic_signal_controller_name="StraghtSignal")
+
+        by_value_condition = builder.get_result()
+
+        assert by_value_condition is not None
+        assert by_value_condition.trafficSignalControllerCondition.phase == "test_phase"
+        assert by_value_condition.trafficSignalControllerCondition.trafficSignalControllerRef == "StraghtSignal"
