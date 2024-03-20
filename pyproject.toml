@@ -15,7 +15,7 @@ shapely = "^2.0.2"
 networkx = "^3.2.1"
 protobuf = "3.19.4"
 cyber-record = "^0.1.12"
-openscenario-msgs = {path = "/home/runner/ADS-scenario-transfer-1/openscenario_msgs"}
+openscenario-msgs = {path = "openscenario_msgs"}
 
 
 [tool.poetry.group.dev.dependencies]

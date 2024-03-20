@@ -7,4 +7,4 @@ path="$PROJECT_ROOT/openscenario_msgs"
 
 poetry remove openscenario-msgs
 sh $path/compile_proto.sh
-poetry add $path
+poetry add ./openscenario_msgs
