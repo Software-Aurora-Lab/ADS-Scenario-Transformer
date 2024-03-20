@@ -1,6 +1,6 @@
 from typing import List
 
-from openscenario_msgs import Condition, TriggeringEntities, Position
+from openscenario_msgs import Condition, TriggeringEntities, Position, RelativeDistanceType
 import openscenario_msgs.common_pb2 as common_pb2
 from openscenario_msgs.common_pb2 import ByEntityCondition, EntityCondition, EndOfRoadCondition, CollisionCondition, OffroadCondition, TimeHeadwayCondition, TimeToCollisionCondition, AccelerationCondition, StandStillCondition, SpeedCondition, RelativeSpeedCondition, TraveledDistanceCondition, ReachPositionCondition, DistanceCondition, RelativeDistanceCondition, RelativeClearanceCondition
 from scenario_transfer.builder import Builder
@@ -68,9 +68,17 @@ class ByEntityConditionBuilder(Builder):
             position=position)
         self.entity_condition = EntityCondition(distanceCondition=condition)
 
-    def make_relative_distance_condition(self):
-        # Implement the logic for relative_distance_condition
-        return RelativeDistanceCondition()
+    def make_relative_distance_condition(
+            self, entity_name: str, relativeDistanceType: RelativeDistanceType,
+            value_in_meter: float, freespace: bool, rule: Rule):
+        condition = RelativeDistanceCondition(
+            entityRef=entity_name,
+            relativeDistanceType=relativeDistanceType,
+            value=value_in_meter,
+            freespace=freespace,
+            rule=rule)
+        self.entity_condition = EntityCondition(
+            relativeDistanceCondition=condition)
 
     def get_result(self) -> ByEntityCondition:
         assert self.entity_condition is not None

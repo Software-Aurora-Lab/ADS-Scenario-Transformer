@@ -1,6 +1,7 @@
 import unittest
 import yaml
 from openscenario_msgs import Actors, Condition, ByEntityCondition, Rule, LanePosition, Position
+from openscenario_msgs.common_pb2 import RelativeDistanceType
 from openscenario_msgs.rule_pb2 import GREATER_THAN
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
@@ -116,3 +117,23 @@ class TestConditionBuilder(unittest.TestCase):
             0].entityRef == "ego"
         assert by_entity_condition.entityCondition.timeHeadwayCondition.value == 3
         assert by_entity_condition.entityCondition.timeHeadwayCondition.entityRef == headway_npc_name
+
+    def test_entity_condition_builder_relative_distance(self):
+
+        target_npc_name = self.entities.scenarioObjects[1].name
+
+        builder = ByEntityConditionBuilder(triggering_entity=self.ego_name)
+        builder.make_relative_distance_condition(
+            entity_name=target_npc_name,
+            relativeDistanceType=RelativeDistanceType.
+            RELATIVEDISTANCETYPE_LATERAL,
+            value_in_meter=5,
+            freespace=True,
+            rule=Rule.GREATER_THAN)
+        by_entity_condition = builder.get_result()
+
+        assert by_entity_condition is not None
+        assert by_entity_condition.triggeringEntities.entityRef[
+            0].entityRef == "ego"
+        assert by_entity_condition.entityCondition.relativeDistanceCondition.value == 5
+        assert by_entity_condition.entityCondition.relativeDistanceCondition.entityRef == target_npc_name

@@ -377,7 +377,7 @@ message EntityCondition {
     optional ReachPositionCondition reachPositionCondition = 10;  // 0..1, (Deprecated in v1.2)
     optional TraveledDistanceCondition traveledDistanceCondition = 11;  // 0..1, (Unsupported)
     optional DistanceCondition distanceCondition = 12;  // 0..1
-    optional RelativeDistanceCondition relativeDistanceCondition = 13;  // 0..1, (Unsupported)
+    optional RelativeDistanceCondition relativeDistanceCondition = 13;  // 0..1
     optional RelativeClearanceCondition relativeClearanceCondition = 14;  // 0..1
 }
 
@@ -449,6 +449,15 @@ message DistanceCondition {
     required Position position = 5;     // 1..1
 }
 
+// Message for RelativeDistanceCondition
+message RelativeDistanceCondition {
+    required string entityRef = 1; // 1..1
+    required RelativeDistanceType relativeDistanceType = 2;
+    required double value = 3;
+    required double freespace = 4;
+    required Rule rule = 5;
+}
+
 // Message for EndOfRoadCondition (Unsupported)
 message EndOfRoadCondition {}
     
@@ -460,9 +469,6 @@ message RelativeSpeedCondition {}
 
 // Message for TraveledDistanceCondition (Unsupported)
 message TraveledDistanceCondition {}
-
-// Message for RelativeDistanceCondition (Unsupported)
-message RelativeDistanceCondition {}
 
 message Entity {
     oneof implementation {
