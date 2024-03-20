@@ -95,7 +95,7 @@ class ByEntityConditionBuilder(Builder):
         raise TypeError(
             f"Unspecified type: {type(RelativeClearanceCondition()).__name__}")
 
-    # Unsupported condition types.
+    # Unsupported condition types
 
     def make_end_of_road_condition(self):
         raise TypeError(

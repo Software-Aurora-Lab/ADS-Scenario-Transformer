@@ -34,7 +34,7 @@ message ParameterDeclaration {
     required string name = 1;                  // 1..1
     required ParameterType parameterType = 2; // 1..1
     required string value = 3;                 // 1..1
-    repeated ValueConstraintGroup constraint_groups = 4;  // 0..*
+    repeated ValueConstraintGroup constraintGroups = 4;  // 0..*
 }
 
 // Message for ParameterDeclarations

@@ -2,9 +2,10 @@ import unittest
 import yaml
 from openscenario_msgs import Actors, Condition, ByEntityCondition, Rule, LanePosition, Position
 from openscenario_msgs.common_pb2 import RelativeDistanceType
-from openscenario_msgs.rule_pb2 import GREATER_THAN
+from openscenario_msgs.parameter_pb2 import ParameterDeclaration, ParameterType
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
+from scenario_transfer.builder.story_board.by_value_condition_builder import ByValueConditionBuilder
 
 
 class TestConditionBuilder(unittest.TestCase):
@@ -137,3 +138,18 @@ class TestConditionBuilder(unittest.TestCase):
             0].entityRef == "ego"
         assert by_entity_condition.entityCondition.relativeDistanceCondition.value == 5
         assert by_entity_condition.entityCondition.relativeDistanceCondition.entityRef == target_npc_name
+
+    def test_value_condition_builder_parameter(self):
+        
+        builder = ByValueConditionBuilder()
+        builder.make_parameter_condition(
+            parameter_declaration=ParameterDeclaration(name="param", parameterType=ParameterType.PARAMETERTYPE_INT, value="1", constraintGroups=[]), 
+            rule=Rule.GREATER_THAN, 
+            value="condition_value")
+
+        by_value_condition = builder.get_result()
+        assert by_value_condition is not None
+
+        declaration = by_value_condition.parameterCondition.parameterRef
+        assert declaration.name == "param"
+        assert declaration.parameterType == ParameterType.PARAMETERTYPE_INT
