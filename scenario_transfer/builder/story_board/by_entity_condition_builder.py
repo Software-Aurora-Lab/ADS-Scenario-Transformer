@@ -25,9 +25,14 @@ class ByEntityConditionBuilder(Builder):
             entityRef=colliding_entity_name))
         self.entity_condition = EntityCondition(collisionCondition=condition)
 
-    def make_time_headway_condition(self):
-        # Implement the logic for time_headway_condition
-        return TimeHeadwayCondition()
+    def make_time_headway_condition(self, entity_name: str,
+                                    value_in_sec: float, rule: Rule):
+        condition = TimeHeadwayCondition(entityRef=entity_name,
+                                         value=value_in_sec,
+                                         freespace=False,
+                                         alongRoute=True,
+                                         rule=rule)
+        self.entity_condition = EntityCondition(timeHeadwayCondition=condition)
 
     def make_acceleration_condition(self, value_in_ms: float, rule: Rule):
         condition = AccelerationCondition(value=value_in_ms, rule=rule)
@@ -67,10 +72,6 @@ class ByEntityConditionBuilder(Builder):
         # Implement the logic for relative_distance_condition
         return RelativeDistanceCondition()
 
-    def make_relative_clearance_condition(self):
-        # Implement the logic for relative_clearance_condition
-        return RelativeClearanceCondition()
-
     def get_result(self) -> ByEntityCondition:
         assert self.entity_condition is not None
         assert self.triggering_entities is not None
@@ -79,6 +80,12 @@ class ByEntityConditionBuilder(Builder):
             triggeringEntities=self.triggering_entities,
             entityCondition=self.entity_condition)
         return self.product
+
+    # UnSpecified
+
+    def make_relative_clearance_condition(self):
+        raise TypeError(
+            f"Unspecified type: {type(RelativeClearanceCondition()).__name__}")
 
     # Unsupported condition types.
 

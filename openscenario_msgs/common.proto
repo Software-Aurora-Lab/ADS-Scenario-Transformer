@@ -387,15 +387,14 @@ message CollisionCondition {
     required ByObjectType byType = 2;    // 0..1
 }
 
+
 // Message for TimeHeadwayCondition
 message TimeHeadwayCondition {
-    optional CoordinateSystem coordinateSystem = 1;  // 0..1
-    required EntityRef entityRef = 2;  // 1..1
+    required string entityRef = 1;  // 1..1
+    required double value = 2;       // 1..1
     required bool freespace = 3;      // 1..1
-    optional RelativeDistanceType relativeDistanceType = 4;  // 0..1
-    required RoutingAlgorithm routingAlgorithm = 5;  // 0..1
-    required Rule rule = 6;          // 1..1
-    required double value = 7;       // 1..1
+    required bool alongRoute = 4; // 1..1
+    required Rule rule = 5;          // 1..1    
 }
 
 // Message for TimeToCollisionCondition (Unsupported)

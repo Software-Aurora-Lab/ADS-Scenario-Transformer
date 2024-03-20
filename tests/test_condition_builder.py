@@ -1,6 +1,7 @@
 import unittest
 import yaml
 from openscenario_msgs import Actors, Condition, ByEntityCondition, Rule, LanePosition, Position
+from openscenario_msgs.rule_pb2 import GREATER_THAN
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
 
@@ -99,3 +100,19 @@ class TestConditionBuilder(unittest.TestCase):
             0].entityRef == "ego"
         assert by_entity_condition.entityCondition.distanceCondition.position.lanePosition.laneId == "154"
         assert by_entity_condition.entityCondition.distanceCondition.value == 5
+
+    def test_entity_condition_builder_time_headway(self):
+
+        headway_npc_name = self.entities.scenarioObjects[1].name
+
+        builder = ByEntityConditionBuilder(triggering_entity=self.ego_name)
+        builder.make_time_headway_condition(entity_name=headway_npc_name,
+                                            value_in_sec=3,
+                                            rule=Rule.GREATER_THAN)
+        by_entity_condition = builder.get_result()
+
+        assert by_entity_condition is not None
+        assert by_entity_condition.triggeringEntities.entityRef[
+            0].entityRef == "ego"
+        assert by_entity_condition.entityCondition.timeHeadwayCondition.value == 3
+        assert by_entity_condition.entityCondition.timeHeadwayCondition.entityRef == headway_npc_name
