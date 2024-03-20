@@ -824,7 +824,7 @@ message StoryboardElementStateCondition {
     }
 
     required StoryboardElementStateCondition.State state = 1;  // 1..1
-    required StoryboardElement storyboardElementRef = 2;  // 1..1
+    required string storyboardElementRef = 2;  // 1..1
     required StoryboardElementStateCondition.Type storyboardElementType = 3;  // 1..1
 }
 
