@@ -1,6 +1,5 @@
-from typing import List
-
-from openscenario_msgs import Condition, TriggeringEntities, Position, RelativeDistanceType
+from typing import List, Optional
+from openscenario_msgs import Condition, TriggeringEntities, Position, RelativeDistanceType, DirectionalDimension, CoordinateSystem, RoutingAlgorithm
 import openscenario_msgs.common_pb2 as common_pb2
 from openscenario_msgs.common_pb2 import ByEntityCondition, EntityCondition, EndOfRoadCondition, CollisionCondition, OffroadCondition, TimeHeadwayCondition, TimeToCollisionCondition, AccelerationCondition, StandStillCondition, SpeedCondition, RelativeSpeedCondition, TraveledDistanceCondition, ReachPositionCondition, DistanceCondition, RelativeDistanceCondition, RelativeClearanceCondition
 from scenario_transfer.builder import Builder
@@ -17,21 +16,26 @@ class ByEntityConditionBuilder(Builder):
         self.triggering_entities = TriggeringEntities(
             triggeringEntitiesRule=common_pb2.TriggeringEntities.
             TriggeringEntitiesRule.ANY,
-            entityRef=[EntityRef(entityRef=triggering_entity)
+            entityRefs=[EntityRef(entityRef=triggering_entity)
                        ])  # limit to use single entity
 
     def make_collision_condition(self, colliding_entity_name: str):
         condition = CollisionCondition(entityRef=EntityRef(
             entityRef=colliding_entity_name))
         self.entity_condition = EntityCondition(collisionCondition=condition)
-
-    def make_time_headway_condition(self, entity_name: str,
-                                    value_in_sec: float, rule: Rule):
-        condition = TimeHeadwayCondition(entityRef=entity_name,
-                                         value=value_in_sec,
+    
+    def make_time_headway_condition(self, 
+                                    coordinateSystem: CoordinateSystem,
+                                    entity_name: str,
+                                    relativeDistanceType: RelativeDistanceType,
+                                    rule: Rule,
+                                    value_in_sec: float):
+        condition = TimeHeadwayCondition(coordinateSystem=coordinateSystem,
+                                         entityRef=entity_name,
                                          freespace=False,
-                                         alongRoute=True,
-                                         rule=rule)
+                                         relativeDistanceType=relativeDistanceType,
+                                         rule=rule,
+                                         value=value_in_sec)
         self.entity_condition = EntityCondition(timeHeadwayCondition=condition)
 
     def make_acceleration_condition(self, value_in_ms: float, rule: Rule):
@@ -43,8 +47,11 @@ class ByEntityConditionBuilder(Builder):
         condition = StandStillCondition(duration=duration_in_sec)
         self.entity_condition = EntityCondition(standStillCondition=condition)
 
-    def make_speed_condition(self, value_in_ms: float, rule: Rule):
-        condition = SpeedCondition(rule=rule, value=value_in_ms)
+    def make_speed_condition(self, 
+                             value_in_ms: float, 
+                             rule: Rule, 
+                             direction: DirectionalDimension = None):
+        condition = SpeedCondition(direction=direction, rule=rule, value=value_in_ms)
         self.entity_condition = EntityCondition(speedCondition=condition)
 
     def make_reach_position_condition(self, tolerance: float,
@@ -56,15 +63,23 @@ class ByEntityConditionBuilder(Builder):
         self.entity_condition = EntityCondition(
             reachPositionCondition=condition)
 
-    def make_distance_condition(self, value_in_meter: float, freespace: bool,
-                                rule: Rule, position: Position):
+    def make_distance_condition(self, 
+                                coordinateSystem: CoordinateSystem,
+                                freespace: bool,
+                                relativeDistanceType: RelativeDistanceType,
+                                routingAlgorithm: RoutingAlgorithm,
+                                value_in_meter: float,
+                                rule: Rule,
+                                position: Position):
         assert position.worldPosition is not None or position.lanePosition is not None
 
         condition = DistanceCondition(
-            value=value_in_meter,
+            coordinateSystem=coordinateSystem,
             freespace=freespace,
-            alongRoute=False,  # always false
+            relativeDistanceType=relativeDistanceType,
+            routingAlgorithm=routingAlgorithm,
             rule=rule,
+            value=value_in_meter,
             position=position)
         self.entity_condition = EntityCondition(distanceCondition=condition)
 

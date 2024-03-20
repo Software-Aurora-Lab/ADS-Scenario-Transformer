@@ -151,7 +151,7 @@ message InitActions {
 
 // Message for Private
 message Private {
-    required string entityRef = 1;  // 1..1, It does not use EntityRef type.
+    required string entityRef = 1;  // 1..1
     repeated PrivateAction privateActions = 2;  // 1..*
 }
 
@@ -175,7 +175,7 @@ message TriggeringEntities {
         ANY = 1;
     }
     required TriggeringEntitiesRule triggeringEntitiesRule = 1;  // 1..1
-    repeated EntityRef entityRef = 2;  // 1..*
+    repeated EntityRef entityRefs = 2;  // 1..*
 }
 
 // Message for ByValueCondition
@@ -378,7 +378,7 @@ message EntityCondition {
     optional TraveledDistanceCondition traveledDistanceCondition = 11;  // 0..1, (Unsupported)
     optional DistanceCondition distanceCondition = 12;  // 0..1
     optional RelativeDistanceCondition relativeDistanceCondition = 13;  // 0..1
-    optional RelativeClearanceCondition relativeClearanceCondition = 14;  // 0..1
+    optional RelativeClearanceCondition relativeClearanceCondition = 14;  // 0..1, (Unspecified)
 }
 
 // Message for CollisionCondition
@@ -387,14 +387,15 @@ message CollisionCondition {
     required ByObjectType byType = 2;    // 0..1
 }
 
-
 // Message for TimeHeadwayCondition
 message TimeHeadwayCondition {
-    required string entityRef = 1;  // 1..1
-    required double value = 2;       // 1..1
+    optional CoordinateSystem coordinateSystem = 1;  // 0..1
+    required string entityRef = 2;  // 1..1
     required bool freespace = 3;      // 1..1
-    required bool alongRoute = 4; // 1..1
-    required Rule rule = 5;          // 1..1    
+    optional RelativeDistanceType relativeDistanceType = 4;  // 0..1
+    required RoutingAlgorithm routingAlgorithm = 5;  // 0..1
+    required Rule rule = 6;          // 1..1
+    required double value = 7;       // 1..1
 }
 
 // Message for TimeToCollisionCondition (Unsupported)
@@ -409,13 +410,14 @@ message AccelerationCondition {
 
 // Message for SpeedCondition
 message SpeedCondition {
+    optional DirectionalDimension direction = 1;  // 0..1
     required Rule rule = 3;      // 1..1
     required double value = 4;   // 1..1
 }
 
 // Message for StandStillCondition
 message StandStillCondition {
-    required double duration = 1;  // 1..1, in second
+    required double duration = 1;  // 1..1
 }
 
 // Message for ReachPositionCondition
@@ -442,11 +444,13 @@ message RelativeLaneRange {
 
 // Message for DistanceCondition
 message DistanceCondition {
-    required double value = 1;          // 1..1
-    required bool freespace = 2;        // 1..1
-    required bool alongRoute = 3;       // 1..1
-    required Rule rule = 4;             // 1..1
-    required Position position = 5;     // 1..1
+    optional CoordinateSystem coordinateSystem = 1;  // 0..1
+    required bool freespace = 2;         // 1..1
+    optional RelativeDistanceType relativeDistanceType = 3;  // 0..1
+    optional RoutingAlgorithm routingAlgorithm = 4;  // 0..1
+    required Rule rule = 5;             // 1..1
+    required double value = 6;          // 1..1
+    required Position position = 7;     // 1..1
 }
 
 // Message for RelativeDistanceCondition
@@ -496,7 +500,7 @@ message EntityObject {
 
 // Message for EntityRef
 message EntityRef {
-    required string entityRef = 1;	// 1..1, Change type to string 
+    required string entityRef = 1;	// 1..1
 }
 
 // Message for SpawnedObject, Unsupported
