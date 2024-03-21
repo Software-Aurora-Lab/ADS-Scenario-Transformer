@@ -317,7 +317,7 @@ message ObjectController {
 
 // Message for EntityAction
 message EntityAction {
-    required EntityRef entityRef = 1;  // 1..1
+    required string entityRef = 1;  // 1..1
     optional AddEntityAction addEntityAction = 2;  // 0..1
     optional DeleteEntityAction deleteEntityAction = 3;  // 0..1
 }
@@ -325,7 +325,6 @@ message EntityAction {
 // Message for AddEntityAction
 message AddEntityAction {
     required Position position = 1;      // 1..1
-    required EntityAction entityAction = 2;  // 1..1
 }
 
 // Message for DeleteEntityAction
