@@ -1,8 +1,9 @@
 import pytest
 from openscenario_msgs import GlobalAction, Entities, Position, LanePosition
-from openscenario_msgs.common_pb2 import InfrastructureAction, EntityAction
+from openscenario_msgs.common_pb2 import InfrastructureAction, EntityAction, UserDefinedAction
 from openscenario_msgs.traffic_signal_pb2 import TrafficSignalControllerAction
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
+from scenario_transfer.builder.story_board.user_defined_action_builder import UserDefinedActionBuilder
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 
 
@@ -75,3 +76,12 @@ def test_global_action_builder_traffic_signal_state_action():
     assert isinstance(action, GlobalAction)
     assert_proto_type_equal(action.infrastructureAction, InfrastructureAction)
     assert action.infrastructureAction.trafficSignalAction.trafficSignalStateAction.name == "StraghtSignal"
+
+
+def test_user_definec_action_builder():
+    builder = UserDefinedActionBuilder()
+
+    builder.make_custom_command_action(type=":", content="")
+    null_action = builder.get_result()
+
+    assert_proto_type_equal(null_action, UserDefinedAction)

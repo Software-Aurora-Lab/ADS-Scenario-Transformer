@@ -3,38 +3,6 @@ from openscenario_msgs import GlobalAction, Position, EntityAction, AddEntityAct
 from openscenario_msgs.traffic_signal_pb2 import TrafficSignalAction, TrafficSignalStateAction, TrafficSignalControllerAction
 from scenario_transfer.builder import Builder
 
-# // Message for GlobalAction
-# message GlobalAction {
-#     optional EnvironmentAction environmentAction = 1;  // 0..1
-#     optional EntityAction entityAction = 2;  // 0..1
-#     optional InfrastructureAction infrastructureAction = 3;  // 0..1
-#     optional TrafficAction trafficAction = 4;  // 0..1
-#     optional VariableAction variableAction = 5;  // 0..1
-# }
-
-# // Message for InfrastructureAction
-# message InfrastructureAction {
-#     required TrafficSignalAction trafficSignalAction = 1;  // 1..1
-# }
-
-# // Message for TrafficSignalAction
-# message TrafficSignalAction {
-#     optional TrafficSignalControllerAction trafficSignalControllerAction = 1;  // 0..1
-#     optional TrafficSignalStateAction trafficSignalStateAction = 2;  // 0..1
-# }
-
-# // Message for TrafficSignalControllerAction
-# message TrafficSignalControllerAction {
-#     required string phase = 1;
-#     required string trafficSignalControllerRef = 2;
-# }
-
-# // Message for TrafficSignalStateAction
-# message TrafficSignalStateAction {
-#     required string name = 1;   // 1..1
-#     required string state = 2;  // 1..1
-# }
-
 
 class GlobalActionBuilder(Builder):
     product: GlobalAction
