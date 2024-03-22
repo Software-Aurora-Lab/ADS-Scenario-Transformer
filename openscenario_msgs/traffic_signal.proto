@@ -10,8 +10,7 @@ message TrafficSignalAction {
 // Message for TrafficSignalControllerAction
 message TrafficSignalControllerAction {
     required string phase = 1; 
-    required TrafficSignalController trafficSignalControllerRef = 2;
-    required Phase phaseRef = 3;
+    required string trafficSignalControllerRef = 2;
 }
 
 // Message for TrafficSignalStateAction
