@@ -760,7 +760,7 @@ message SpeedActionTarget {
 // Message for RelativeTargetSpeed
 message RelativeTargetSpeed {
     required bool continuous = 1;     // 1..1
-    required EntityRef entityRef = 2;   // 1..1
+    required string entityRef = 2;   // 1..1
     required SpeedTargetValueType speedTargetValueType = 3;  // 1..1
     required double value = 4;          // 1..1
 }

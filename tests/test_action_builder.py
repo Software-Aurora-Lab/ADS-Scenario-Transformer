@@ -1,9 +1,9 @@
 import pytest
-from openscenario_msgs import GlobalAction, Entities, Position, LanePosition
-from openscenario_msgs.common_pb2 import InfrastructureAction, EntityAction, UserDefinedAction
-from openscenario_msgs.traffic_signal_pb2 import TrafficSignalControllerAction
+from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, TransitionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode
+from openscenario_msgs.common_pb2 import InfrastructureAction, EntityAction, UserDefinedAction, PrivateAction, SpeedTargetValueType, SpeedAction
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
 from scenario_transfer.builder.story_board.user_defined_action_builder import UserDefinedActionBuilder
+from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 
 
@@ -19,6 +19,15 @@ def entities() -> Entities:
 @pytest.fixture
 def ego_name(entities) -> str:
     return entities.scenarioObjects[0].name
+
+
+@pytest.fixture
+def transition_dynamics() -> TransitionDynamics:
+    return TransitionDynamics(
+        dynamicsDimension=TransitionDynamics.DynamicsDimension.RATE,
+        dynamicsShape=TransitionDynamics.DynamicsShape.LINEAR,
+        followingMode=FollowingMode.FOLLOWINGMODE_FOLLOW,
+        value=1.0)
 
 
 def assert_proto_type_equal(reflection_type, pb2_type):
@@ -85,3 +94,37 @@ def test_user_definec_action_builder():
     null_action = builder.get_result()
 
     assert_proto_type_equal(null_action, UserDefinedAction)
+
+
+def test_relative_speed_action_builder(ego_name, transition_dynamics):
+    assert ego_name == "ego"
+    builder = PrivateActionBuilder()
+    builder.make_relative_speed_action(
+        transition_dynamics=transition_dynamics,
+        continuous=True,
+        entity_name=ego_name,
+        target_value_type=SpeedTargetValueType.SPEEDTARGETVALUETYPE_DELTA,
+        value=2.0)
+
+    action = builder.get_result()
+    assert_proto_type_equal(action, PrivateAction)
+    speed_action = action.longitudinalAction.speedAction
+    assert_proto_type_equal(speed_action, SpeedAction)
+    assert_proto_type_equal(speed_action.speedActionDynamics,
+                            TransitionDynamics)
+    assert_proto_type_equal(speed_action.speedActionTarget.relativeTargetSpeed,
+                            RelativeTargetSpeed)
+
+
+def test_absolute_speed_action_builder(transition_dynamics):
+    builder = PrivateActionBuilder()
+    builder.make_absolute_speed_action(transition_dynamics=transition_dynamics,
+                                       value=0.0)
+    action = builder.get_result()
+    assert_proto_type_equal(action, PrivateAction)
+    speed_action = action.longitudinalAction.speedAction
+    assert_proto_type_equal(speed_action, SpeedAction)
+    assert_proto_type_equal(speed_action.speedActionDynamics,
+                            TransitionDynamics)
+    assert_proto_type_equal(speed_action.speedActionTarget.absoluteTargetSpeed,
+                            AbsoluteTargetSpeed)
