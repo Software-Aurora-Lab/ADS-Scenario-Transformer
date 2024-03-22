@@ -5,7 +5,6 @@ import os
 import importlib
 from protobuf_to_dict import protobuf_to_dict
 from google.protobuf.descriptor import Descriptor
-from scenario_transfer.openscenario.openscenario_attributes_name_mapper import OpenScenarioAttributesNameMapper
 
 
 class OpenScenarioCoder:
