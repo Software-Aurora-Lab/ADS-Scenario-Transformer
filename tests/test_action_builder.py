@@ -1,6 +1,6 @@
 import pytest
 from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, TransitionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode
-from openscenario_msgs.common_pb2 import InfrastructureAction, EntityAction, UserDefinedAction, PrivateAction, SpeedTargetValueType, SpeedAction
+from openscenario_msgs.common_pb2 import InfrastructureAction, EntityAction, LaneChangeAction, UserDefinedAction, PrivateAction, SpeedTargetValueType, SpeedAction
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
 from scenario_transfer.builder.story_board.user_defined_action_builder import UserDefinedActionBuilder
 from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
@@ -128,3 +128,35 @@ def test_absolute_speed_action_builder(transition_dynamics):
                             TransitionDynamics)
     assert_proto_type_equal(speed_action.speedActionTarget.absoluteTargetSpeed,
                             AbsoluteTargetSpeed)
+
+
+def test_relative_lane_change_action(transition_dynamics):
+    builder = PrivateActionBuilder()
+    builder.make_relative_lane_change_action(
+        transition_dynamics=transition_dynamics,
+        entity_name="example_entity",
+        value=2,
+        lane_offset=0.5)
+    action = builder.get_result()
+    assert action is not None
+    assert_proto_type_equal(action.lateralAction.laneChangeAction,
+                            LaneChangeAction)
+    assert_proto_type_equal(
+        action.lateralAction.laneChangeAction.laneChangeActionDynamics,
+        TransitionDynamics)
+    # Add more assertions as needed
+
+
+def test_absolute_lane_change_action(transition_dynamics):
+    builder = PrivateActionBuilder()
+    builder.make_absolute_lane_change_action(
+        transition_dynamics=transition_dynamics,
+        value="example_value",
+        lane_offset=0.5)
+    action = builder.get_result()
+    assert action is not None
+    assert_proto_type_equal(action.lateralAction.laneChangeAction,
+                            LaneChangeAction)
+    assert_proto_type_equal(
+        action.lateralAction.laneChangeAction.laneChangeActionDynamics,
+        TransitionDynamics)

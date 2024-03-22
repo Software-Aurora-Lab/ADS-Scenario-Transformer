@@ -605,7 +605,7 @@ message LaneChangeTarget {
 
 // Message for RelativeTargetLane
 message RelativeTargetLane {
-    required EntityRef entityRef = 1;  // 1..1
+    required string entityRef = 1;  // 1..1
     required int32 value = 2;           // 1..1
 }
 
