@@ -260,8 +260,8 @@ message AssignControllerAction {
     required bool activateLongitudinal = 3;   // 0..1
     required Controller controller = 4;           // 0..1
     required CatalogReference catalogReference = 5;  // 0..1
-    required ControllerAction controllerAction = 6;  // 1..1
 }
+
 // Message for OverrideControllerValueAction (Unsupported)
 message OverrideControllerValueAction {}
 
