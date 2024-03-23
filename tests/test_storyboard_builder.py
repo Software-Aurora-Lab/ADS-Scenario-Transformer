@@ -8,8 +8,6 @@ from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuild
 class TestBuilder(unittest.TestCase):
 
     def setUp(self):
-        input_dir = "./tests/data/"
-        self.route_file_path = input_dir + "openscenario_route.yaml"
         builder = EntitiesBuilder(entities=[
             EntityType.NPC, EntityType.NPC, EntityType.EGO,
             EntityType.PEDESTRIAN, EntityType.NPC

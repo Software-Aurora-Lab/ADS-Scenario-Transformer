@@ -1,6 +1,6 @@
 import unittest
-import yaml
-from openscenario_msgs import Actors, Condition, ByEntityCondition, Rule, LanePosition, Position, DirectionalDimension, RelativeDistanceType, CoordinateSystem, RoutingAlgorithm, StoryboardElementStateCondition
+from definitions import TEST_ROOT
+from openscenario_msgs import Rule, LanePosition, Position, DirectionalDimension, RelativeDistanceType, CoordinateSystem, RoutingAlgorithm, StoryboardElementStateCondition
 from openscenario_msgs.parameter_pb2 import ParameterDeclaration, ParameterType
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
@@ -10,8 +10,6 @@ from scenario_transfer.builder.story_board.by_value_condition_builder import ByV
 class TestConditionBuilder(unittest.TestCase):
 
     def setUp(self):
-        input_dir = "./tests/data/"
-        self.route_file_path = input_dir + "openscenario_route.yaml"
         builder = EntitiesBuilder(entities=[
             EntityType.NPC, EntityType.NPC, EntityType.EGO,
             EntityType.PEDESTRIAN, EntityType.NPC

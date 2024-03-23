@@ -1,6 +1,7 @@
 import unittest
 import yaml
 from datetime import datetime
+from definitions import TEST_ROOT
 from openscenario_msgs import CatalogDefinition, FileHeader, Entities, ParameterDeclarations, ParameterDeclaration, ScenarioDefinition, Route, Private, ScenarioObject, TeleportAction, RoutingAction, AssignRouteAction, AcquirePositionAction
 from openscenario_msgs.scenario_pb2 import Scenario, OpenSCENARIO
 
@@ -15,8 +16,7 @@ from scenario_transfer.openscenario import OpenScenarioEncoder, OpenScenarioDeco
 class TestBuilder(unittest.TestCase):
 
     def setUp(self):
-        input_dir = "./tests/data/"
-        self.route_file_path = input_dir + "openscenario_route.yaml"
+        self.route_file_path = TEST_ROOT + "/data/openscenario_route.yaml"
 
     def test_scenario_builder(self):
 

@@ -1,5 +1,6 @@
 import unittest
 import yaml
+from definitions import TEST_ROOT
 from openscenario_msgs import Route, LanePosition, ObjectController, Vehicle, EntityObject, ScenarioObject, Entities, ParameterDeclarations
 from scenario_transfer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
 
@@ -7,10 +8,9 @@ from scenario_transfer.openscenario import OpenScenarioEncoder, OpenScenarioDeco
 class TestOpenScenarioCoder(unittest.TestCase):
 
     def setUp(self):
-        input_dir = "./tests/data/"
-        self.route_file_path = input_dir + "openscenario_route.yaml"
-        self.entities_file_path = input_dir + "openscenario_entities.yaml"
-        self.scenario_object_file_path = input_dir + "openscenario_scenario_object.yaml"
+        self.route_file_path = TEST_ROOT + "/data/openscenario_route.yaml"
+        self.entities_file_path = TEST_ROOT + "/data/openscenario_entities.yaml"
+        self.scenario_object_file_path = TEST_ROOT + "/data/openscenario_scenario_object.yaml"
 
     def test_openscenario_encode_decode(self):
         with open(self.route_file_path, 'r') as file:

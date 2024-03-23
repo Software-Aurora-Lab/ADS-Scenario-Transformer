@@ -5,14 +5,14 @@ import os
 import importlib
 from protobuf_to_dict import protobuf_to_dict
 from google.protobuf.descriptor import Descriptor
-
+from definitions import PROJECT_ROOT
 
 class OpenScenarioCoder:
     field_name_cache = {}
+    openscenario_msgs_path = PROJECT_ROOT + "/openscenario_msgs"
 
     @staticmethod
-    def update_field_names_in_proto_files(
-            openscenario_protobuf_directory="./openscenario_msgs"):
+    def update_field_names_in_proto_files(openscenario_protobuf_directory: str = openscenario_msgs_path):
 
         if OpenScenarioCoder.field_name_cache:
             return
@@ -96,13 +96,11 @@ class OpenScenarioEncoder:
 
         OpenScenarioCoder.update_field_names_in_proto_files()
 
-        print(proto_dict)
         result_dict = OpenScenarioEncoder.convert_to_compatible_element(
             input_dict=proto_dict,
             name_dict=OpenScenarioCoder.field_name_cache,
             root_type_name=type(proto_pyobject).__name__)
 
-        print("after encoding", result_dict)
         if wrap_result_with_typename:
             result_dict = {type(proto_pyobject).__name__: result_dict}
 
@@ -127,7 +125,7 @@ class OpenScenarioEncoder:
 
             type_name = search_type_name(field_name=key,
                                          root_type_name=root_type_name)
-            print("key:", key, "value:", value, "type_name:", type_name)
+
             new_key = key
             new_value = value
 
@@ -243,7 +241,7 @@ class OpenScenarioDecoder:
         def search_oneof(
                 searching_type_name: str,
                 type_pair: Dict[str, str]) -> Optional[Tuple[str, str, str]]:
-            one_of_wrapper_field = ""
+
             for field_name, type_name in type_pair:
                 if OpenScenarioCoder.is_oneof_type_or_skipped_type(type_name):
                     one_of_wrapper_field = field_name
