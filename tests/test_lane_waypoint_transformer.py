@@ -5,7 +5,7 @@ from lanelet2.io import Origin
 from modules.common.proto.geometry_pb2 import PointENU
 from modules.routing.proto.routing_pb2 import LaneWaypoint
 from openscenario_msgs import Waypoint, LanePosition
-from scenario_transfer import LaneWaypointTransformer
+from scenario_transfer.transformer import LaneWaypointTransformer
 from scenario_transfer.tools.apollo_map_service import ApolloMapService
 
 
@@ -50,7 +50,7 @@ class TestLaneWaypointTransformer(unittest.TestCase):
         openscenario_waypoint = transformer.transform(source=lane_waypoint)
         self.assert_proto_type_equal(openscenario_waypoint, Waypoint)
         lane_position = openscenario_waypoint.position.lanePosition
-        
+
         self.assert_proto_type_equal(lane_position, LanePosition)
         self.assertEqual(lane_position.laneId, "149")
         self.assertEqual(lane_position.offset, 1.4604610803960605)
@@ -59,6 +59,7 @@ class TestLaneWaypointTransformer(unittest.TestCase):
 
     def assert_proto_type_equal(self, reflection_type, pb2_type):
         self.assertEqual(str(reflection_type.__class__), str(pb2_type))
+
 
 if __name__ == '__main__':
     unittest.main()

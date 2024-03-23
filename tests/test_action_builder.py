@@ -144,7 +144,6 @@ def test_relative_lane_change_action(transition_dynamics):
     assert_proto_type_equal(
         action.lateralAction.laneChangeAction.laneChangeActionDynamics,
         TransitionDynamics)
-    # Add more assertions as needed
 
 
 def test_absolute_lane_change_action(transition_dynamics):

@@ -2,14 +2,14 @@ import unittest
 import lanelet2
 from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
-from modules.routing.proto.routing_pb2 import RoutingRequest, RoutingResponse
-from openscenario_msgs import Private, TeleportAction, RoutingAction, AssignRouteAction, Route, LanePosition
-from scenario_transfer import RoutingRequestTransformer
+from openscenario_msgs import Private, TeleportAction, RoutingAction, AssignRouteAction
+from scenario_transfer.transformer import RoutingRequestTransformer
 from scenario_transfer.tools.apollo_map_service import ApolloMapService
 from scenario_transfer.builder import EntitiesBuilder
 from scenario_transfer.builder.entities_builder import EntityType
 from scenario_transfer.openscenario import OpenScenarioEncoder
 from scenario_transfer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
+
 
 class TestRoutingRequestTransformer(unittest.TestCase):
 
@@ -35,7 +35,9 @@ class TestRoutingRequestTransformer(unittest.TestCase):
                 "ego_scenario_object": self.ego
             })
 
-        routing_requests = CyberRecordReader.read_channel(source_path="./samples/apollo_borregas/00000009.00000", channel=CyberRecordChannel.ROUTING_REQUEST)
+        routing_requests = CyberRecordReader.read_channel(
+            source_path="./samples/apollo_borregas/00000009.00000",
+            channel=CyberRecordChannel.ROUTING_REQUEST)
 
         routing_request = routing_requests[0]
         openscenario_private = routing_request_transformer.transform(
@@ -56,7 +58,7 @@ class TestRoutingRequestTransformer(unittest.TestCase):
         self.assertEqual(start_lane_position.orientation.h, 2.883901414579166)
 
         self.assert_proto_type_equal(routing_action.assignRouteAction,
-                                      AssignRouteAction)
+                                     AssignRouteAction)
 
         end_waypoint = routing_action.assignRouteAction.route.waypoints[-1]
         end_lane_position = end_waypoint.position.lanePosition
@@ -75,7 +77,9 @@ class TestRoutingRequestTransformer(unittest.TestCase):
                 "route_name": "test_route",
                 "ego_scenario_object": self.ego
             })
-        routing_responses = CyberRecordReader.read_channel(source_path="./samples/apollo_borregas/00000035.00000", channel=CyberRecordChannel.ROUTING_RESPONSE)
+        routing_responses = CyberRecordReader.read_channel(
+            source_path="./samples/apollo_borregas/00000035.00000",
+            channel=CyberRecordChannel.ROUTING_RESPONSE)
 
         routing_response = routing_responses[0]
         routing_request = routing_response.routing_request
@@ -84,16 +88,16 @@ class TestRoutingRequestTransformer(unittest.TestCase):
             routing_request)
 
         self.assert_proto_type_equal(openscenario_private, Private)
-        
-    
+
     def write_proto_pyobject_to_yaml(self, file_path, proto_pyobject):
-        encoded_data = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(proto_pyobject)
+        encoded_data = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
+            proto_pyobject)
         with open(file_path, "w") as file:
             file.write(encoded_data)
 
     def assert_proto_type_equal(self, reflection_type, pb2_type):
         self.assertEqual(str(reflection_type.__class__), str(pb2_type))
-            
+
 
 if __name__ == '__main__':
     unittest.main()
