@@ -7,12 +7,14 @@ from protobuf_to_dict import protobuf_to_dict
 from google.protobuf.descriptor import Descriptor
 from definitions import PROJECT_ROOT
 
+
 class OpenScenarioCoder:
     field_name_cache = {}
     openscenario_msgs_path = PROJECT_ROOT + "/openscenario_msgs"
 
     @staticmethod
-    def update_field_names_in_proto_files(openscenario_protobuf_directory: str = openscenario_msgs_path):
+    def update_field_names_in_proto_files(
+            openscenario_protobuf_directory: str = openscenario_msgs_path):
 
         if OpenScenarioCoder.field_name_cache:
             return
@@ -219,23 +221,22 @@ class OpenScenarioDecoder:
     def convert_to_compatible_element(input_dict,
                                       name_dict,
                                       root_type_name,
-                                      parenet_type_name=""):
+                                      parent_type_name=""):
         """
         Convert key of a dictionary to a compatible one which enable initializing object.
         
         """
 
         @staticmethod
-        def create_key(name_dict, key, root_name) -> str:
-            attr_names = []
-            for x in name_dict[root_name]:
-                if isinstance(x, tuple):
-                    attr_names.append(x[0])
-                else:
-                    attr_names.append(list(x.keys())[0])  # enum hanldling
+        def search_pyobject_field_name(name_dict, key, root_name) -> str:
+            res = key
+            for field_name, type_name in name_dict[root_name]:
+                if type_name == key or field_name.lower() == key.lower():
+                    if isinstance(type_name, str):
+                        res = field_name
+                        break
 
-            matches = difflib.get_close_matches(key, attr_names)
-            return matches[0] if matches else key
+            return res
 
         @staticmethod
         def search_oneof(
@@ -253,17 +254,26 @@ class OpenScenarioDecoder:
 
             return None
 
+        @staticmethod
+        def search_field_name(type_name: str,
+                              root_type_name: str) -> Optional[str]:
+            for field_name, type_name_key in name_dict[root_type_name]:
+                if type_name == type_name_key:
+                    return field_name
+            return None
+
         # Code starts here
         res_dict = {}
 
-        if parenet_type_name == "":
-            parenet_type_name = root_type_name
+        if parent_type_name == "":
+            parent_type_name = root_type_name
 
         if root_type_name == "":
             return input_dict
 
         for key, value in input_dict.items():
-            new_key = create_key(name_dict, key, root_type_name)
+            new_key = search_pyobject_field_name(name_dict, key,
+                                                 root_type_name)
             new_value = value
 
             # find type information
@@ -285,10 +295,10 @@ class OpenScenarioDecoder:
                     break
 
             if new_root_type_name == "":
-                if isinstance(parenet_type_name, str):
+                if isinstance(parent_type_name, str):
                     one_of_result = search_oneof(
                         searching_type_name=new_key,
-                        type_pair=name_dict[parenet_type_name])
+                        type_pair=name_dict[parent_type_name])
                     if one_of_result:
                         one_of_wrapper_field = one_of_result[0]
                         one_of_field_name = one_of_result[1]
@@ -299,7 +309,7 @@ class OpenScenarioDecoder:
                     input_dict=value,
                     name_dict=name_dict,
                     root_type_name=new_root_type_name,
-                    parenet_type_name=root_type_name)
+                    parent_type_name=root_type_name)
 
                 # wrap one_of type
                 if one_of_wrapper_field != "":
@@ -309,15 +319,21 @@ class OpenScenarioDecoder:
                     res_dict[new_key] = new_value
 
             elif isinstance(value, list):
+
                 new_value = [
                     OpenScenarioDecoder.convert_to_compatible_element(
                         input_dict=value_element,
                         name_dict=name_dict,
                         root_type_name=new_root_type_name,
-                        parenet_type_name=root_type_name)
+                        parent_type_name=root_type_name)
                     for value_element in value
                 ]
-                res_dict[new_key] = new_value
+                field_name = search_field_name(type_name=new_key,
+                                               root_type_name=root_type_name)
+                if field_name:
+                    res_dict[field_name] = new_value
+                else:
+                    res_dict[new_key] = new_value
             elif isinstance(value, str):
                 # enum + string value
 
