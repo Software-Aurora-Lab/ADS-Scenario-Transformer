@@ -16,7 +16,8 @@ enum PedestrianCategory {
 // Message for Pedestrian
 message Pedestrian {
     required double mass = 1;   // 1..1
-    optional string model3d = 2;  // 0..1
+    optional string model = 2;  // 0..1, model is marked as deprecated, but it is still in use
+    // optional string model3d = 2;  // 0..1, model3d is specified in OpenSCENARIO, but it does not exist in scenario files.
     required string name = 3;    // 1..1
     required PedestrianCategory pedestrianCategory = 4;  // 1..1
     optional Role role = 5;      // 0..1

@@ -19,7 +19,7 @@ from openscenario_msgs import property_pb2 as openscenario__msgs_dot_property__p
 from openscenario_msgs import role_pb2 as openscenario__msgs_dot_role__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\"openscenario_msgs/pedestrian.proto\x12\x0copenscenario\x1a#openscenario_msgs/boundingbox.proto\x1a!openscenario_msgs/parameter.proto\x1a openscenario_msgs/property.proto\x1a\x1copenscenario_msgs/role.proto\"\xba\x02\n\nPedestrian\x12\x0c\n\x04mass\x18\x01 \x02(\x01\x12\x0f\n\x07model3d\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x02(\t\x12<\n\x12pedestrianCategory\x18\x04 \x02(\x0e\x32 .openscenario.PedestrianCategory\x12 \n\x04role\x18\x05 \x01(\x0e\x32\x12.openscenario.Role\x12\x41\n\x15parameterDeclarations\x18\x06 \x03(\x0b\x32\".openscenario.ParameterDeclaration\x12.\n\x0b\x62oundingBox\x18\x07 \x02(\x0b\x32\x19.openscenario.BoundingBox\x12,\n\nproperties\x18\x08 \x02(\x0b\x32\x18.openscenario.Properties*y\n\x12PedestrianCategory\x12\x1d\n\x19PEDESTRIANCATEGORY_ANIMAL\x10\x00\x12!\n\x1dPEDESTRIANCATEGORY_PEDESTRIAN\x10\x01\x12!\n\x1dPEDESTRIANCATEGORY_WHEELCHAIR\x10\x02')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\"openscenario_msgs/pedestrian.proto\x12\x0copenscenario\x1a#openscenario_msgs/boundingbox.proto\x1a!openscenario_msgs/parameter.proto\x1a openscenario_msgs/property.proto\x1a\x1copenscenario_msgs/role.proto\"\xb8\x02\n\nPedestrian\x12\x0c\n\x04mass\x18\x01 \x02(\x01\x12\r\n\x05model\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x02(\t\x12<\n\x12pedestrianCategory\x18\x04 \x02(\x0e\x32 .openscenario.PedestrianCategory\x12 \n\x04role\x18\x05 \x01(\x0e\x32\x12.openscenario.Role\x12\x41\n\x15parameterDeclarations\x18\x06 \x03(\x0b\x32\".openscenario.ParameterDeclaration\x12.\n\x0b\x62oundingBox\x18\x07 \x02(\x0b\x32\x19.openscenario.BoundingBox\x12,\n\nproperties\x18\x08 \x02(\x0b\x32\x18.openscenario.Properties*y\n\x12PedestrianCategory\x12\x1d\n\x19PEDESTRIANCATEGORY_ANIMAL\x10\x00\x12!\n\x1dPEDESTRIANCATEGORY_PEDESTRIAN\x10\x01\x12!\n\x1dPEDESTRIANCATEGORY_WHEELCHAIR\x10\x02')
 
 _PEDESTRIANCATEGORY = DESCRIPTOR.enum_types_by_name['PedestrianCategory']
 PedestrianCategory = enum_type_wrapper.EnumTypeWrapper(_PEDESTRIANCATEGORY)
@@ -39,8 +39,8 @@ _sym_db.RegisterMessage(Pedestrian)
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _PEDESTRIANCATEGORY._serialized_start=505
-  _PEDESTRIANCATEGORY._serialized_end=626
+  _PEDESTRIANCATEGORY._serialized_start=503
+  _PEDESTRIANCATEGORY._serialized_end=624
   _PEDESTRIAN._serialized_start=189
-  _PEDESTRIAN._serialized_end=503
+  _PEDESTRIAN._serialized_end=501
 # @@protoc_insertion_point(module_scope)
