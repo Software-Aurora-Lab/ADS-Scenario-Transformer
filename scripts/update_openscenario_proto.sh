@@ -6,5 +6,5 @@ PROJECT_ROOT=$(pwd)
 path="$PROJECT_ROOT/openscenario_msgs"
 
 poetry remove openscenario-msgs
-sh $path/compile_proto.sh
+sh $path/compile_proto.sh $PROJECT_ROOT
 poetry add ./openscenario_msgs

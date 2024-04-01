@@ -5,7 +5,6 @@ import "openscenario_msgs/boundingbox.proto";
 import "openscenario_msgs/by_type.proto";
 import "openscenario_msgs/directory.proto";
 import "openscenario_msgs/environment.proto";
-import "openscenario_msgs/file.proto";
 import "openscenario_msgs/following_mode.proto";
 import "openscenario_msgs/parameter.proto";
 import "openscenario_msgs/pedestrian.proto";
@@ -17,6 +16,7 @@ import "openscenario_msgs/shape.proto";
 import "openscenario_msgs/traffic_signal.proto";
 import "openscenario_msgs/vehicle.proto";
 import "openscenario_msgs/transition_dynamics.proto";
+import "openscenario_msgs/orientation.proto";
 
 // Message for OpenScenario
 message OpenScenario {
@@ -243,7 +243,7 @@ message RouteRef {
 // Message for TrajectoryRef
 message TrajectoryRef {
     required Trajectory trajectory = 1;  // 1..1
-    required CatalogReference catalogReference = 2;  // 1..1
+    optional CatalogReference catalogReference = 2;  // 1..1
 }
 
 // Message for ControllerAction
@@ -726,11 +726,28 @@ message AssignRouteAction {
     required AssignRouteAction action = 3;  // 1..1
 }
 
-// Message for FollowTrajectoryAction (doc out-of-date)
+// Message for FollowTrajectoryAction
 message FollowTrajectoryAction {
-    required double initialDistanceOffset = 1;   // Unsupported
-    required RoutingAction action = 2;  // Unsupported
-    // Additional fields are unsupported and documentation is out-of-date
+    optional double initialDistanceOffset = 1;
+    required RoutingAction action = 2;
+    required TimeReference timeReference = 3;
+    required TrajectoryFollowingMode trajectoryFollowingMode = 4;
+    optional TrajectoryRef trajectoryRef = 5;
+}
+
+// Message for TimeReference, XOR message
+message TimeReference {
+    message NONE {}
+    
+    optional NONE none = 1; // 0..1
+    optional Timing timing = 2; // 0..1
+}
+
+// Message for Timing
+message Timing {
+    required ReferenceContext domainAbsoluteRelative = 1; // 1..1
+    required double offset = 2; // 1..1
+    required double scale = 3; // 1..1
 }
 
 // Message for AcquirePositionAction
