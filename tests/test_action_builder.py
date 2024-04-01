@@ -1,12 +1,13 @@
 import pytest
 import yaml
 from typing import List
-from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode, Properties, Property, Controller, ControllerAction, AssignControllerAction, TeleportAction, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing
+from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode, Properties, Property, Controller, ControllerAction, AssignControllerAction, TeleportAction, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action
 from openscenario_msgs.common_pb2 import InfrastructureAction, EntityAction, LaneChangeAction, UserDefinedAction, PrivateAction, SpeedTargetValueType, SpeedAction
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
 from scenario_transfer.builder.story_board.user_defined_action_builder import UserDefinedActionBuilder
 from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
 from scenario_transfer.builder.story_board.routing_action_builder import RoutingActionBuilder
+from scenario_transfer.builder.story_board.action_builder import ActionBuilder
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 from scenario_transfer.openscenario.openscenario_coder import OpenScenarioDecoder
 
@@ -15,13 +16,11 @@ def assert_proto_type_equal(reflection_type, pb2_type):
     assert str(reflection_type.__class__) == str(pb2_type)
 
 
-def test_global_action_builder_add_entity_action(ego_name):
+def test_global_action_builder_add_entity_action(ego_name, lane_position):
     assert ego_name == "ego"
     builder = GlobalActionBuilder()
 
-    position = Position(
-        lanePosition=LanePosition(laneId="154", s=10.9835, offset=-0.5042))
-
+    position = Position(lanePosition=lane_position)
     builder.make_add_entity_action(position=position, entity_name=ego_name)
     action = builder.get_result()
 
@@ -238,3 +237,35 @@ def test_following_trajectory_action_builder(trajectory, time_reference):
     assert trajectory.name == "ego_approach"
     assert trajectory.closed == False
     assert len(trajectory.shape.polyline.vertices) == 5
+
+
+def test_action_builder(lane_position, ego_name):
+    builder = ActionBuilder()
+
+    private_action_builder = PrivateActionBuilder()
+    private_action_builder.make_teleport_action(lane_position=lane_position)
+    private_action = private_action_builder.get_result()
+
+    builder.make_action(name="test_action", private_action=private_action)
+
+    action = builder.get_result()
+    assert_proto_type_equal(action, Action)
+    assert_proto_type_equal(action.privateAction.teleportAction,
+                            TeleportAction)
+    lane_position_in_teleport_action = action.privateAction.teleportAction.position.lanePosition
+    assert_proto_type_equal(lane_position_in_teleport_action, LanePosition)
+    assert lane_position_in_teleport_action.laneId == "154"
+    assert lane_position_in_teleport_action.s == 10.9835
+    assert lane_position_in_teleport_action.offset == -0.5042
+
+    global_action_builder = GlobalActionBuilder()
+    position = Position(lanePosition=lane_position)
+    global_action_builder.make_add_entity_action(position=position,
+                                                 entity_name=ego_name)
+    global_action = global_action_builder.get_result()
+
+    builder.make_action(name="test_action", global_action=global_action)
+    action = builder.get_result()
+    assert_proto_type_equal(action, Action)
+    assert action.globalAction.entityAction.entityRef == ego_name
+    assert action.globalAction.entityAction.addEntityAction.position.lanePosition.laneId == "154"
