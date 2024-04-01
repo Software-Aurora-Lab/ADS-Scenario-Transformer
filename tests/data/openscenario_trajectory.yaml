@@ -1,0 +1,61 @@
+    Trajectory:
+        Shape:
+          Polyline:
+            Vertex:
+            - Position:
+                LanePosition:
+                  Orientation:
+                    h: 0
+                    p: 0
+                    r: 0
+                    type: relative
+                  laneId: '41'
+                  offset: -1
+                  roadId: ''
+                  s: 25
+            - Position:
+                LanePosition:
+                  Orientation:
+                    h: 0
+                    p: 0
+                    r: 0
+                    type: relative
+                  laneId: '1119'
+                  offset: 0.8
+                  roadId: ''
+                  s: 40
+            - Position:
+                LanePosition:
+                  Orientation:
+                    h: 0
+                    p: 0
+                    r: 0
+                    type: relative
+                  laneId: '1124'
+                  offset: 0.8
+                  roadId: ''
+                  s: 10
+            - Position:
+                LanePosition:
+                  Orientation:
+                    h: 0
+                    p: 0
+                    r: 0
+                    type: relative
+                  laneId: '48'
+                  offset: -1
+                  roadId: ''
+                  s: 30
+            - Position:
+                LanePosition:
+                  Orientation:
+                    h: 0
+                    p: 0
+                    r: 0
+                    type: relative
+                  laneId: '48'
+                  offset: 0.8
+                  roadId: ''
+                  s: 45
+        closed: false
+        name: ego_approach

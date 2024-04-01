@@ -1,10 +1,15 @@
 import pytest
-from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode, Properties, Property, Controller, ControllerAction, AssignControllerAction, TeleportAction
+import yaml
+from typing import List
+from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode, Properties, Property, Controller, ControllerAction, AssignControllerAction, TeleportAction, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing
 from openscenario_msgs.common_pb2 import InfrastructureAction, EntityAction, LaneChangeAction, UserDefinedAction, PrivateAction, SpeedTargetValueType, SpeedAction
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
 from scenario_transfer.builder.story_board.user_defined_action_builder import UserDefinedActionBuilder
 from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
+from scenario_transfer.builder.story_board.routing_action_builder import RoutingActionBuilder
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
+from scenario_transfer.openscenario.openscenario_coder import OpenScenarioDecoder
+
 
 @pytest.fixture
 def entities() -> Entities:
@@ -28,6 +33,7 @@ def transition_dynamics() -> TransitionDynamics:
         followingMode=FollowingMode.FOLLOWINGMODE_FOLLOW,
         value=1.0)
 
+
 @pytest.fixture
 def properties() -> Properties:
     return Properties(properties=[
@@ -35,19 +41,54 @@ def properties() -> Properties:
         Property(name="maxSpeed", value="50")
     ])
 
+
 @pytest.fixture
 def controller(properties) -> Controller:
     return Controller(name="controller",
                       properties=properties,
                       parameterDeclarations=[])
 
+
 @pytest.fixture
 def lane_position() -> LanePosition:
     return LanePosition(laneId="154", s=10.9835, offset=-0.5042)
 
+
 @pytest.fixture
 def world_position() -> WorldPosition:
     return WorldPosition(x=37.416880423172465, y=-122.01593194093681, z=0.0)
+
+
+@pytest.fixture
+def waypoints() -> List[Waypoint]:
+    with open("tests/data/openscenario_route.yaml", "r") as file:
+        input = file.read()
+
+    dict = yaml.safe_load(input)
+    openscenario_route = OpenScenarioDecoder.decode_yaml_to_pyobject(
+        yaml_dict=dict, type_=Route, exclude_top_level_key=True)
+
+    return openscenario_route.waypoints
+
+
+@pytest.fixture
+def trajectory() -> Trajectory:
+    with open("tests/data/openscenario_trajectory.yaml", "r") as file:
+        input = file.read()
+
+    dict = yaml.safe_load(input)
+    trajectory = OpenScenarioDecoder.decode_yaml_to_pyobject(
+        yaml_dict=dict, type_=Trajectory, exclude_top_level_key=True)
+    return trajectory
+
+
+@pytest.fixture
+def time_reference() -> TimeReference:
+    return TimeReference(timing=Timing(
+        domainAbsoluteRelative=ReferenceContext.REFERENCECONTEXT_RELATIVE,
+        offset=0.0,
+        scale=1))
+
 
 def assert_proto_type_equal(reflection_type, pb2_type):
     assert str(reflection_type.__class__) == str(pb2_type)
@@ -149,7 +190,7 @@ def test_absolute_speed_action_builder(transition_dynamics):
                             AbsoluteTargetSpeed)
 
 
-def test_relative_lane_change_action(transition_dynamics):
+def test_relative_lane_change_action_builder(transition_dynamics):
     builder = PrivateActionBuilder()
     builder.make_relative_lane_change_action(
         transition_dynamics=transition_dynamics,
@@ -165,7 +206,7 @@ def test_relative_lane_change_action(transition_dynamics):
         TransitionDynamics)
 
 
-def test_absolute_lane_change_action(transition_dynamics):
+def test_absolute_lane_change_action_builder(transition_dynamics):
     builder = PrivateActionBuilder()
     builder.make_absolute_lane_change_action(
         transition_dynamics=transition_dynamics,
@@ -179,21 +220,23 @@ def test_absolute_lane_change_action(transition_dynamics):
         action.lateralAction.laneChangeAction.laneChangeActionDynamics,
         TransitionDynamics)
 
-def test_assigned_control_action(controller):
+
+def test_assigned_control_action_builder(controller):
     builder = PrivateActionBuilder()
-    builder.make_assign_controller_action(
-            controller= controller,
-            activate_lateral=True)
+    builder.make_assign_controller_action(controller=controller,
+                                          activate_lateral=True)
     action = builder.get_result()
 
     assert action is not None
     assert_proto_type_equal(action.controllerAction, ControllerAction)
-    assert_proto_type_equal(action.controllerAction.assignControllerAction, AssignControllerAction)
+    assert_proto_type_equal(action.controllerAction.assignControllerAction,
+                            AssignControllerAction)
     target_controller = action.controllerAction.assignControllerAction.controller
     assert target_controller.properties.properties[0].name == "isEgo"
     assert target_controller.properties.properties[1].name == "maxSpeed"
 
-def test_teleport_action(world_position, lane_position):
+
+def test_teleport_action_builder(world_position, lane_position):
     builder = PrivateActionBuilder()
     builder.make_teleport_action(lane_position=lane_position)
     action = builder.get_result()
@@ -215,3 +258,62 @@ def test_teleport_action(world_position, lane_position):
     assert world_position_in_teleport_action.x == 37.416880423172465
     assert world_position_in_teleport_action.y == -122.01593194093681
     assert world_position_in_teleport_action.z == 0.0
+
+
+def test_acquire_position_action_builder(world_position, lane_position):
+    builder = RoutingActionBuilder()
+    builder.make_acquire_position_action(lane_position=lane_position)
+
+    routing_action = builder.get_result()
+    assert routing_action is not None
+
+    lane_position = routing_action.acquirePositionAction.position.lanePosition
+    assert lane_position.laneId == "154"
+    assert lane_position.s == 10.9835
+    assert lane_position.offset == -0.5042
+
+    builder.make_acquire_position_action(world_position=world_position)
+    routing_action = builder.get_result()
+
+    assert routing_action is not None
+    world_position = routing_action.acquirePositionAction.position.worldPosition
+    assert world_position.x == 37.416880423172465
+    assert world_position.y == -122.01593194093681
+    assert world_position.z == 0.0
+
+
+def test_assign_route_action_builder(waypoints):
+    assert waypoints is not None
+
+    builder = RoutingActionBuilder()
+    builder.make_assign_route_action(closed=True,
+                                     name="AssignRouteAction",
+                                     parameter_declarations=[],
+                                     waypoints=waypoints)
+    routing_action = builder.get_result()
+    assert routing_action is not None
+    route = routing_action.assignRouteAction.route
+    assert route.closed == True
+    assert route.name == "AssignRouteAction"
+    waypoint = route.waypoints[0]
+    assert waypoint.position.lanePosition.laneId == "22"
+    assert waypoint.position.lanePosition.s == 35.71471492399046
+    assert waypoint.position.lanePosition.orientation.h == 2.883901414579166
+
+
+def test_following_trajectory_action_builder(trajectory, time_reference):
+    assert trajectory is not None
+    builder = RoutingActionBuilder()
+
+    builder.make_following_trajectory_action(timing=time_reference.timing,
+                                             trajectory=trajectory,
+                                             initial_offset=0.0)
+    routing_action = builder.get_result()
+    assert routing_action is not None
+    follow_trajectory_action = routing_action.followTrajectoryAction
+    assert follow_trajectory_action.timeReference.timing.offset == 0
+    assert follow_trajectory_action.trajectoryFollowingMode.followingMode == FollowingMode.FOLLOWINGMODE_POSITION
+    trajectory = follow_trajectory_action.trajectoryRef.trajectory
+    assert trajectory.name == "ego_approach"
+    assert trajectory.closed == False
+    assert len(trajectory.shape.polyline.vertices) == 5

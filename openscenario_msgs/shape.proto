@@ -3,10 +3,10 @@ package openscenario;
 
 import "openscenario_msgs/position.proto";
 
-// Message for Shape
+// Message for Shape, XOR message
 message Shape {
-    optional Polyline polyline = 1;  // 0..1 (Unsupported)
-    optional Clothoid clothoid = 2;  // 0..1 (Unsupported)
+    optional Polyline polyline = 1;  // 0..1
+    optional Clothoid clothoid = 2;  // 0..1
     optional Nurbs nurbs = 3;        // 0..1
 }
 
