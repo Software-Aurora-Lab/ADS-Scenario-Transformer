@@ -1,6 +1,5 @@
 from typing import List, Optional
-from openscenario_msgs import RoutingAction, Waypoint, Route, ParameterDeclaration, AssignRouteAction, Position, LanePosition, WorldPosition, AcquirePositionAction, FollowTrajectoryAction, TrajectoryRef, Trajectory, TrajectoryFollowingMode, FollowingMode, Timing, TimeReference, NONE
-from openscenario_msgs.common_pb2 import TimeReference
+from openscenario_msgs import RoutingAction, Waypoint, Route, ParameterDeclaration, AssignRouteAction, Position, LanePosition, WorldPosition, AcquirePositionAction, FollowTrajectoryAction, TrajectoryRef, Trajectory, TrajectoryFollowingMode, FollowingMode, Timing, TimeReference
 from scenario_transfer import Builder
 
 
