@@ -10,8 +10,7 @@ from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuild
 
 
 def test_actors_builder(entities):
-    builder = ActorsBuilder(entities=entities)
-    builder.set_key(name_key="ego")
+    builder = ActorsBuilder(entities=entities, scenario_object_name="ego")
     actors = builder.get_result()
 
     assert isinstance(actors, Actors)

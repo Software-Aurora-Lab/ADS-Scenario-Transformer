@@ -9,11 +9,11 @@ class ActorsBuilder(Builder):
     _default_actors: Dict[str, Actors]
     name_key: str
 
-    def __init__(self, entities: Entities):
-        self._default_actors = self.make_default_actors(entities=entities)
-        self.name_key = ""
+    def __init__(self, entities: Entities, scenario_object_name: str):
+        self.make_default_actors(entities=entities)
+        self.scenario_object_name = scenario_object_name
 
-    def make_default_actors(self, entities: Entities) -> Dict[str, Actors]:
+    def make_default_actors(self, entities: Entities):
         default_actors = {}
 
         for scenario_object in entities.scenarioObjects:
@@ -21,11 +21,11 @@ class ActorsBuilder(Builder):
                 selectTriggeringEntities=False,
                 entityRef=[scenario_object.name])
 
-        return default_actors
-
-    def set_key(self, name_key: str):
-        self.name_key = name_key
+        self._default_actors = default_actors
 
     def get_result(self):
-        if self.name_key in self._default_actors:
-            return self._default_actors[self.name_key]
+        if self.scenario_object_name not in self._default_actors:
+            raise ValueError("Actors not found from default actors")
+        
+        return self._default_actors[self.scenario_object_name]
+
