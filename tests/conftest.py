@@ -1,10 +1,12 @@
 import pytest
 import yaml
 from typing import List
-from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode, Properties, Property, Controller, ControllerAction, AssignControllerAction, TeleportAction, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action
-from openscenario_msgs.common_pb2 import InfrastructureAction, EntityAction, LaneChangeAction, UserDefinedAction, PrivateAction, SpeedTargetValueType, SpeedAction
+from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode, Properties, Property, Controller, ControllerAction, AssignControllerAction, TeleportAction, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action, GlobalAction, InfrastructureAction, EntityAction, LaneChangeAction, UserDefinedAction, PrivateAction, SpeedTargetValueType, SpeedAction, ByEntityCondition, ByValueCondition 
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
 from scenario_transfer.builder.story_board.user_defined_action_builder import UserDefinedActionBuilder
+from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
+from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
+from scenario_transfer.builder.story_board.by_value_condition_builder import ByValueConditionBuilder
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 from scenario_transfer.openscenario.openscenario_coder import OpenScenarioDecoder
 
@@ -85,3 +87,33 @@ def time_reference() -> TimeReference:
         domainAbsoluteRelative=ReferenceContext.REFERENCECONTEXT_RELATIVE,
         offset=0.0,
         scale=1))
+
+@pytest.fixture
+def by_entity_collision_condition(ego_name, entities) -> ByEntityCondition:
+    colliding_npc_name = entities.scenarioObjects[1].name
+
+    by_entity_condition_builder = ByEntityConditionBuilder(triggering_entity=ego_name)
+    by_entity_condition_builder.make_collision_condition(
+        colliding_entity_name=colliding_npc_name)
+    return by_entity_condition_builder.get_result()
+
+@pytest.fixture
+def by_value_traffic_condition() -> ByValueCondition:
+    by_value_condition_builder = ByValueConditionBuilder()
+    by_value_condition_builder.make_traffic_signal_controller_condition(
+        phase="test_phase", traffic_signal_controller_name="StraghtSignal")
+    return by_value_condition_builder.get_result()
+
+@pytest.fixture
+def private_action(lane_position) -> PrivateAction:
+    private_action_builder = PrivateActionBuilder()
+    private_action_builder.make_teleport_action(lane_position=lane_position)
+    return private_action_builder.get_result()
+
+@pytest.fixture
+def global_action(lane_position, ego_name) -> GlobalAction:
+    global_action_builder = GlobalActionBuilder()
+    position = Position(lanePosition=lane_position)
+    global_action_builder.make_add_entity_action(position=position,
+                                                 entity_name=ego_name)
+    return global_action_builder.get_result()
