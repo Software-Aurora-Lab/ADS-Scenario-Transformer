@@ -1,7 +1,7 @@
 import pytest
 import yaml
 from typing import List
-from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, FollowingMode, Properties, Property, Controller, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action, PrivateAction, ByEntityCondition, ByValueCondition, Story, Act, ManeuverGroup, Maneuver, Event, Actors
+from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, FollowingMode, Properties, Property, Controller, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action, PrivateAction, ByEntityCondition, ByValueCondition, Story, Act, ManeuverGroup, Maneuver, Event, Actors, Trigger
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
 from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
@@ -134,13 +134,17 @@ def story() -> Story:
     openscenario_story = OpenScenarioDecoder.decode_yaml_to_pyobject(
         yaml_dict=dict, type_=Story, exclude_top_level_key=True)
 
-    print(openscenario_story)
     return openscenario_story
 
 
 @pytest.fixture
 def acts(story) -> List[Act]:
     return story.acts
+
+
+@pytest.fixture
+def start_trigger(story) -> Trigger:
+    return story.acts[0].startTrigger
 
 
 @pytest.fixture

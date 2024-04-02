@@ -1,11 +1,11 @@
 import pytest
 import yaml
-from openscenario_msgs import Actors, Event, Entities, Priority, ManeuverGroup
+from openscenario_msgs import Actors, Event, Entities, Priority, ManeuverGroup, Story, Act
 from scenario_transfer.builder.story_board.actors_builder import ActorsBuilder
 from scenario_transfer.builder.story_board.event_builder import EventBuilder
 from scenario_transfer.builder.story_board.condition_builder import ConditionBuilder
-from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
-from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
+from scenario_transfer.builder.story_board.story_builder import StoryBuilder
+from scenario_transfer.builder.story_board.act_builder import ActBuilder
 from scenario_transfer.builder.story_board.maneuver_group_builder import ManeuverGroupBuilder
 from scenario_transfer.builder.story_board.maneuver_builder import ManeuverBuilder
 
@@ -89,3 +89,34 @@ def test_maneuver_builder(events):
         0].userDefinedAction.customCommandAction.type == ":"
     assert maneuver.events[-1].startTrigger.conditionGroups[0].conditions[
         0].byValueCondition.simulationTimeCondition.value == 180.0
+
+
+def test_act_builder(maneuver_groups, start_trigger):
+    builder = ActBuilder()
+    builder.make_maneuver_groups(maneuver_groups=maneuver_groups)
+    builder.make_start_trigger(trigger=start_trigger)
+    act = builder.get_result()
+
+    assert isinstance(act, Act)
+
+    maneuver = act.maneuverGroups[0].maneuvers[0]
+    assert maneuver.events[0].name == "speed_check"
+    assert maneuver.events[0].actions[
+        0].userDefinedAction.customCommandAction.type == ":"
+    assert maneuver.events[-1].startTrigger.conditionGroups[0].conditions[
+        0].byValueCondition.simulationTimeCondition.value == 0.0
+
+
+def test_story_builder(acts):
+    builder = StoryBuilder()
+    builder.make_acts(acts=acts)
+    story = builder.get_result()
+
+    assert isinstance(story, Story)
+
+    maneuver = story.acts[0].maneuverGroups[0].maneuvers[0]
+    assert maneuver.events[0].name == "speed_check"
+    assert maneuver.events[0].actions[
+        0].userDefinedAction.customCommandAction.type == ":"
+    assert maneuver.events[-1].startTrigger.conditionGroups[0].conditions[
+        0].byValueCondition.simulationTimeCondition.value == 0.0
