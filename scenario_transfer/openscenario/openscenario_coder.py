@@ -1,6 +1,6 @@
 import yaml
 import difflib
-from typing import Optional, TypeVar, Dict, Type, Tuple
+from typing import Optional, TypeVar, Dict, Type, Tuple, List
 import os
 import importlib
 from protobuf_to_dict import protobuf_to_dict
@@ -186,7 +186,10 @@ class OpenScenarioDecoder:
             yaml_dict = yaml_dict[list(yaml_dict.keys())[0]]
 
         data_dict = OpenScenarioDecoder.convert_to_compatible_element(
-            yaml_dict, OpenScenarioCoder.field_name_cache, type_.__name__)
+            input_dict=yaml_dict,
+            name_dict=OpenScenarioCoder.field_name_cache,
+            root_type_name=type_.__name__,
+            parent_type_name="")
 
         return type_(**data_dict)
 
