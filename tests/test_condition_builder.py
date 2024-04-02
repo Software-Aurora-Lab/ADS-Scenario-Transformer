@@ -5,6 +5,7 @@ from openscenario_msgs.parameter_pb2 import ParameterDeclaration, ParameterType
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
 from scenario_transfer.builder.story_board.by_value_condition_builder import ByValueConditionBuilder
+from scenario_transfer.builder.story_board.condition_builder import ConditionBuilder
 
 # Entity Condition
 
@@ -215,6 +216,39 @@ def test_value_condition_builder_traffic_signal_controller_condition(ego_name):
 
     by_value_condition = builder.get_result()
 
+    assert by_value_condition is not None
+    assert by_value_condition.trafficSignalControllerCondition.phase == "test_phase"
+    assert by_value_condition.trafficSignalControllerCondition.trafficSignalControllerRef == "StraghtSignal"
+
+
+def test_condtion_builder_by_entity_condition(ego_name, entities):
+    builder = ConditionBuilder()
+
+    colliding_npc_name = entities.scenarioObjects[1].name
+
+    by_entity_condition_builder = ByEntityConditionBuilder(triggering_entity=ego_name)
+    by_entity_condition_builder.make_collision_condition(
+        colliding_entity_name=colliding_npc_name)
+    
+    builder.make_by_entity_condition(by_entity_condition=by_entity_condition_builder.get_result())
+    condition = builder.get_result()
+    
+    by_entity_condition = condition.byEntityCondition
+    assert by_entity_condition is not None
+    assert by_entity_condition.triggeringEntities.entityRefs[
+        0].entityRef == "ego"
+    assert by_entity_condition.entityCondition.collisionCondition is not None
+    assert by_entity_condition.entityCondition.collisionCondition.entityRef.entityRef == "npc_1"
+
+def test_condtion_builder_by_value_condition(ego_name):
+    builder = ConditionBuilder()
+    
+    by_value_condition_builder = ByValueConditionBuilder()
+    by_value_condition_builder.make_traffic_signal_controller_condition(
+        phase="test_phase", traffic_signal_controller_name="StraghtSignal")
+    builder.make_by_value_condition(by_value_condition=by_value_condition_builder.get_result())
+    condition = builder.get_result()
+    by_value_condition = condition.byValueCondition
     assert by_value_condition is not None
     assert by_value_condition.trafficSignalControllerCondition.phase == "test_phase"
     assert by_value_condition.trafficSignalControllerCondition.trafficSignalControllerRef == "StraghtSignal"

@@ -1,5 +1,5 @@
 from typing import List, Optional
-from openscenario_msgs import Condition, TriggeringEntities, Position, RelativeDistanceType, DirectionalDimension, CoordinateSystem, RoutingAlgorithm
+from openscenario_msgs import TriggeringEntities, Position, RelativeDistanceType, DirectionalDimension, CoordinateSystem, RoutingAlgorithm
 import openscenario_msgs.common_pb2 as common_pb2
 from openscenario_msgs.common_pb2 import ByEntityCondition, EntityCondition, EndOfRoadCondition, CollisionCondition, OffroadCondition, TimeHeadwayCondition, TimeToCollisionCondition, AccelerationCondition, StandStillCondition, SpeedCondition, RelativeSpeedCondition, TraveledDistanceCondition, ReachPositionCondition, DistanceCondition, RelativeDistanceCondition, RelativeClearanceCondition
 from scenario_transfer.builder import Builder
