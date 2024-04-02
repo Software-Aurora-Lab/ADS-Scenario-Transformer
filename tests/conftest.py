@@ -1,14 +1,14 @@
 import pytest
 import yaml
 from typing import List
-from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode, Properties, Property, Controller, ControllerAction, AssignControllerAction, TeleportAction, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action, GlobalAction, InfrastructureAction, EntityAction, LaneChangeAction, UserDefinedAction, PrivateAction, SpeedTargetValueType, SpeedAction, ByEntityCondition, ByValueCondition 
+from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, FollowingMode, Properties, Property, Controller, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action, PrivateAction, ByEntityCondition, ByValueCondition, Story, Act, ManeuverGroup, Maneuver, Event, Actors
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
-from scenario_transfer.builder.story_board.user_defined_action_builder import UserDefinedActionBuilder
 from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
 from scenario_transfer.builder.story_board.by_value_condition_builder import ByValueConditionBuilder
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 from scenario_transfer.openscenario.openscenario_coder import OpenScenarioDecoder
+
 
 @pytest.fixture
 def entities() -> Entities:
@@ -88,14 +88,17 @@ def time_reference() -> TimeReference:
         offset=0.0,
         scale=1))
 
+
 @pytest.fixture
 def by_entity_collision_condition(ego_name, entities) -> ByEntityCondition:
     colliding_npc_name = entities.scenarioObjects[1].name
 
-    by_entity_condition_builder = ByEntityConditionBuilder(triggering_entity=ego_name)
+    by_entity_condition_builder = ByEntityConditionBuilder(
+        triggering_entity=ego_name)
     by_entity_condition_builder.make_collision_condition(
         colliding_entity_name=colliding_npc_name)
     return by_entity_condition_builder.get_result()
+
 
 @pytest.fixture
 def by_value_traffic_condition() -> ByValueCondition:
@@ -104,11 +107,13 @@ def by_value_traffic_condition() -> ByValueCondition:
         phase="test_phase", traffic_signal_controller_name="StraghtSignal")
     return by_value_condition_builder.get_result()
 
+
 @pytest.fixture
 def private_action(lane_position) -> PrivateAction:
     private_action_builder = PrivateActionBuilder()
     private_action_builder.make_teleport_action(lane_position=lane_position)
     return private_action_builder.get_result()
+
 
 @pytest.fixture
 def global_action(lane_position, ego_name) -> GlobalAction:
@@ -117,3 +122,47 @@ def global_action(lane_position, ego_name) -> GlobalAction:
     global_action_builder.make_add_entity_action(position=position,
                                                  entity_name=ego_name)
     return global_action_builder.get_result()
+
+
+@pytest.fixture
+def story() -> Story:
+    with open("tests/data/openscenario_story.yaml", "r") as file:
+        input = file.read()
+
+    dict = yaml.safe_load(input)
+
+    openscenario_story = OpenScenarioDecoder.decode_yaml_to_pyobject(
+        yaml_dict=dict, type_=Story, exclude_top_level_key=True)
+
+    print(openscenario_story)
+    return openscenario_story
+
+
+@pytest.fixture
+def acts(story) -> List[Act]:
+    return story.acts
+
+
+@pytest.fixture
+def maneuver_groups(acts) -> List[ManeuverGroup]:
+    return [
+        maneuver_group for act in acts for maneuver_group in act.maneuverGroups
+    ]
+
+
+@pytest.fixture
+def maneuvers(maneuver_groups) -> List[Maneuver]:
+    return [
+        maneuver for maneuver_group in maneuver_groups
+        for maneuver in maneuver_group.maneuvers
+    ]
+
+
+@pytest.fixture
+def actors(maneuver_groups) -> Actors:
+    return maneuver_groups[0].actors
+
+
+@pytest.fixture
+def events(maneuvers) -> List[Event]:
+    return [event for maneuver in maneuvers for event in maneuver.events]

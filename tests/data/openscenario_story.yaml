@@ -1,0 +1,187 @@
+Story:
+  Act:
+  - ManeuverGroup:
+    - Actors:
+        EntityRef: []
+        selectTriggeringEntities: false
+      Maneuver:
+      - Event:
+        - Action:
+          - UserDefinedAction:
+              CustomCommandAction:
+                type: ":"
+            name: ''
+          StartTrigger:
+            ConditionGroup:
+            - Condition:
+              - ByEntityCondition:
+                  EntityCondition:
+                    SpeedCondition:
+                      rule: greaterThan
+                      value: 50
+                  TriggeringEntities:
+                    EntityRef:
+                    - entityRef: ego
+                    triggeringEntitiesRule: any
+                conditionEdge: sticky
+                delay: 0
+                name: ''
+          name: speed_check
+          priority: parallel
+        name: ''
+      maximumExecutionCount: 1
+      name: act_ego_testspeed_check
+    StartTrigger:
+      ConditionGroup:
+      - Condition:
+        - ByValueCondition:
+            SimulationTimeCondition:
+              rule: greaterThan
+              value: 0
+          conditionEdge: none
+          delay: 0
+          name: ''
+    name: act_ego_testspeed_check
+  - ManeuverGroup:
+    - Actors:
+        EntityRef:
+        - entityRef: ego
+        selectTriggeringEntities: false
+      Maneuver:
+      - Event:
+        - Action:
+          - UserDefinedAction:
+              CustomCommandAction:
+                type: exitSuccess
+            name: ''
+          StartTrigger:
+            ConditionGroup:
+            - Condition:
+              - ByValueCondition:
+                  UserDefinedValueCondition:
+                    name: "/diagnostic/planning_evaluator/metrics_modified_goal_longitudinal_deviation_mean"
+                    rule: lessThan
+                    value: '1.0'
+                conditionEdge: none
+                delay: 0
+                name: ''
+              - ByValueCondition:
+                  UserDefinedValueCondition:
+                    name: "/diagnostic/planning_evaluator/metrics_modified_goal_lateral_deviation_mean"
+                    rule: lessThan
+                    value: '1.0'
+                conditionEdge: none
+                delay: 0
+                name: ''
+              - ByValueCondition:
+                  UserDefinedValueCondition:
+                    name: "/diagnostic/planning_evaluator/metrics_modified_goal_yaw_deviation_mean"
+                    rule: lessThan
+                    value: '0.785398'
+                conditionEdge: none
+                delay: 0
+                name: ''
+              - ByEntityCondition:
+                  EntityCondition:
+                    SpeedCondition:
+                      rule: lessThan
+                      value: 0.0001
+                  TriggeringEntities:
+                    EntityRef:
+                    - entityRef: ego
+                    triggeringEntitiesRule: any
+                conditionEdge: none
+                delay: 0
+                name: ''
+              - ByValueCondition:
+                  StoryboardElementStateCondition:
+                    state: completeState
+                    storyboardElementRef: act_ego_testspeed_check
+                    storyboardElementType: act
+                conditionEdge: none
+                delay: 0
+                name: ''
+              - ByEntityCondition:
+                  EntityCondition:
+                    StandStillCondition:
+                      duration: 3
+                  TriggeringEntities:
+                    EntityRef:
+                    - entityRef: ego
+                    triggeringEntitiesRule: any
+                conditionEdge: none
+                delay: 0
+                name: ''
+          name: ''
+          priority: parallel
+        - Action:
+          - UserDefinedAction:
+              CustomCommandAction:
+                type: exitFailure
+            name: ''
+          StartTrigger:
+            ConditionGroup:
+            - Condition:
+              - ByValueCondition:
+                  SimulationTimeCondition:
+                    rule: greaterThan
+                    value: 180
+                conditionEdge: none
+                delay: 0
+                name: ''
+            - Condition:
+              - ByEntityCondition:
+                  EntityCondition:
+                    AccelerationCondition:
+                      rule: lessThan
+                      value: -2.5
+                  TriggeringEntities:
+                    EntityRef:
+                    - entityRef: ego
+                    triggeringEntitiesRule: any
+                conditionEdge: none
+                delay: 0
+                name: ''
+            - Condition:
+              - ByEntityCondition:
+                  EntityCondition:
+                    CollisionCondition:
+                      EntityRef:
+                        entityRef: Npc1
+                  TriggeringEntities:
+                    EntityRef:
+                    - entityRef: ego
+                    triggeringEntitiesRule: any
+                conditionEdge: none
+                delay: 0
+                name: ''
+            - Condition:
+              - ByEntityCondition:
+                  EntityCondition:
+                    CollisionCondition:
+                      EntityRef:
+                        entityRef: Npc2
+                  TriggeringEntities:
+                    EntityRef:
+                    - entityRef: ego
+                    triggeringEntitiesRule: any
+                conditionEdge: none
+                delay: 0
+                name: ''
+          name: ''
+          priority: parallel
+        name: ''
+      maximumExecutionCount: 1
+      name: ''
+    StartTrigger:
+      ConditionGroup:
+      - Condition:
+        - ByValueCondition:
+            SimulationTimeCondition:
+              rule: greaterThan
+              value: 0
+          conditionEdge: none
+          delay: 0
+          name: ''
+    name: _EndCondition
+  name: ''
