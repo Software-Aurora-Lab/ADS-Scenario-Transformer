@@ -1,7 +1,7 @@
 import pytest
 import yaml
 from typing import List
-from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, FollowingMode, Properties, Property, Controller, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action, PrivateAction, ByEntityCondition, ByValueCondition, Story, Act, ManeuverGroup, Maneuver, Event, Actors, Trigger
+from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, FollowingMode, Properties, Property, Controller, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action, PrivateAction, ByEntityCondition, ByValueCondition, Story, Act, ManeuverGroup, Maneuver, Event, Actors, Trigger, Storyboard, InitActions
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
 from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
@@ -122,6 +122,23 @@ def global_action(lane_position, ego_name) -> GlobalAction:
     global_action_builder.make_add_entity_action(position=position,
                                                  entity_name=ego_name)
     return global_action_builder.get_result()
+
+@pytest.fixture
+def storyboard() -> Storyboard:
+    with open("tests/data/openscenario_storyboard.yaml", "r") as file:
+        input = file.read()
+
+    dict = yaml.safe_load(input)
+
+    openscenario_storyboard = OpenScenarioDecoder.decode_yaml_to_pyobject(
+        yaml_dict=dict, type_=Storyboard, exclude_top_level_key=True)
+
+    return openscenario_storyboard
+
+
+@pytest.fixture
+def init_actions(storyboard) -> InitActions:
+    return storyboard.init.actions
 
 
 @pytest.fixture

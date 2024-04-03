@@ -1,6 +1,6 @@
 import pytest
 import yaml
-from openscenario_msgs import Actors, Event, Entities, Priority, ManeuverGroup, Story, Act
+from openscenario_msgs import Actors, Event, Entities, Priority, ManeuverGroup, Story, Act, Storyboard, Init
 from scenario_transfer.builder.story_board.actors_builder import ActorsBuilder
 from scenario_transfer.builder.story_board.event_builder import EventBuilder
 from scenario_transfer.builder.story_board.condition_builder import ConditionBuilder
@@ -8,6 +8,7 @@ from scenario_transfer.builder.story_board.story_builder import StoryBuilder
 from scenario_transfer.builder.story_board.act_builder import ActBuilder
 from scenario_transfer.builder.story_board.maneuver_group_builder import ManeuverGroupBuilder
 from scenario_transfer.builder.story_board.maneuver_builder import ManeuverBuilder
+from scenario_transfer.builder.story_board.init_builder import InitBuilder
 
 
 def test_actors_builder(entities):
@@ -120,3 +121,15 @@ def test_story_builder(acts):
         0].userDefinedAction.customCommandAction.type == ":"
     assert maneuver.events[-1].startTrigger.conditionGroups[0].conditions[
         0].byValueCondition.simulationTimeCondition.value == 0.0
+
+
+def test_init_builder(init_actions):
+    builder = InitBuilder()
+
+    builder.make_global_actions(global_actions=init_actions.globalActions)
+    builder.make_user_defined_actions(user_defined_actions=init_actions.userDefinedActions)
+    builder.make_privates(privates=init_actions.privates)
+    init = builder.get_result()
+
+    assert isinstance(init, Init)
+    assert len(init.actions.privates) == 3
