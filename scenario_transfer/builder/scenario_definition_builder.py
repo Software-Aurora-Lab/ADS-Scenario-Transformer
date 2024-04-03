@@ -47,9 +47,8 @@ class ScenarioDefinitionBuilder(Builder):
         builder = EntitiesBuilder(entities=entities)
         self.entities = builder.get_result()
 
-    def make_storyboard(self):  # TODO: fix this
-        self.storyboard = Storyboard(init=Init(actions=InitActions(
-            privates=[])))
+    def make_storyboard(self, storyboard: Storyboard):
+        self.storyboard = storyboard
 
     def get_result(self) -> ScenarioDefinition:
         assert self.road_network is not None

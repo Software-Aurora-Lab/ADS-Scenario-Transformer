@@ -1,10 +1,9 @@
 from typing import List
-from openscenario_msgs import Scenario, ScenarioDefinition, ScenarioModifiers, FileHeader, TrafficSignalController, OpenSCENARIO
+from openscenario_msgs import Scenario, ScenarioDefinition, ScenarioModifiers, FileHeader, TrafficSignalController, OpenSCENARIO, Storyboard
 from scenario_transfer.builder import Builder
-from scenario_transfer.builder import scenario_definition_builder
 from scenario_transfer.builder.file_header_builder import FileHeaderBuilder
 from scenario_transfer.builder.scenario_definition_builder import ScenarioDefinitionBuilder
-from scenario_transfer.builder.entities_builder import EntitiesBuilder, EntityType
+from scenario_transfer.builder.entities_builder import EntityType
 
 
 class ScenarioConfiguration:
@@ -35,14 +34,19 @@ class ScenarioBuilder(Builder):
 
     def __init__(self, scenario_configuration: ScenarioConfiguration):
         self.configuration = scenario_configuration
+        self.scenario_modifiers = None
+        self.header = None
+        self.scenario_definition = None
+        self.open_scenario = None
 
     def make_scenario_modifiers(self):
-        self.scenario_modifiers = ScenarioModifiers()
+        self.scenario_modifiers = ScenarioModifiers()  # not in used
 
     def make_file_header(self):
-        self.header = FileHeaderBuilder().get_result()
+        self.header = FileHeaderBuilder().get_result(
+        )  # FileHeader uses default information
 
-    def make_scenario_definition(self):
+    def make_scenario_definition(self, storyboard: Storyboard):
         scenario_definition_builder = ScenarioDefinitionBuilder()
 
         scenario_definition_builder.make_default_entities(
@@ -51,25 +55,36 @@ class ScenarioBuilder(Builder):
             lanelet_map_path=self.configuration.lanelet_map_path,
             pcd_map_path=self.configuration.pcd_map_path,
             trafficSignals=self.configuration.traffic_signals)
-        scenario_definition_builder.make_storyboard()
+        scenario_definition_builder.make_storyboard(storyboard=storyboard)
 
         self.scenario_definition = scenario_definition_builder.get_result()
 
-    def get_result(self) -> Scenario:
+    def get_open_scenario(self) -> OpenSCENARIO:
         assert self.header is not None
         assert self.scenario_modifiers is not None
         assert self.scenario_definition is not None
 
-        self.open_scenario = OpenSCENARIO(
-            fileHeader=self.header,
-            parameterDeclarations=self.scenario_definition.
-            parameterDeclarations,
-            catalogLocations=self.scenario_definition.catalogLocations,
-            roadNetwork=self.scenario_definition.roadNetwork,
-            entities=self.scenario_definition.entities,
-            storyboard=self.scenario_definition.storyboard)
+        if not self.open_scenario:
+            self.open_scenario = OpenSCENARIO(
+                fileHeader=self.header,
+                parameterDeclarations=self.scenario_definition.
+                parameterDeclarations,
+                catalogLocations=self.scenario_definition.catalogLocations,
+                roadNetwork=self.scenario_definition.roadNetwork,
+                entities=self.scenario_definition.entities,
+                storyboard=self.scenario_definition.storyboard)
+        return self.open_scenario
 
+    def get_result(self) -> Scenario:
+        if not self.scenario_modifiers:
+            self.make_scenario_modifiers()
+        if not self.header:
+            self.make_file_header()
+
+        assert self.scenario_definition is not None
+
+        open_scenario = self.get_open_scenario()
         self.product = Scenario(scenarioModifiers=self.scenario_modifiers,
-                                openScenario=self.open_scenario)
+                                openScenario=open_scenario)
 
         return self.product
