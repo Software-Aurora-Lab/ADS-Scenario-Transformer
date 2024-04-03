@@ -1,6 +1,6 @@
 from typing import List
 from openscenario_msgs import Story, Act, ParameterDeclaration
-from scenario_transfer import Builder
+from scenario_transfer.builder import Builder
 
 
 class StoryBuilder(Builder):

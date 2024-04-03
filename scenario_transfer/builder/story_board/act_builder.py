@@ -1,6 +1,6 @@
 from typing import List
 from openscenario_msgs import Act, Trigger, ManeuverGroup
-from scenario_transfer import Builder
+from scenario_transfer.builder import Builder
 
 
 class ActBuilder(Builder):

@@ -1,5 +1,5 @@
 from openscenario_msgs import Condition, ByEntityCondition, ByValueCondition
-from scenario_transfer import Builder
+from scenario_transfer.builder import Builder
 
 
 class ConditionBuilder(Builder):

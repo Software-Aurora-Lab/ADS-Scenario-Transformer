@@ -123,6 +123,7 @@ def global_action(lane_position, ego_name) -> GlobalAction:
                                                  entity_name=ego_name)
     return global_action_builder.get_result()
 
+
 @pytest.fixture
 def storyboard() -> Storyboard:
     with open("tests/data/openscenario_storyboard.yaml", "r") as file:
@@ -160,7 +161,7 @@ def acts(story) -> List[Act]:
 
 
 @pytest.fixture
-def start_trigger(story) -> Trigger:
+def trigger(story) -> Trigger:
     return story.acts[0].startTrigger
 
 

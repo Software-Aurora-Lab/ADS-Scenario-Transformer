@@ -9,6 +9,5 @@ from .entities_builder import EntitiesBuilder
 from .file_header_builder import FileHeaderBuilder
 from .parameter_declarations_builder import ParameterDeclarationsBuilder, ParameterDeclarationBuilder
 from .scenario_definition_builder import ScenarioDefinitionBuilder
-from .storyboard_builder import StoryboardBuilder
 from .traffic_signal_controller_builder import TrafficSignalControllerBuilder, TrafficSignalStateBuilder
 from .private_builder import PrivateBuilder

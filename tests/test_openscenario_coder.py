@@ -63,7 +63,6 @@ class TestOpenScenarioCoder(unittest.TestCase):
             yaml_dict=dict, type_=ScenarioObject, exclude_top_level_key=False)
         encoded_data = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
             scenario_object)
-        print("encoded_data", encoded_data)
 
         decoded_data = yaml.safe_load(encoded_data)
 
@@ -80,7 +79,6 @@ class TestOpenScenarioCoder(unittest.TestCase):
             yaml_dict=dict, type_=Entities, exclude_top_level_key=True)
         encoded_data = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
             entities)
-        print("encoded_data", encoded_data)
 
         decoded_data = yaml.safe_load(encoded_data)
 

@@ -72,7 +72,6 @@ class TestGeometry(unittest.TestCase):
 
             target_lane_position = Geometry.lane_position(
                 lanelet=lanelet, basic_point=basic_point)
-            print("Lane Position", target_lane_position)
 
             self.assertEqual(target_lane_position.laneId, expectation.laneId,
                              "laneId should be the same")

@@ -1,6 +1,6 @@
 from typing import List
 from openscenario_msgs import Init, InitActions, GlobalAction, UserDefinedAction, Private
-from scenario_transfer import Builder
+from scenario_transfer.builder import Builder
 
 
 class InitBuilder(Builder):

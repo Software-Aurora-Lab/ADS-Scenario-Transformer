@@ -1,6 +1,6 @@
 from typing import List, Optional
 from openscenario_msgs import RoutingAction, Waypoint, Route, ParameterDeclaration, AssignRouteAction, Position, LanePosition, WorldPosition, AcquirePositionAction, FollowTrajectoryAction, TrajectoryRef, Trajectory, TrajectoryFollowingMode, FollowingMode, Timing, TimeReference
-from scenario_transfer import Builder
+from scenario_transfer.builder import Builder
 
 
 class RoutingActionBuilder(Builder):
