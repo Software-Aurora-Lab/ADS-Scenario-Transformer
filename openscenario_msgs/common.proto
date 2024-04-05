@@ -134,7 +134,7 @@ message RouteCatalogLocation {
 message Storyboard {
     required Init init = 1;  // 1..1
     repeated Story stories = 2;  // 1..*
-    required Trigger stopTrigger = 3;  // 1..1
+    required StopTrigger stopTrigger = 3;  // 1..1
 }
 
 // Message for Init
@@ -536,12 +536,16 @@ message Event {
     required string name = 2;  // 1..1
     required Priority priority = 3;  // 1..1
     repeated Action actions = 4;  // 1..*
-    optional Trigger startTrigger = 5;  // 0..1
+    optional StartTrigger startTrigger = 5;  // 0..1
 }
 
 
 // Message for Trigger
-message Trigger {
+message StartTrigger {
+    repeated ConditionGroup conditionGroups = 1;  // 0..*
+}
+// Message for Trigger
+message StopTrigger {
     repeated ConditionGroup conditionGroups = 1;  // 0..*
 }
 
@@ -812,8 +816,8 @@ message Story {
 message Act {
     required string name = 1;  // 1..1
     repeated ManeuverGroup maneuverGroups = 2;  // 1..*
-    required Trigger startTrigger = 3;  // 1..1
-    optional Trigger stopTrigger = 4;  // 0..1
+    required StartTrigger startTrigger = 3;  // 1..1
+    optional StopTrigger stopTrigger = 4;  // 0..1
 }
 
 // Message for StoryboardElementStateCondition

@@ -1,13 +1,26 @@
+
 import pytest
 import yaml
 from typing import List
-from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, FollowingMode, Properties, Property, Controller, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action, PrivateAction, ByEntityCondition, ByValueCondition, Story, Act, ManeuverGroup, Maneuver, Event, Actors, Trigger, Storyboard, InitActions
+from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, FollowingMode, Properties, Property, Controller, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, PrivateAction, ByEntityCondition, ByValueCondition, Story, Act, ManeuverGroup, Maneuver, Event, Actors, StartTrigger, StopTrigger, Storyboard, InitActions, Scenario
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
 from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
 from scenario_transfer.builder.story_board.by_value_condition_builder import ByValueConditionBuilder
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 from scenario_transfer.openscenario.openscenario_coder import OpenScenarioDecoder
+from scenario_transfer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
+
+
+@pytest.fixture
+def scenario(storyboard) -> Scenario:
+    scenario_config = ScenarioConfiguration(
+        entities=[EntityType.EGO, EntityType.NPC, EntityType.NPC],
+        lanelet_map_path="/home/map/lanelet2.osm",
+        traffic_signals=[])
+    scenario_builder = ScenarioBuilder(scenario_configuration=scenario_config)
+    scenario_builder.make_scenario_definition(storyboard=storyboard)
+    return scenario_builder.get_result()
 
 
 @pytest.fixture
@@ -161,7 +174,7 @@ def acts(story) -> List[Act]:
 
 
 @pytest.fixture
-def trigger(story) -> Trigger:
+def trigger(story) -> StartTrigger:
     return story.acts[0].startTrigger
 
 
