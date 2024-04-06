@@ -45,9 +45,27 @@ message Performance {
 
 // Message for Axles
 message Axles {
-    required Axle frontAxle = 1;   // 1..1
-    required Axle rearAxle = 2;    // 1..1
+    required FrontAxle frontAxle = 1;   // 1..1
+    required RearAxle rearAxle = 2;    // 1..1
     repeated Axle additionalAxles = 3;  // 0..*
+}
+
+// Message for Axle
+message FrontAxle {
+    required double maxSteering = 1;   // 1..1
+    required double positionX = 2;     // 1..1
+    required double positionZ = 3;     // 1..1
+    required double trackWidth = 4;    // 1..1
+    required double wheelDiameter = 5;  // 1..1
+}
+
+// Message for Axle
+message RearAxle {
+    required double maxSteering = 1;   // 1..1
+    required double positionX = 2;     // 1..1
+    required double positionZ = 3;     // 1..1
+    required double trackWidth = 4;    // 1..1
+    required double wheelDiameter = 5;  // 1..1
 }
 
 // Message for Axle
