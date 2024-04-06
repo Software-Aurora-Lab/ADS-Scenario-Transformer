@@ -597,7 +597,7 @@ message LaneOffsetAction {
 // Message for LaneChangeAction
 message LaneChangeAction {
     required double targetLaneOffset = 1;   // 0..1
-    required TransitionDynamics laneChangeActionDynamics = 2;  // 1..1
+    required LaneChangeActionDynamics laneChangeActionDynamics = 2;  // 1..1
     required LaneChangeTarget laneChangeTarget = 3;  // 1..1
 }
 
@@ -762,7 +762,7 @@ message AcquirePositionAction {
 
 // Message for SpeedAction
 message SpeedAction {
-    required TransitionDynamics speedActionDynamics = 1;  // 1..1
+    required SpeedActionDynamics speedActionDynamics = 1;  // 1..1
     required SpeedActionTarget speedActionTarget = 2;  // 1..1
 }
 

@@ -22,6 +22,22 @@ message TransitionDynamics {
     }
     required DynamicsDimension dynamicsDimension = 1;  // 1..1
     required DynamicsShape dynamicsShape = 2;  // 1..1
-    required FollowingMode followingMode = 3;  // 1..1
+    optional FollowingMode followingMode = 3;  // 0..1
+    required double value = 4;          // 1..1
+}
+
+// Message for TransitionDynamics
+message LaneChangeActionDynamics {
+    required TransitionDynamics.DynamicsDimension dynamicsDimension = 1;  // 1..1
+    required TransitionDynamics.DynamicsShape dynamicsShape = 2;  // 1..1
+    optional FollowingMode followingMode = 3;  // 0..1
+    required double value = 4;          // 1..1
+}
+
+// Message for TransitionDynamics
+message SpeedActionDynamics {
+    required TransitionDynamics.DynamicsDimension dynamicsDimension = 1;  // 1..1
+    required TransitionDynamics.DynamicsShape dynamicsShape = 2;  // 1..1
+    optional FollowingMode followingMode = 3;  // 0..1
     required double value = 4;          // 1..1
 }

@@ -15,11 +15,13 @@ _sym_db = _symbol_database.Default()
 from openscenario_msgs import following_mode_pb2 as openscenario__msgs_dot_following__mode__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n+openscenario_msgs/transition_dynamics.proto\x12\x0copenscenario\x1a&openscenario_msgs/following_mode.proto\"\xe6\x02\n\x12TransitionDynamics\x12M\n\x11\x64ynamicsDimension\x18\x01 \x02(\x0e\x32\x32.openscenario.TransitionDynamics.DynamicsDimension\x12\x45\n\rdynamicsShape\x18\x02 \x02(\x0e\x32..openscenario.TransitionDynamics.DynamicsShape\x12\x32\n\rfollowingMode\x18\x03 \x02(\x0e\x32\x1b.openscenario.FollowingMode\x12\r\n\x05value\x18\x04 \x02(\x01\"5\n\x11\x44ynamicsDimension\x12\x0c\n\x08\x44ISTANCE\x10\x00\x12\x08\n\x04RATE\x10\x01\x12\x08\n\x04TIME\x10\x02\"@\n\rDynamicsShape\x12\t\n\x05\x43UBIC\x10\x00\x12\n\n\x06LINEAR\x10\x01\x12\x0e\n\nSINUSOIDAL\x10\x02\x12\x08\n\x04STEP\x10\x03')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n+openscenario_msgs/transition_dynamics.proto\x12\x0copenscenario\x1a&openscenario_msgs/following_mode.proto\"\xe6\x02\n\x12TransitionDynamics\x12M\n\x11\x64ynamicsDimension\x18\x01 \x02(\x0e\x32\x32.openscenario.TransitionDynamics.DynamicsDimension\x12\x45\n\rdynamicsShape\x18\x02 \x02(\x0e\x32..openscenario.TransitionDynamics.DynamicsShape\x12\x32\n\rfollowingMode\x18\x03 \x01(\x0e\x32\x1b.openscenario.FollowingMode\x12\r\n\x05value\x18\x04 \x02(\x01\"5\n\x11\x44ynamicsDimension\x12\x0c\n\x08\x44ISTANCE\x10\x00\x12\x08\n\x04RATE\x10\x01\x12\x08\n\x04TIME\x10\x02\"@\n\rDynamicsShape\x12\t\n\x05\x43UBIC\x10\x00\x12\n\n\x06LINEAR\x10\x01\x12\x0e\n\nSINUSOIDAL\x10\x02\x12\x08\n\x04STEP\x10\x03\"\xf3\x01\n\x18LaneChangeActionDynamics\x12M\n\x11\x64ynamicsDimension\x18\x01 \x02(\x0e\x32\x32.openscenario.TransitionDynamics.DynamicsDimension\x12\x45\n\rdynamicsShape\x18\x02 \x02(\x0e\x32..openscenario.TransitionDynamics.DynamicsShape\x12\x32\n\rfollowingMode\x18\x03 \x01(\x0e\x32\x1b.openscenario.FollowingMode\x12\r\n\x05value\x18\x04 \x02(\x01\"\xee\x01\n\x13SpeedActionDynamics\x12M\n\x11\x64ynamicsDimension\x18\x01 \x02(\x0e\x32\x32.openscenario.TransitionDynamics.DynamicsDimension\x12\x45\n\rdynamicsShape\x18\x02 \x02(\x0e\x32..openscenario.TransitionDynamics.DynamicsShape\x12\x32\n\rfollowingMode\x18\x03 \x01(\x0e\x32\x1b.openscenario.FollowingMode\x12\r\n\x05value\x18\x04 \x02(\x01')
 
 
 
 _TRANSITIONDYNAMICS = DESCRIPTOR.message_types_by_name['TransitionDynamics']
+_LANECHANGEACTIONDYNAMICS = DESCRIPTOR.message_types_by_name['LaneChangeActionDynamics']
+_SPEEDACTIONDYNAMICS = DESCRIPTOR.message_types_by_name['SpeedActionDynamics']
 _TRANSITIONDYNAMICS_DYNAMICSDIMENSION = _TRANSITIONDYNAMICS.enum_types_by_name['DynamicsDimension']
 _TRANSITIONDYNAMICS_DYNAMICSSHAPE = _TRANSITIONDYNAMICS.enum_types_by_name['DynamicsShape']
 TransitionDynamics = _reflection.GeneratedProtocolMessageType('TransitionDynamics', (_message.Message,), {
@@ -28,6 +30,20 @@ TransitionDynamics = _reflection.GeneratedProtocolMessageType('TransitionDynamic
   # @@protoc_insertion_point(class_scope:openscenario.TransitionDynamics)
   })
 _sym_db.RegisterMessage(TransitionDynamics)
+
+LaneChangeActionDynamics = _reflection.GeneratedProtocolMessageType('LaneChangeActionDynamics', (_message.Message,), {
+  'DESCRIPTOR' : _LANECHANGEACTIONDYNAMICS,
+  '__module__' : 'openscenario_msgs.transition_dynamics_pb2'
+  # @@protoc_insertion_point(class_scope:openscenario.LaneChangeActionDynamics)
+  })
+_sym_db.RegisterMessage(LaneChangeActionDynamics)
+
+SpeedActionDynamics = _reflection.GeneratedProtocolMessageType('SpeedActionDynamics', (_message.Message,), {
+  'DESCRIPTOR' : _SPEEDACTIONDYNAMICS,
+  '__module__' : 'openscenario_msgs.transition_dynamics_pb2'
+  # @@protoc_insertion_point(class_scope:openscenario.SpeedActionDynamics)
+  })
+_sym_db.RegisterMessage(SpeedActionDynamics)
 
 if _descriptor._USE_C_DESCRIPTORS == False:
 
@@ -38,4 +54,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _TRANSITIONDYNAMICS_DYNAMICSDIMENSION._serialized_end=394
   _TRANSITIONDYNAMICS_DYNAMICSSHAPE._serialized_start=396
   _TRANSITIONDYNAMICS_DYNAMICSSHAPE._serialized_end=460
+  _LANECHANGEACTIONDYNAMICS._serialized_start=463
+  _LANECHANGEACTIONDYNAMICS._serialized_end=706
+  _SPEEDACTIONDYNAMICS._serialized_start=709
+  _SPEEDACTIONDYNAMICS._serialized_end=947
 # @@protoc_insertion_point(module_scope)
