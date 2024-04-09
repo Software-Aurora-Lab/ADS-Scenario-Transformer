@@ -1,5 +1,5 @@
 from typing import List
-from openscenario_msgs import Act, Trigger, ManeuverGroup
+from openscenario_msgs import Act, StartTrigger, StopTrigger, ManeuverGroup
 from scenario_transfer.builder import Builder
 
 
@@ -14,10 +14,10 @@ class ActBuilder(Builder):
     def make_maneuver_groups(self, maneuver_groups: List[ManeuverGroup]):
         self.maneuver_groups = maneuver_groups
 
-    def make_start_trigger(self, trigger: Trigger):
+    def make_start_trigger(self, trigger: StartTrigger):
         self.start_trigger = trigger
 
-    def make_stop_trigger(self, trigger: Trigger):
+    def make_stop_trigger(self, trigger: StopTrigger):
         self.stop_trigger = trigger
 
     def get_result(self) -> Act:

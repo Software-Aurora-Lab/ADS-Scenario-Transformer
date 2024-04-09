@@ -2,7 +2,7 @@ from typing import List
 from openscenario_msgs import Event, Action, Condition, Priority, GlobalAction, UserDefinedAction, PrivateAction
 from scenario_transfer.builder import Builder
 from scenario_transfer.builder.story_board.action_builder import ActionBuilder
-from scenario_transfer.builder.story_board.trigger_builder import TriggerBuilder
+from scenario_transfer.builder.story_board.trigger_builder import StartTriggerBuilder
 
 
 class EventBuilder(Builder):
@@ -16,7 +16,7 @@ class EventBuilder(Builder):
         self.maximum_execution_count = maximum_execution_count
         self.name = name
         self.priority = priority
-        self.trigger_builder = TriggerBuilder()
+        self.trigger_builder = StartTriggerBuilder()
         self.trigger_builder.make_condition_group(start_conditions)
         self.start_trigger = self.trigger_builder.get_result()
         self.actions = []

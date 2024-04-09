@@ -1,5 +1,5 @@
 from typing import List
-from openscenario_msgs import Storyboard, Init, Story, Trigger
+from openscenario_msgs import Storyboard, Init, Story, StopTrigger
 from scenario_transfer.builder import Builder
 
 
@@ -15,7 +15,7 @@ class StoryboardBuilder(Builder):
     def make_stories(self, stories: List[Story]):
         self.stories = stories
 
-    def make_stop_trigger(self, trigger: Trigger):
+    def make_stop_trigger(self, trigger: StopTrigger):
         self.stop_trigger = trigger
 
     def get_result(self) -> Storyboard:

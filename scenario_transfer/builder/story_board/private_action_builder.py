@@ -1,5 +1,6 @@
 from typing import Optional
-from openscenario_msgs import PrivateAction, SpeedAction, LongitudinalAction, TransitionDynamics, SpeedTargetValueType, SpeedActionTarget, AbsoluteTargetSpeed, RelativeTargetSpeed, LateralAction, LaneChangeAction, LaneChangeTarget, AbsoluteTargetLane, RelativeTargetLane, AssignControllerAction, ControllerAction, CatalogReference, Controller, TeleportAction, Position, LanePosition, WorldPosition
+from openscenario_msgs import PrivateAction, SpeedAction, LongitudinalAction, SpeedActionDynamics, SpeedTargetValueType, SpeedActionTarget, AbsoluteTargetSpeed, RelativeTargetSpeed, LateralAction, LaneChangeAction, LaneChangeActionDynamics, LaneChangeTarget, AbsoluteTargetLane, RelativeTargetLane, AssignControllerAction, ControllerAction, CatalogReference, Controller, TeleportAction, Position, LanePosition, WorldPosition
+from openscenario_msgs.transition_dynamics_pb2 import LaneChangeActionDynamics
 from scenario_transfer.builder.builder import Builder
 
 
@@ -7,7 +8,7 @@ class PrivateActionBuilder(Builder):
     product: PrivateAction
 
     def make_relative_speed_action(self,
-                                   transition_dynamics: TransitionDynamics,
+                                   speed_action_dynamics: SpeedActionDynamics,
                                    continuous: bool, entity_name: str,
                                    target_value_type: SpeedTargetValueType,
                                    value: float):
@@ -16,17 +17,17 @@ class PrivateActionBuilder(Builder):
             entityRef=entity_name,
             speedTargetValueType=target_value_type,
             value=value)
-        action = SpeedAction(speedActionDynamics=transition_dynamics,
+        action = SpeedAction(speedActionDynamics=speed_action_dynamics,
                              speedActionTarget=SpeedActionTarget(
                                  relativeTargetSpeed=target_speed))
         self.product = PrivateAction(longitudinalAction=LongitudinalAction(
             speedAction=action))
 
     def make_absolute_speed_action(self,
-                                   transition_dynamics: TransitionDynamics,
+                                   speed_action_dynamics: SpeedActionDynamics,
                                    value: float):
         target_speed = AbsoluteTargetSpeed(value=value)
-        action = SpeedAction(speedActionDynamics=transition_dynamics,
+        action = SpeedAction(speedActionDynamics=speed_action_dynamics,
                              speedActionTarget=SpeedActionTarget(
                                  absoluteTargetSpeed=target_speed))
 
@@ -35,7 +36,7 @@ class PrivateActionBuilder(Builder):
 
     def make_relative_lane_change_action(
             self,
-            transition_dynamics: TransitionDynamics,
+            lane_change_action_dynamics: LaneChangeActionDynamics,
             entity_name: str,
             value: int,
             lane_offset: Optional[float] = None):
@@ -44,7 +45,7 @@ class PrivateActionBuilder(Builder):
 
         lane_change_action = LaneChangeAction(
             targetLaneOffset=lane_offset,
-            laneChangeActionDynamics=transition_dynamics,
+            laneChangeActionDynamics=lane_change_action_dynamics,
             laneChangeTarget=lane_change_target)
         self.product = PrivateAction(lateralAction=LateralAction(
             laneChangeAction=lane_change_action))
@@ -52,14 +53,14 @@ class PrivateActionBuilder(Builder):
     def make_absolute_lane_change_action(
             self,
             value: str,
-            transition_dynamics: TransitionDynamics,
+            lane_change_action_dynamics: LaneChangeActionDynamics,
             lane_offset: Optional[float] = None):
         lane = AbsoluteTargetLane(value=value)
         lane_change_target = LaneChangeTarget(absoluteTargetLane=lane)
 
         lane_change_action = LaneChangeAction(
             targetLaneOffset=lane_offset,
-            laneChangeActionDynamics=transition_dynamics,
+            laneChangeActionDynamics=lane_change_action_dynamics,
             laneChangeTarget=lane_change_target)
 
         self.product = PrivateAction(lateralAction=LateralAction(
@@ -78,7 +79,8 @@ class PrivateActionBuilder(Builder):
             activateLongitudinal=activate_longitudinal,
             controller=controller,
             catalogReference=catalog_reference)
-        self.product = PrivateAction(controllerAction=ControllerAction(assignControllerAction=assign_controller_action))
+        self.product = PrivateAction(controllerAction=ControllerAction(
+            assignControllerAction=assign_controller_action))
 
     def make_teleport_action(self,
                              lane_position: Optional[LanePosition] = None,
@@ -91,7 +93,8 @@ class PrivateActionBuilder(Builder):
         else:
             position = Position(worldPosition=world_position)
 
-        self.product = PrivateAction(teleportAction=TeleportAction(position=position))
+        self.product = PrivateAction(teleportAction=TeleportAction(
+            position=position))
 
     def get_result(self) -> PrivateAction:
         return self.product

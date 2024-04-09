@@ -1,8 +1,7 @@
-
 import pytest
 import yaml
 from typing import List
-from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, FollowingMode, Properties, Property, Controller, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, PrivateAction, ByEntityCondition, ByValueCondition, Story, Act, ManeuverGroup, Maneuver, Event, Actors, StartTrigger, StopTrigger, Storyboard, InitActions, Scenario
+from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, SpeedActionDynamics, LaneChangeActionDynamics, TransitionDynamics, FollowingMode, Properties, Property, Controller, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, PrivateAction, ByEntityCondition, ByValueCondition, Story, Act, ManeuverGroup, Maneuver, Event, Actors, StartTrigger, StopTrigger, Storyboard, InitActions, Scenario
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
 from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
@@ -38,8 +37,17 @@ def ego_name(entities) -> str:
 
 
 @pytest.fixture
-def transition_dynamics() -> TransitionDynamics:
-    return TransitionDynamics(
+def speed_action_dynamics() -> SpeedActionDynamics:
+    return SpeedActionDynamics(
+        dynamicsDimension=TransitionDynamics.DynamicsDimension.RATE,
+        dynamicsShape=TransitionDynamics.DynamicsShape.LINEAR,
+        followingMode=FollowingMode.FOLLOWINGMODE_FOLLOW,
+        value=1.0)
+
+
+@pytest.fixture
+def lane_change_action_dynamics() -> LaneChangeActionDynamics:
+    return LaneChangeActionDynamics(
         dynamicsDimension=TransitionDynamics.DynamicsDimension.RATE,
         dynamicsShape=TransitionDynamics.DynamicsShape.LINEAR,
         followingMode=FollowingMode.FOLLOWINGMODE_FOLLOW,
@@ -174,8 +182,13 @@ def acts(story) -> List[Act]:
 
 
 @pytest.fixture
-def trigger(story) -> StartTrigger:
+def start_trigger(story) -> StartTrigger:
     return story.acts[0].startTrigger
+
+
+@pytest.fixture
+def stop_trigger(storyboard) -> StartTrigger:
+    return storyboard.stopTrigger
 
 
 @pytest.fixture

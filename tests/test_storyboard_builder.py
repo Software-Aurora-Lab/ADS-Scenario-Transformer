@@ -93,10 +93,10 @@ def test_maneuver_builder(events):
         0].byValueCondition.simulationTimeCondition.value == 180.0
 
 
-def test_act_builder(maneuver_groups, trigger):
+def test_act_builder(maneuver_groups, start_trigger):
     builder = ActBuilder()
     builder.make_maneuver_groups(maneuver_groups=maneuver_groups)
-    builder.make_start_trigger(trigger=trigger)
+    builder.make_start_trigger(trigger=start_trigger)
     act = builder.get_result()
 
     assert isinstance(act, Act)
@@ -137,12 +137,12 @@ def test_init_builder(init_actions):
     assert len(init.actions.privates) == 3
 
 
-def test_storyboard_builder(storyboard, story, trigger):
+def test_storyboard_builder(storyboard, story, stop_trigger):
     builder = StoryboardBuilder()
 
     builder.make_init(init=storyboard.init)
     builder.make_stories(stories=[story])
-    builder.make_stop_trigger(trigger=trigger)
+    builder.make_stop_trigger(trigger=stop_trigger)
 
     storyboard = builder.get_result()
     assert isinstance(storyboard, Storyboard)

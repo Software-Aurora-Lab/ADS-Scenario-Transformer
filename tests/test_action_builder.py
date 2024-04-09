@@ -1,7 +1,7 @@
 import pytest
 import yaml
 from typing import List
-from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode, Properties, Property, Controller, ControllerAction, AssignControllerAction, TeleportAction, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action
+from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, SpeedActionDynamics, LaneChangeActionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode, Properties, Property, Controller, ControllerAction, AssignControllerAction, TeleportAction, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action
 from openscenario_msgs.common_pb2 import InfrastructureAction, EntityAction, LaneChangeAction, UserDefinedAction, PrivateAction, SpeedTargetValueType, SpeedAction
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
 from scenario_transfer.builder.story_board.user_defined_action_builder import UserDefinedActionBuilder
@@ -76,11 +76,11 @@ def test_user_definec_action_builder():
     assert_proto_type_equal(null_action, UserDefinedAction)
 
 
-def test_relative_speed_action_builder(ego_name, transition_dynamics):
+def test_relative_speed_action_builder(ego_name, speed_action_dynamics):
     assert ego_name == "ego"
     builder = PrivateActionBuilder()
     builder.make_relative_speed_action(
-        transition_dynamics=transition_dynamics,
+        speed_action_dynamics=speed_action_dynamics,
         continuous=True,
         entity_name=ego_name,
         target_value_type=SpeedTargetValueType.SPEEDTARGETVALUETYPE_DELTA,
@@ -91,29 +91,29 @@ def test_relative_speed_action_builder(ego_name, transition_dynamics):
     speed_action = action.longitudinalAction.speedAction
     assert_proto_type_equal(speed_action, SpeedAction)
     assert_proto_type_equal(speed_action.speedActionDynamics,
-                            TransitionDynamics)
+                            SpeedActionDynamics)
     assert_proto_type_equal(speed_action.speedActionTarget.relativeTargetSpeed,
                             RelativeTargetSpeed)
 
 
-def test_absolute_speed_action_builder(transition_dynamics):
+def test_absolute_speed_action_builder(speed_action_dynamics):
     builder = PrivateActionBuilder()
-    builder.make_absolute_speed_action(transition_dynamics=transition_dynamics,
-                                       value=0.0)
+    builder.make_absolute_speed_action(
+        speed_action_dynamics=speed_action_dynamics, value=0.0)
     action = builder.get_result()
     assert_proto_type_equal(action, PrivateAction)
     speed_action = action.longitudinalAction.speedAction
     assert_proto_type_equal(speed_action, SpeedAction)
     assert_proto_type_equal(speed_action.speedActionDynamics,
-                            TransitionDynamics)
+                            SpeedActionDynamics)
     assert_proto_type_equal(speed_action.speedActionTarget.absoluteTargetSpeed,
                             AbsoluteTargetSpeed)
 
 
-def test_relative_lane_change_action_builder(transition_dynamics):
+def test_relative_lane_change_action_builder(lane_change_action_dynamics):
     builder = PrivateActionBuilder()
     builder.make_relative_lane_change_action(
-        transition_dynamics=transition_dynamics,
+        lane_change_action_dynamics=lane_change_action_dynamics,
         entity_name="example_entity",
         value=2,
         lane_offset=0.5)
@@ -123,13 +123,13 @@ def test_relative_lane_change_action_builder(transition_dynamics):
                             LaneChangeAction)
     assert_proto_type_equal(
         action.lateralAction.laneChangeAction.laneChangeActionDynamics,
-        TransitionDynamics)
+        LaneChangeActionDynamics)
 
 
-def test_absolute_lane_change_action_builder(transition_dynamics):
+def test_absolute_lane_change_action_builder(lane_change_action_dynamics):
     builder = PrivateActionBuilder()
     builder.make_absolute_lane_change_action(
-        transition_dynamics=transition_dynamics,
+        lane_change_action_dynamics=lane_change_action_dynamics,
         value="example_value",
         lane_offset=0.5)
     action = builder.get_result()
@@ -138,7 +138,7 @@ def test_absolute_lane_change_action_builder(transition_dynamics):
                             LaneChangeAction)
     assert_proto_type_equal(
         action.lateralAction.laneChangeAction.laneChangeActionDynamics,
-        TransitionDynamics)
+        LaneChangeActionDynamics)
 
 
 def test_assigned_control_action_builder(controller):
