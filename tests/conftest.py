@@ -1,11 +1,12 @@
 import pytest
 import yaml
 from typing import List
-from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, SpeedActionDynamics, LaneChangeActionDynamics, TransitionDynamics, FollowingMode, Properties, Property, Controller, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, PrivateAction, ByEntityCondition, ByValueCondition, Story, Act, ManeuverGroup, Maneuver, Event, Actors, StartTrigger, StopTrigger, Storyboard, InitActions, Scenario
+from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, SpeedActionDynamics, LaneChangeActionDynamics, TransitionDynamics, FollowingMode, Properties, Property, Controller, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, PrivateAction, ByEntityCondition, ByValueCondition, Story, Act, ManeuverGroup, Maneuver, Event, Actors, StartTrigger, StopTrigger, Storyboard, Actions, Scenario, ParameterDeclarations, ParameterDeclaration, ParameterType
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
 from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
 from scenario_transfer.builder.story_board.by_entity_condition_builder import ByEntityConditionBuilder
 from scenario_transfer.builder.story_board.by_value_condition_builder import ByValueConditionBuilder
+from scenario_transfer.builder.parameter_declarations_builder import ParameterDeclarationsBuilder
 from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
 from scenario_transfer.openscenario.openscenario_coder import OpenScenarioDecoder
 from scenario_transfer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
@@ -159,7 +160,7 @@ def storyboard() -> Storyboard:
 
 
 @pytest.fixture
-def init_actions(storyboard) -> InitActions:
+def init_actions(storyboard) -> Actions:
     return storyboard.init.actions
 
 
@@ -187,7 +188,7 @@ def start_trigger(story) -> StartTrigger:
 
 
 @pytest.fixture
-def stop_trigger(storyboard) -> StartTrigger:
+def stop_trigger(storyboard) -> StopTrigger:
     return storyboard.stopTrigger
 
 
@@ -214,3 +215,37 @@ def actors(maneuver_groups) -> Actors:
 @pytest.fixture
 def events(maneuvers) -> List[Event]:
     return [event for maneuver in maneuvers for event in maneuver.events]
+
+
+@pytest.fixture
+def parameter_declarations() -> ParameterDeclarations:
+
+    declarations = [
+        ParameterDeclaration(name='ego_speed',
+                             parameterType=ParameterType.PARAMETERTYPE_DOUBLE,
+                             value='__tier4_modifier_ego_speed'),
+        ParameterDeclaration(name='npc_position',
+                             parameterType=ParameterType.PARAMETERTYPE_DOUBLE,
+                             value='__tier4_modifier_npc_position'),
+        ParameterDeclaration(name='__ego_dimensions_length__',
+                             parameterType=ParameterType.PARAMETERTYPE_DOUBLE,
+                             value='0'),
+        ParameterDeclaration(name='__ego_dimensions_width__',
+                             parameterType=ParameterType.PARAMETERTYPE_DOUBLE,
+                             value='0'),
+        ParameterDeclaration(name='__ego_dimensions_height__',
+                             parameterType=ParameterType.PARAMETERTYPE_DOUBLE,
+                             value='0'),
+        ParameterDeclaration(name='__ego_center_x__',
+                             parameterType=ParameterType.PARAMETERTYPE_DOUBLE,
+                             value='0'),
+        ParameterDeclaration(name='__ego_center_y__',
+                             parameterType=ParameterType.PARAMETERTYPE_DOUBLE,
+                             value='0'),
+        ParameterDeclaration(name='__ego_center_z__',
+                             parameterType=ParameterType.PARAMETERTYPE_DOUBLE,
+                             value='0'),
+    ]
+
+    builder = ParameterDeclarationsBuilder(parameterDeclarations=declarations)
+    return builder.get_result()

@@ -6,12 +6,12 @@ Entities:
           vehicleCategory: car
           BoundingBox:
             Center:
-              x: 1.355
+              x: 1.35
               y: 0
               z: 1.25
             Dimensions:
-              length: 4.77
-              width: 1.83
+              length: 4.4
+              width: 1.875
               height: 2.5
           Performance:
             maxSpeed: 50
@@ -20,16 +20,16 @@ Entities:
           Axles:
             FrontAxle:
               maxSteering: 0.5236
-              wheelDiameter: 0.78
-              trackWidth: 1.63
-              positionX: 1.385
-              positionZ: 0.39
+              wheelDiameter: 0.62
+              trackWidth: 1.485
+              positionX: 1.4
+              positionZ: 0.31
             RearAxle:
               maxSteering: 0.5236
-              wheelDiameter: 0.78
-              trackWidth: 1.63
+              wheelDiameter: 0.62
+              trackWidth: 1.485
               positionX: 0
-              positionZ: 0.39
+              positionZ: 0.31
           Properties:
             Property: []
         ObjectController:

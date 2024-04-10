@@ -3,15 +3,14 @@ from openscenario_msgs import ScenarioDefinition, ParameterDeclaration, RoadNetw
 from scenario_transfer.builder import Builder
 from scenario_transfer.builder.catalog_locations_builder import CatalogLocationsBuilder
 from scenario_transfer.builder.road_network_builder import RoadNetworkBuilder
-from scenario_transfer.builder.parameter_declarations_builder import ParameterDeclarationBuilder
+from scenario_transfer.builder.parameter_declarations_builder import ParameterDeclarationsBuilder, ParameterDeclarationBuilder
 from scenario_transfer.builder.entities_builder import EntitiesBuilder, EntityType
-from openscenario_msgs import Init, InitActions  # TODO: Remove after implement Storyboard builder
 
 
 class ScenarioDefinitionBuilder(Builder):
     """
     message ScenarioDefinition {
-        repeated ParameterDeclaration parameterDeclarations = 1;  // 0..*
+        optional ParameterDeclarations parameterDeclarations = 1;  // 0..*
         required CatalogLocations catalogLocations = 2;           // 1..1
         required RoadNetwork roadNetwork = 3;                     // 1..1
         required Entities entities = 4;                           // 1..1
@@ -27,13 +26,16 @@ class ScenarioDefinitionBuilder(Builder):
 
     def __init__(self,
                  parameter_declarations: List[ParameterDeclaration] = []):
-        self.parameter_declarations = parameter_declarations
+
+        params_builder = ParameterDeclarationsBuilder(
+            parameterDeclarations=parameter_declarations)
+        self.parameter_declarations = params_builder.get_result()
 
     def add_parameter_declaration(self, name: str, parameterType: int,
                                   value: str):
         param = ParameterDeclarationBuilder(name, parameterType,
                                             value).get_result()
-        self.parameter_declarations.append(param)
+        self.parameter_declarations.parameterDeclarations.append(param)
 
     def make_road_network(self,
                           lanelet_map_path: str,

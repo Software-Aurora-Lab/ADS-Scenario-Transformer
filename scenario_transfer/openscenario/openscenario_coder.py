@@ -1,5 +1,5 @@
 import yaml
-import difflib
+import re
 from typing import Optional, TypeVar, Dict, Type, Tuple, List
 import os
 import importlib
@@ -91,8 +91,13 @@ class OpenScenarioCoder:
 
 class OpenScenarioEncoder:
 
+    including_default_value_fields = {
+        "Actors": [("EntityRef", [])],
+        "StopTrigger": [("ConditionGroup", [])]
+    }
+
     @staticmethod
-    def encode_proto_pyobject_to_yaml(proto_pyobject,
+    def encode_proto_pyobject_to_dict(proto_pyobject,
                                       wrap_result_with_typename=True):
         proto_dict = protobuf_to_dict(proto_pyobject, use_enum_labels=True)
 
@@ -106,6 +111,15 @@ class OpenScenarioEncoder:
         if wrap_result_with_typename:
             result_dict = {type(proto_pyobject).__name__: result_dict}
 
+        return result_dict
+
+    @staticmethod
+    def encode_proto_pyobject_to_yaml(proto_pyobject,
+                                      wrap_result_with_typename=True):
+
+        result_dict = OpenScenarioEncoder.encode_proto_pyobject_to_dict(
+            proto_pyobject, wrap_result_with_typename)
+
         yaml_data = yaml.dump(result_dict,
                               sort_keys=False,
                               default_flow_style=False)
@@ -115,6 +129,10 @@ class OpenScenarioEncoder:
     @staticmethod
     def convert_to_compatible_element(input_dict, name_dict, root_type_name):
 
+        def snake_to_camel(snake_str) -> str:
+            words = snake_str.lower().split('_')
+            return words[0] + ''.join(word.title() for word in words[1:])
+        
         def search_type_name(field_name: str,
                              root_type_name: str) -> Optional[str]:
             for field_name_key, type_name in name_dict[root_type_name]:
@@ -152,6 +170,14 @@ class OpenScenarioEncoder:
                         sub_key = OpenScenarioCoder.plural_singular_types[
                             type_name]
                         new_value = {sub_key: []}
+                    elif type_name in OpenScenarioEncoder.including_default_value_fields:
+                        fields = OpenScenarioEncoder.including_default_value_fields[
+                            type_name]
+                        for (field, default_value) in fields:
+                            if field not in value:
+                                new_value[field] = default_value
+                        new_value = OpenScenarioEncoder.convert_to_compatible_element(
+                            new_value, name_dict, new_key)
                     else:
                         new_value = OpenScenarioEncoder.convert_to_compatible_element(
                             value, name_dict, new_key)
@@ -166,8 +192,11 @@ class OpenScenarioEncoder:
                 # enum
                 for enum_key, enum_value in type_name.items():
                     if value == enum_value:
-                        new_value = enum_key.lower()
+                        new_value = snake_to_camel(enum_key)
                         break
+
+            if new_value == float('inf'):
+                new_value = 'INF'
 
             res_dict[new_key] = new_value
         return res_dict
@@ -204,14 +233,16 @@ class OpenScenarioDecoder:
         if target == "":
             return None
 
+        res = None
+        # change camel case to snake case
+        enum_key = re.sub(r'(?<!^)(?=[A-Z])', '_', target).upper()
         for pair in name_dict[root_type_name]:
             if isinstance(pair[1], dict):
                 enum_map = pair[1]
-                enum_key = target.upper()
                 if enum_key in enum_map.keys():
-                    return enum_map[enum_key]
-
-        return None
+                    res = enum_map[enum_key]
+                    break
+        return res
 
     @staticmethod
     def is_enum(name_dict, root_type_name, key) -> bool:
@@ -339,10 +370,11 @@ class OpenScenarioDecoder:
                     res_dict[new_key] = new_value
             elif isinstance(value, str):
                 # enum + string value
-
                 if OpenScenarioDecoder.is_enum(name_dict, root_type_name, key):
                     decoded_enum = OpenScenarioDecoder.decode_enum(
                         name_dict, root_type_name, value)
+                    if root_type_name == "SpeedCondition":
+                        print("decoded", decoded_enum)
                     new_value = decoded_enum
                 else:
                     if value.upper() == 'INF':

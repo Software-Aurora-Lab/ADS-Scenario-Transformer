@@ -1,0 +1,435 @@
+ScenarioModifiers:
+  ScenarioModifier: []
+OpenSCENARIO:
+  CatalogLocations:
+    CatalogLocation: []
+  Entities:
+    ScenarioObject:
+    - ObjectController:
+        Controller:
+          Properties:
+            Property:
+            - name: isEgo
+              value: 'true'
+          name: ''
+      Vehicle:
+        Axles:
+          FrontAxle:
+            maxSteering: 0.5236
+            positionX: 1.4
+            positionZ: 0.31
+            trackWidth: 1.485
+            wheelDiameter: 0.62
+          RearAxle:
+            maxSteering: 0.5236
+            positionX: 0
+            positionZ: 0.31
+            trackWidth: 1.485
+            wheelDiameter: 0.62
+        BoundingBox:
+          Center:
+            x: 1.35
+            y: 0
+            z: 1.25
+          Dimensions:
+            height: 2.5
+            length: 4.4
+            width: 1.875
+        Performance:
+          maxAcceleration: INF
+          maxDeceleration: INF
+          maxSpeed: 50
+        Properties:
+          Property: []
+        name: ''
+        vehicleCategory: car
+      name: ego
+    - ObjectController:
+        Controller:
+          Properties:
+            Property: []
+          name: ''
+      Vehicle:
+        Axles:
+          FrontAxle:
+            maxSteering: 0.5236
+            positionX: 2
+            positionZ: 0.3
+            trackWidth: 1.8
+            wheelDiameter: 0.6
+          RearAxle:
+            maxSteering: 0.5236
+            positionX: 0
+            positionZ: 0.3
+            trackWidth: 1.8
+            wheelDiameter: 0.6
+        BoundingBox:
+          Center:
+            x: 0
+            y: 0
+            z: 1.25
+          Dimensions:
+            height: 2.5
+            length: 4
+            width: 1.8
+        Performance:
+          maxAcceleration: INF
+          maxDeceleration: INF
+          maxSpeed: 50
+        Properties:
+          Property: []
+        name: ''
+        vehicleCategory: car
+      name: npc_1
+    - ObjectController:
+        Controller:
+          Properties:
+            Property: []
+          name: ''
+      Vehicle:
+        Axles:
+          FrontAxle:
+            maxSteering: 0.5236
+            positionX: 2
+            positionZ: 0.3
+            trackWidth: 1.8
+            wheelDiameter: 0.6
+          RearAxle:
+            maxSteering: 0.5236
+            positionX: 0
+            positionZ: 0.3
+            trackWidth: 1.8
+            wheelDiameter: 0.6
+        BoundingBox:
+          Center:
+            x: 0
+            y: 0
+            z: 1.25
+          Dimensions:
+            height: 2.5
+            length: 4
+            width: 1.8
+        Performance:
+          maxAcceleration: INF
+          maxDeceleration: INF
+          maxSpeed: 50
+        Properties:
+          Property: []
+        name: ''
+        vehicleCategory: car
+      name: npc_2
+  FileHeader:
+    author: 'AKIRA TAMURA (last modified by: Berkay Karaman)'
+    date: '2023-11-13T12:25:48.481Z'
+    description: ''
+    revMajor: 1
+    revMinor: 1
+  ParameterDeclarations:
+    ParameterDeclaration:
+    - name: ego_speed
+      parameterType: double
+      value: __tier4_modifier_ego_speed
+    - name: npc_position
+      parameterType: double
+      value: __tier4_modifier_npc_position
+    - name: __ego_dimensions_length__
+      parameterType: double
+      value: '0'
+    - name: __ego_dimensions_width__
+      parameterType: double
+      value: '0'
+    - name: __ego_dimensions_height__
+      parameterType: double
+      value: '0'
+    - name: __ego_center_x__
+      parameterType: double
+      value: '0'
+    - name: __ego_center_y__
+      parameterType: double
+      value: '0'
+    - name: __ego_center_z__
+      parameterType: double
+      value: '0'
+  RoadNetwork:
+    LogicFile:
+      filepath: 
+        /home/cloudsky/autoware_map/autoware_scenario_data/maps/awf_cicd_virtual_G_dev/lanelet2_map.osm
+    SceneGraphFile:
+      filepath: 
+        /home/cloudsky/autoware_map/autoware_scenario_data/maps/awf_cicd_virtual_G_dev/pointcloud_map.pcd
+    TrafficSignals:
+      TrafficSignalController: []
+  Storyboard:
+    Init:
+      Actions:
+        Private:
+        - PrivateAction:
+          - TeleportAction:
+              Position:
+                LanePosition:
+                  Orientation:
+                    h: 0
+                    p: 0
+                    r: 0
+                    type: relative
+                  laneId: '194864'
+                  offset: 0
+                  roadId: ''
+                  s: 5
+          - RoutingAction:
+              AcquirePositionAction:
+                Position:
+                  LanePosition:
+                    Orientation:
+                      h: 0
+                      p: 0
+                      r: 0
+                      type: relative
+                    laneId: '194868'
+                    offset: 0
+                    roadId: ''
+                    s: 20
+          - ControllerAction:
+              AssignControllerAction:
+                Controller:
+                  Properties:
+                    Property:
+                    - name: maxSpeed
+                      value: '50'
+                  name: ''
+          entityRef: ego
+        - PrivateAction:
+          - TeleportAction:
+              Position:
+                LanePosition:
+                  Orientation:
+                    h: 0
+                    p: 0
+                    r: 0
+                    type: relative
+                  laneId: '194868'
+                  offset: -0.025
+                  roadId: ''
+                  s: 0.0
+          - LongitudinalAction:
+              SpeedAction:
+                SpeedActionDynamics:
+                  dynamicsDimension: time
+                  dynamicsShape: step
+                  value: 0
+                SpeedActionTarget:
+                  AbsoluteTargetSpeed:
+                    value: 0
+          entityRef: Npc1
+        - PrivateAction:
+          - TeleportAction:
+              Position:
+                LanePosition:
+                  Orientation:
+                    h: 0
+                    p: 0
+                    r: 0
+                    type: relative
+                  laneId: '194868'
+                  offset: -0.025
+                  roadId: ''
+                  s: 0.0
+          - LongitudinalAction:
+              SpeedAction:
+                SpeedActionDynamics:
+                  dynamicsDimension: time
+                  dynamicsShape: step
+                  value: 0
+                SpeedActionTarget:
+                  AbsoluteTargetSpeed:
+                    value: 0
+          entityRef: Npc2
+    StopTrigger:
+      ConditionGroup: []
+    Story:
+    - Act:
+      - ManeuverGroup:
+        - Actors:
+            EntityRef: []
+            selectTriggeringEntities: false
+          Maneuver:
+          - Event:
+            - Action:
+              - UserDefinedAction:
+                  CustomCommandAction:
+                    type: ':'
+                name: ''
+              StartTrigger:
+                ConditionGroup:
+                - Condition:
+                  - ByEntityCondition:
+                      EntityCondition:
+                        SpeedCondition:
+                          rule: greaterThan
+                          value: 10
+                      TriggeringEntities:
+                        EntityRef:
+                        - entityRef: ego
+                        triggeringEntitiesRule: any
+                    conditionEdge: none
+                    delay: 0
+                    name: ''
+              name: speed_check
+              priority: parallel
+            name: ''
+          maximumExecutionCount: 1
+          name: act_ego_testspeed_check
+        StartTrigger:
+          ConditionGroup:
+          - Condition:
+            - ByValueCondition:
+                SimulationTimeCondition:
+                  rule: greaterThan
+                  value: 0
+              conditionEdge: none
+              delay: 0
+              name: ''
+        name: act_ego_testspeed_check
+      - ManeuverGroup:
+        - Actors:
+            EntityRef:
+            - entityRef: ego
+            selectTriggeringEntities: false
+          Maneuver:
+          - Event:
+            - Action:
+              - UserDefinedAction:
+                  CustomCommandAction:
+                    type: exitSuccess
+                name: ''
+              StartTrigger:
+                ConditionGroup:
+                - Condition:
+                  - ByValueCondition:
+                      UserDefinedValueCondition:
+                        name: /diagnostic/planning_evaluator/metrics_modified_goal_longitudinal_deviation_mean
+                        rule: lessThan
+                        value: '1.0'
+                    conditionEdge: none
+                    delay: 0
+                    name: ''
+                  - ByValueCondition:
+                      UserDefinedValueCondition:
+                        name: /diagnostic/planning_evaluator/metrics_modified_goal_lateral_deviation_mean
+                        rule: lessThan
+                        value: '1.0'
+                    conditionEdge: none
+                    delay: 0
+                    name: ''
+                  - ByValueCondition:
+                      UserDefinedValueCondition:
+                        name: /diagnostic/planning_evaluator/metrics_modified_goal_yaw_deviation_mean
+                        rule: lessThan
+                        value: '0.785398'
+                    conditionEdge: none
+                    delay: 0
+                    name: ''
+                  - ByEntityCondition:
+                      EntityCondition:
+                        SpeedCondition:
+                          rule: lessThan
+                          value: 0.0001
+                      TriggeringEntities:
+                        EntityRef:
+                        - entityRef: ego
+                        triggeringEntitiesRule: any
+                    conditionEdge: none
+                    delay: 0
+                    name: ''
+                  - ByValueCondition:
+                      StoryboardElementStateCondition:
+                        state: completeState
+                        storyboardElementRef: act_ego_testspeed_check
+                        storyboardElementType: act
+                    conditionEdge: none
+                    delay: 0
+                    name: ''
+                  - ByEntityCondition:
+                      EntityCondition:
+                        StandStillCondition:
+                          duration: 3
+                      TriggeringEntities:
+                        EntityRef:
+                        - entityRef: ego
+                        triggeringEntitiesRule: any
+                    conditionEdge: none
+                    delay: 0
+                    name: ''
+              name: ''
+              priority: parallel
+            - Action:
+              - UserDefinedAction:
+                  CustomCommandAction:
+                    type: exitFailure
+                name: ''
+              StartTrigger:
+                ConditionGroup:
+                - Condition:
+                  - ByValueCondition:
+                      SimulationTimeCondition:
+                        rule: greaterThan
+                        value: 180
+                    conditionEdge: none
+                    delay: 0
+                    name: ''
+                - Condition:
+                  - ByEntityCondition:
+                      EntityCondition:
+                        AccelerationCondition:
+                          rule: lessThan
+                          value: -2.5
+                      TriggeringEntities:
+                        EntityRef:
+                        - entityRef: ego
+                        triggeringEntitiesRule: any
+                    conditionEdge: none
+                    delay: 0
+                    name: ''
+                - Condition:
+                  - ByEntityCondition:
+                      EntityCondition:
+                        CollisionCondition:
+                          EntityRef:
+                            entityRef: Npc1
+                      TriggeringEntities:
+                        EntityRef:
+                        - entityRef: ego
+                        triggeringEntitiesRule: any
+                    conditionEdge: none
+                    delay: 0
+                    name: ''
+                - Condition:
+                  - ByEntityCondition:
+                      EntityCondition:
+                        CollisionCondition:
+                          EntityRef:
+                            entityRef: Npc2
+                      TriggeringEntities:
+                        EntityRef:
+                        - entityRef: ego
+                        triggeringEntitiesRule: any
+                    conditionEdge: none
+                    delay: 0
+                    name: ''
+              name: ''
+              priority: parallel
+            name: ''
+          maximumExecutionCount: 1
+          name: ''
+        StartTrigger:
+          ConditionGroup:
+          - Condition:
+            - ByValueCondition:
+                SimulationTimeCondition:
+                  rule: greaterThan
+                  value: 0
+              conditionEdge: none
+              delay: 0
+              name: ''
+        name: _EndCondition
+      name: ''

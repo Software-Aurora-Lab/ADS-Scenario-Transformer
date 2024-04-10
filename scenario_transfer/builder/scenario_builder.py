@@ -1,5 +1,5 @@
-from typing import List
-from openscenario_msgs import Scenario, ScenarioDefinition, ScenarioModifiers, FileHeader, TrafficSignalController, OpenSCENARIO, Storyboard
+from typing import List, Optional, Dict
+from openscenario_msgs import Scenario, ScenarioDefinition, ScenarioModifiers, FileHeader, TrafficSignalController, OpenSCENARIO, Storyboard, ParameterDeclaration
 from scenario_transfer.builder import Builder
 from scenario_transfer.builder.file_header_builder import FileHeaderBuilder
 from scenario_transfer.builder.scenario_definition_builder import ScenarioDefinitionBuilder
@@ -42,12 +42,18 @@ class ScenarioBuilder(Builder):
     def make_scenario_modifiers(self):
         self.scenario_modifiers = ScenarioModifiers()  # not in used
 
-    def make_file_header(self):
-        self.header = FileHeaderBuilder().get_result(
-        )  # FileHeader uses default information
+    def make_file_header(self, fileheader_dict: Optional[Dict] = None):
+        if fileheader_dict:
+            self.header = FileHeaderBuilder(dict=fileheader_dict).get_result()
+        else:
+            self.header = FileHeaderBuilder().get_result()
 
-    def make_scenario_definition(self, storyboard: Storyboard):
-        scenario_definition_builder = ScenarioDefinitionBuilder()
+    def make_scenario_definition(
+            self,
+            storyboard: Storyboard,
+            parameter_declarataions: List[ParameterDeclaration] = []):
+        scenario_definition_builder = ScenarioDefinitionBuilder(
+            parameter_declarations=parameter_declarataions)
 
         scenario_definition_builder.make_default_entities(
             self.configuration.entities)
