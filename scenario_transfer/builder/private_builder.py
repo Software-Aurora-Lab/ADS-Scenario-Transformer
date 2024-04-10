@@ -1,48 +1,53 @@
 from typing import List, Optional
-from openscenario_msgs import Private, PrivateAction, Waypoint, ScenarioObject, RoutingAction, AssignRouteAction, AcquirePositionAction, Route, TeleportAction, EntityRef, Entity
+from openscenario_msgs import Private, PrivateAction, Waypoint, ScenarioObject, RoutingAction, AssignRouteAction, AcquirePositionAction, Route, TeleportAction, EntityRef, Entity, Position
 from scenario_transfer.builder import Builder
-
+from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
+from scenario_transfer.builder.story_board.routing_action_builder import RoutingActionBuilder
 
 class PrivateBuilder(Builder):
-    waypoints: List[Waypoint]
     scenario_object: ScenarioObject
-    teleport_action: TeleportAction
-    routing_action: RoutingAction
-
+    private_actions: List[PrivateAction]
+    
     product: Private
 
-    def __init__(self, waypoints: List[Waypoint]):
-        self.waypoints = waypoints
-
-    def make_entity(self, scenario_object: ScenarioObject):
+    def __init__(self, scenario_object: ScenarioObject):
         self.scenario_object = scenario_object
+        self.private_actions = []
 
-    def make_teleport_action(self):
-        self.teleport_action = TeleportAction(
-            position=self.waypoints[0].position)
-
-    def make_routing_action(self):
-        if len(self.waypoints) > 3:
-            self.routing_action = RoutingAction(
-                assignRouteAction=AssignRouteAction(
-                    route=Route(closed=False,
-                                name="ego route",
-                                parameterDeclarations=[],
-                                waypoints=self.waypoints[1:])))
+    def make_teleport_action(self, position: Position):
+        builder = PrivateActionBuilder()
+        if position.lanePosition:
+            builder.make_teleport_action(lane_position = position.lanePosition)
         else:
-            self.routing_action = RoutingAction(
-                acquirePositionAction=AcquirePositionAction(
-                    position=self.waypoints[-1].position))
+            builder.make_teleport_action(lane_position = position.worldPosition)
 
-    def update_route_name(self, name: str):
-        if not self.routing_action.assignRouteAction:
-            return
+        self.private_actions.append(builder.get_result())
 
-        self.routing_action.assignRouteAction.route.name = name
+    def make_routing_action_with_teleport_action(self, waypoints: List[Waypoint], closed: bool, name: str):
+        assert len(waypoints) > 1, "The number of waypoints should be larger than 2"
+
+        self.make_teleport_action(position= waypoints[0].position)
+        
+        routing_action_builder = RoutingActionBuilder()
+        if len(waypoints) > 3:
+            routing_action_builder.make_assign_route_action(
+                closed=closed,
+                name=name,
+                parameter_declarations=[],
+                waypoints=waypoints[1:])
+        else:
+            if waypoints[-1].position.lanePosition:
+                routing_action_builder.make_acquire_position_action(lane_position=waypoints[-1].position.lanePosition)
+            else:
+                routing_action_builder.make_acquire_position_action(world_position=waypoints[-1].position.worldPosition)
+
+        routing_action = routing_action_builder.get_result()
+        private_action_builder = PrivateActionBuilder()
+        private_action_builder.make_routing_action(routing_action=routing_action)
+        self.private_actions.append(private_action_builder.get_result())
+        
 
     def get_result(self) -> Private:
-        return Private(entityRef=self.scenario_object.name,
-                       privateActions=[
-                           PrivateAction(teleportAction=self.teleport_action),
-                           PrivateAction(routingAction=self.routing_action)
-                       ])
+        self.product = Private(entityRef=self.scenario_object.name,
+                               privateActions=self.private_actions)
+        return self.product

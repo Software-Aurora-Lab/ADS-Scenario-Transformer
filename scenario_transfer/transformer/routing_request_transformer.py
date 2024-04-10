@@ -52,16 +52,11 @@ class RoutingRequestTransformer(Transformer):
             lambda lane_waypoint:
             (transformer.transform(source=lane_waypoint)), source.waypoint)
 
-        private_builder = PrivateBuilder(
-            waypoints=list(openscenario_waypoints))
-        private_builder.make_entity(ego)
-        private_builder.make_teleport_action()
-        private_builder.make_routing_action()
-
-        route_name = self.properties[
-            "route_name"] if "route_name" in self.properties else ""
-
-        private_builder.update_route_name(name=route_name)
-
+        private_builder = PrivateBuilder(scenario_object=ego)
+        private_builder.make_routing_action_with_teleport_action(
+            waypoints=list(openscenario_waypoints),
+            closed=False, 
+            name="Routing Request Transformer Generated Route")
+        
         private = private_builder.get_result()
         return private

@@ -1,6 +1,7 @@
 from typing import List
 from openscenario_msgs import Storyboard, Init, Story, StopTrigger
 from scenario_transfer.builder import Builder
+from scenario_transfer.builder.story_board.init_builder import InitBuilder
 
 
 class StoryboardBuilder(Builder):
@@ -8,6 +9,8 @@ class StoryboardBuilder(Builder):
 
     def __init__(self):
         self.stories = []
+
+        InitBuilder()
 
     def make_init(self, init: Init):
         self.init = init

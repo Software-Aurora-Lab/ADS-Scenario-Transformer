@@ -128,13 +128,13 @@ def test_private_builder(waypoints):
     ego = entities_builder.get_result().scenarioObjects[0]
 
     assert_proto_type_equal(ego, ScenarioObject)
-    # assert isinstance(ego, ScenarioObject)
-
-    private_builder = PrivateBuilder(waypoints=waypoints)
-    private_builder.make_entity(ego)
-    private_builder.make_teleport_action()
-    private_builder.make_routing_action()
-
+    
+    private_builder = PrivateBuilder(scenario_object=ego)
+    private_builder.make_routing_action_with_teleport_action(
+        waypoints=waypoints,
+        closed=False, 
+        name="Routing Request Transformer Generated Route")
+    
     openscenario_private = private_builder.get_result()
 
     assert isinstance(openscenario_private,

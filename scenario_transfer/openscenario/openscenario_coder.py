@@ -373,8 +373,6 @@ class OpenScenarioDecoder:
                 if OpenScenarioDecoder.is_enum(name_dict, root_type_name, key):
                     decoded_enum = OpenScenarioDecoder.decode_enum(
                         name_dict, root_type_name, value)
-                    if root_type_name == "SpeedCondition":
-                        print("decoded", decoded_enum)
                     new_value = decoded_enum
                 else:
                     if value.upper() == 'INF':

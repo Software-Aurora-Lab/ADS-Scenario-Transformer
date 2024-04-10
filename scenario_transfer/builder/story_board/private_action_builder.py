@@ -1,5 +1,5 @@
 from typing import Optional
-from openscenario_msgs import PrivateAction, SpeedAction, LongitudinalAction, SpeedActionDynamics, SpeedTargetValueType, SpeedActionTarget, AbsoluteTargetSpeed, RelativeTargetSpeed, LateralAction, LaneChangeAction, LaneChangeActionDynamics, LaneChangeTarget, AbsoluteTargetLane, RelativeTargetLane, AssignControllerAction, ControllerAction, CatalogReference, Controller, TeleportAction, Position, LanePosition, WorldPosition
+from openscenario_msgs import PrivateAction, SpeedAction, LongitudinalAction, SpeedActionDynamics, SpeedTargetValueType, SpeedActionTarget, AbsoluteTargetSpeed, RelativeTargetSpeed, LateralAction, LaneChangeAction, LaneChangeActionDynamics, LaneChangeTarget, AbsoluteTargetLane, RelativeTargetLane, AssignControllerAction, ControllerAction, CatalogReference, Controller, TeleportAction, Position, LanePosition, WorldPosition, RoutingAction
 from openscenario_msgs.transition_dynamics_pb2 import LaneChangeActionDynamics
 from scenario_transfer.builder.builder import Builder
 
@@ -96,5 +96,8 @@ class PrivateActionBuilder(Builder):
         self.product = PrivateAction(teleportAction=TeleportAction(
             position=position))
 
+    def make_routing_action(self, routing_action: RoutingAction):
+        self.product = PrivateAction(routingAction=routing_action)
+        
     def get_result(self) -> PrivateAction:
         return self.product
