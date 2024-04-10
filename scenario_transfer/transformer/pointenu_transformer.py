@@ -1,5 +1,6 @@
 from typing import Dict, Tuple
 from enum import Enum
+from dataclasses import dataclass
 import lanelet2
 from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
@@ -8,17 +9,16 @@ from openscenario_msgs import Position, LanePosition, WorldPosition
 from scenario_transfer.transformer import Transformer
 from scenario_transfer.tools.geometry import Geometry
 
+@dataclass
+class PointENUTransformerConfiguration:
+    supported_position: 'PointENUTransformer.SupportedPosition'
+    lanelet_map: LaneletMap
+    projector: lanelet2.projection.MGRSProjector
 
-#
-class PointENUTransformer(Transformer):
-    """
-    - properties = [
-        "supported_position": PointENUTransformer.SupportedPosition, 
-        "lanelet_map": lanelet2.core.LaneletMap, 
-        "projector": lanelet2.projection.MGRSProjector
-    ]
-    """
 
+class PointENUTransformer(Transformer):    
+    configuration: PointENUTransformerConfiguration
+    
     class SupportedPosition(Enum):
         Lane = 1
         World = 2
@@ -26,25 +26,17 @@ class PointENUTransformer(Transformer):
     Source = Tuple[PointENU, float]
     Target = Position
 
-    def __init__(self, properties: Dict = {}):
-        self.properties = properties
+    def __init__(self, configuration: PointENUTransformerConfiguration):
+        self.configuration = configuration
 
     def transform(self, source: Source) -> Target:
-        if self.properties[
-                "supported_position"] == PointENUTransformer.SupportedPosition.Lane:
+        if self.configuration.supported_position == PointENUTransformer.SupportedPosition.Lane:
             return Position(lanePosition=self.transformToLanePosition(source))
         return Position(worldPosition=self.transformToWorldPosition(source))
 
     def transformToLanePosition(self, source: Source) -> LanePosition:
-        lanelet_map = self.properties["lanelet_map"]
-        projector = self.properties["projector"]
-
-        assert isinstance(
-            lanelet_map, LaneletMap
-        ), "lanelet_map should be of type lanelet2.core.LaneletMap"
-        assert isinstance(
-            projector, MGRSProjector
-        ), "projector should be of type lanelet2.projection.MGRSProjector"
+        lanelet_map = self.configuration.lanelet_map
+        projector = self.configuration.projector
 
         projected_point = Geometry.project_UTM_to_lanelet(projector=projector,
                                                           pose=source[0])

@@ -11,6 +11,26 @@ from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuild
 from scenario_transfer.openscenario.openscenario_coder import OpenScenarioDecoder
 from scenario_transfer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
 
+import lanelet2
+from lanelet2.projection import MGRSProjector
+from lanelet2.io import Origin
+from lanelet2.core import LaneletMap
+from scenario_transfer.tools.apollo_map_parser import ApolloMapParser
+
+
+@pytest.fixture
+def mgrs_projector() -> MGRSProjector:
+    origin = Origin(37.04622247590861, -123.00000000000001, 0)
+    return MGRSProjector(origin)
+
+@pytest.fixture
+def lanelet_map(mgrs_projector) -> LaneletMap:
+    return lanelet2.io.load("./samples/map/BorregasAve/lanelet2_map.osm", mgrs_projector)
+
+@pytest.fixture
+def apollo_map_parser() -> ApolloMapParser:
+    return ApolloMapParser(filepath="./samples/map/BorregasAve/base_map.bin")
+    
 
 @pytest.fixture
 def scenario(storyboard) -> Scenario:

@@ -37,7 +37,7 @@ class ApolloMapParser:
         # ApolloMapParser.__instance = self
         self.load_instance()
 
-    def load_hd_map(filepath: str):
+    def load_hd_map(self, filepath: str):
         map = Map()
         f = open(filepath, 'rb')
         map.ParseFromString(f.read())
