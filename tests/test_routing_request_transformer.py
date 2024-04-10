@@ -6,7 +6,6 @@ from lanelet2.io import Origin
 from openscenario_msgs import Private, TeleportAction, RoutingAction, AssignRouteAction, ScenarioObject
 from scenario_transfer.transformer import RoutingRequestTransformer
 from scenario_transfer.transformer.routing_request_transformer import RoutingRequestTransformerConfiguration
-from scenario_transfer.tools.apollo_map_service import ApolloMapService
 from scenario_transfer.builder import EntitiesBuilder
 from scenario_transfer.builder.entities_builder import EntityType
 from scenario_transfer.openscenario import OpenScenarioEncoder
