@@ -16,7 +16,7 @@ from openscenario_msgs import common_pb2 as openscenario__msgs_dot_common__pb2
 from openscenario_msgs import parameter_pb2 as openscenario__msgs_dot_parameter__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n openscenario_msgs/scenario.proto\x12\x0copenscenario\x1a\x1eopenscenario_msgs/common.proto\x1a!openscenario_msgs/parameter.proto\"x\n\x08Scenario\x12:\n\x11scenarioModifiers\x18\x01 \x01(\x0b\x32\x1f.openscenario.ScenarioModifiers\x12\x30\n\x0copenScenario\x18\x02 \x02(\x0b\x32\x1a.openscenario.OpenSCENARIO\"\xc1\x02\n\x0cOpenSCENARIO\x12,\n\nfileHeader\x18\x01 \x01(\x0b\x32\x18.openscenario.FileHeader\x12\x41\n\x15parameterDeclarations\x18\x02 \x03(\x0b\x32\".openscenario.ParameterDeclaration\x12\x38\n\x10\x63\x61talogLocations\x18\x03 \x02(\x0b\x32\x1e.openscenario.CatalogLocations\x12.\n\x0broadNetwork\x18\x04 \x02(\x0b\x32\x19.openscenario.RoadNetwork\x12(\n\x08\x65ntities\x18\x05 \x02(\x0b\x32\x16.openscenario.Entities\x12,\n\nstoryboard\x18\x06 \x02(\x0b\x32\x18.openscenario.Storyboard\"\x12\n\x10ScenarioModifier\"N\n\x11ScenarioModifiers\x12\x39\n\x11scenarioModifiers\x18\x01 \x03(\x0b\x32\x1e.openscenario.ScenarioModifier')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n openscenario_msgs/scenario.proto\x12\x0copenscenario\x1a\x1eopenscenario_msgs/common.proto\x1a!openscenario_msgs/parameter.proto\"x\n\x08Scenario\x12:\n\x11scenarioModifiers\x18\x01 \x01(\x0b\x32\x1f.openscenario.ScenarioModifiers\x12\x30\n\x0copenScenario\x18\x02 \x02(\x0b\x32\x1a.openscenario.OpenSCENARIO\"\xc2\x02\n\x0cOpenSCENARIO\x12,\n\nfileHeader\x18\x01 \x01(\x0b\x32\x18.openscenario.FileHeader\x12\x42\n\x15parameterDeclarations\x18\x02 \x01(\x0b\x32#.openscenario.ParameterDeclarations\x12\x38\n\x10\x63\x61talogLocations\x18\x03 \x02(\x0b\x32\x1e.openscenario.CatalogLocations\x12.\n\x0broadNetwork\x18\x04 \x02(\x0b\x32\x19.openscenario.RoadNetwork\x12(\n\x08\x65ntities\x18\x05 \x02(\x0b\x32\x16.openscenario.Entities\x12,\n\nstoryboard\x18\x06 \x02(\x0b\x32\x18.openscenario.Storyboard\"\x12\n\x10ScenarioModifier\"N\n\x11ScenarioModifiers\x12\x39\n\x11scenarioModifiers\x18\x01 \x03(\x0b\x32\x1e.openscenario.ScenarioModifier')
 
 
 
@@ -58,9 +58,9 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _SCENARIO._serialized_start=117
   _SCENARIO._serialized_end=237
   _OPENSCENARIO._serialized_start=240
-  _OPENSCENARIO._serialized_end=561
-  _SCENARIOMODIFIER._serialized_start=563
-  _SCENARIOMODIFIER._serialized_end=581
-  _SCENARIOMODIFIERS._serialized_start=583
-  _SCENARIOMODIFIERS._serialized_end=661
+  _OPENSCENARIO._serialized_end=562
+  _SCENARIOMODIFIER._serialized_start=564
+  _SCENARIOMODIFIER._serialized_end=582
+  _SCENARIOMODIFIERS._serialized_start=584
+  _SCENARIOMODIFIERS._serialized_end=662
 # @@protoc_insertion_point(module_scope)

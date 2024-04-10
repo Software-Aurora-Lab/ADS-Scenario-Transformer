@@ -12,7 +12,7 @@ message Scenario {
 
 message OpenSCENARIO {
     optional FileHeader fileHeader = 1;                       // 1..1
-    repeated ParameterDeclaration parameterDeclarations = 2;  // 0..*
+    optional ParameterDeclarations parameterDeclarations = 2;  // 0..*
     required CatalogLocations catalogLocations = 3;           // 1..1
     required RoadNetwork roadNetwork = 4;                     // 1..1
     required Entities entities = 5;                           // 1..1

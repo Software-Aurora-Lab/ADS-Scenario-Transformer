@@ -1,15 +1,10 @@
-import pytest
-import yaml
-from typing import List
-from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, TransitionDynamics, SpeedActionDynamics, LaneChangeActionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode, Properties, Property, Controller, ControllerAction, AssignControllerAction, TeleportAction, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, Action
+from openscenario_msgs import GlobalAction, Position, LanePosition, WorldPosition, SpeedActionDynamics, LaneChangeActionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode, ControllerAction, AssignControllerAction, TeleportAction, Action
 from openscenario_msgs.common_pb2 import InfrastructureAction, EntityAction, LaneChangeAction, UserDefinedAction, PrivateAction, SpeedTargetValueType, SpeedAction
 from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
 from scenario_transfer.builder.story_board.user_defined_action_builder import UserDefinedActionBuilder
 from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
 from scenario_transfer.builder.story_board.routing_action_builder import RoutingActionBuilder
 from scenario_transfer.builder.story_board.action_builder import ActionBuilder
-from scenario_transfer.builder.entities_builder import EntityType, EntitiesBuilder
-from scenario_transfer.openscenario.openscenario_coder import OpenScenarioDecoder
 
 
 def assert_proto_type_equal(reflection_type, pb2_type):
