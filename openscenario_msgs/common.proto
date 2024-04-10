@@ -41,7 +41,7 @@ message OpenScenarioCategory {
 
 // Message for ScenarioDefinition
 message ScenarioDefinition {
-    repeated ParameterDeclaration parameterDeclarations = 1;  // 0..*
+    optional ParameterDeclarations parameterDeclarations = 1;  // 0..*
     required CatalogLocations catalogLocations = 2;           // 1..1
     required RoadNetwork roadNetwork = 3;                     // 1..1
     required Entities entities = 4;                           // 1..1
@@ -139,14 +139,14 @@ message Storyboard {
 
 // Message for Init
 message Init {
-    required InitActions actions = 1;  // 1..1
+   required Actions actions = 1;  // 1..1
 }
 
 // Message for InitActions
-message InitActions {
-    repeated GlobalAction globalActions = 1;   // 0..*
-    repeated UserDefinedAction userDefinedActions = 2;  // 0..*
-    repeated Private privates = 3;             // 0..*
+message Actions {
+   repeated GlobalAction globalActions = 1;   // 0..*
+   repeated UserDefinedAction userDefinedActions = 2;  // 0..*
+   repeated Private privates = 3;             // 0..*
 }
 
 // Message for Private
