@@ -4,6 +4,7 @@ import math
 from protobuf_to_dict import protobuf_to_dict
 from cyber_record.record import Record
 
+
 class CyberRecordChannel(Enum):
     PERCEPTION_OBSTACLES = "/apollo/perception/obstacles"
     ROUTING_REQUEST = "/apollo/routing_request"
@@ -18,15 +19,18 @@ class CyberRecordChannel(Enum):
     LOCALIZATION_POSE = "/apollo/localization/pose"
     CANBUS_CHASSIS = "/apollo/canbus/chassis"
 
+
 class CyberRecordReader:
 
     @staticmethod
-    def read_channel(source_path: str, channel: CyberRecordChannel, max_count=float('inf')):
+    def read_channel(source_path: str,
+                     channel: CyberRecordChannel,
+                     max_count=float('inf')):
         record = Record(source_path)
         messages = record.read_messages(channel.value)
         result = []
         count = 0
-        
+
         for topic, message, t in messages:
             if count > max_count:
                 break
@@ -35,9 +39,13 @@ class CyberRecordReader:
         return result
 
     @staticmethod
-    def read_all_channels(source_path: str, maxCount=float('inf')):
+    def read_all_channels(source_path: str, max_count=float('inf')):
         """
         Read all target channels
         """
-        return [self.read_channel(source_path=source_path, channel=channel, maxCount=maxCount) for channel in CyberRecordChannel]
-        
+        return [
+            CyberRecordReader.read_channel(source_path=source_path,
+                                           channel=channel,
+                                           max_count=max_count)
+            for channel in CyberRecordChannel
+        ]
