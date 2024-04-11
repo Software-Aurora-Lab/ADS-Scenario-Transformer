@@ -81,7 +81,8 @@ class OpenScenarioCoder:
         "Properties": "Property",
         "ScenarioModifiers": "ScenarioModifier",
         "CatalogLocations": "CatalogLocation",
-        "TrafficSignals": "TrafficSignalController"
+        "TrafficSignals": "TrafficSignalController",
+        "ParameterDeclarations": "ParameterDeclaration"
     }
 
     @staticmethod

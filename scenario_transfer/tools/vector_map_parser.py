@@ -1,14 +1,21 @@
 from typing import List, Dict, Type, TypeVar
+import lanelet2
 from lanelet2.core import Lanelet, LaneletMap
+from lanelet2.projection import MGRSProjector
+from lanelet2.io import Origin
+
+T = TypeVar('T')
 
 
 class VectorMapParser:
     lanelet_map: LaneletMap
     projector: MGRSProjector
 
-    def __init__(sel, vector_map_path: str):
-        self.mgrs_Projector = MGRSProjector(origin)
-        self.lanelet_map = lanelet2.io.load(vector_map_path, self.mgrs_Projector)
+    def __init__(self, vector_map_path: str):
+        origin = Origin(0.0, 0.0, 0.0)
+        self.projector = MGRSProjector(origin)
+        self.lanelet_map = lanelet2.io.load(vector_map_path,
+                                            self.projector)
 
     def get_attributes(self, key: str,
                        attribute_type: Type[T]) -> Dict[int, T]:
