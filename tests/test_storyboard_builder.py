@@ -1,15 +1,15 @@
 import pytest
 import yaml
 from openscenario_msgs import Actors, Event, Entities, Priority, ManeuverGroup, Story, Act, Storyboard, Init
-from scenario_transfer.builder.story_board.actors_builder import ActorsBuilder
-from scenario_transfer.builder.story_board.event_builder import EventBuilder
-from scenario_transfer.builder.story_board.condition_builder import ConditionBuilder
-from scenario_transfer.builder.story_board.story_builder import StoryBuilder
-from scenario_transfer.builder.story_board.act_builder import ActBuilder
-from scenario_transfer.builder.story_board.maneuver_group_builder import ManeuverGroupBuilder
-from scenario_transfer.builder.story_board.maneuver_builder import ManeuverBuilder
-from scenario_transfer.builder.story_board.init_builder import InitBuilder
-from scenario_transfer.builder.story_board.storyboard_builder import StoryboardBuilder
+from scenario_transformer.builder.storyboard.actors_builder import ActorsBuilder
+from scenario_transformer.builder.storyboard.event_builder import EventBuilder
+from scenario_transformer.builder.storyboard.condition_builder import ConditionBuilder
+from scenario_transformer.builder.storyboard.story_builder import StoryBuilder
+from scenario_transformer.builder.storyboard.act_builder import ActBuilder
+from scenario_transformer.builder.storyboard.maneuver_group_builder import ManeuverGroupBuilder
+from scenario_transformer.builder.storyboard.maneuver_builder import ManeuverBuilder
+from scenario_transformer.builder.storyboard.init_builder import InitBuilder
+from scenario_transformer.builder.storyboard.storyboard_builder import StoryboardBuilder
 
 
 def test_actors_builder(entities):

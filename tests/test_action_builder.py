@@ -1,10 +1,10 @@
 from openscenario_msgs import GlobalAction, Position, LanePosition, WorldPosition, SpeedActionDynamics, LaneChangeActionDynamics, AbsoluteTargetSpeed, RelativeTargetSpeed, FollowingMode, ControllerAction, AssignControllerAction, TeleportAction, Action
 from openscenario_msgs.common_pb2 import InfrastructureAction, EntityAction, LaneChangeAction, UserDefinedAction, PrivateAction, SpeedTargetValueType, SpeedAction
-from scenario_transfer.builder.story_board.global_action_builder import GlobalActionBuilder
-from scenario_transfer.builder.story_board.user_defined_action_builder import UserDefinedActionBuilder
-from scenario_transfer.builder.story_board.private_action_builder import PrivateActionBuilder
-from scenario_transfer.builder.story_board.routing_action_builder import RoutingActionBuilder
-from scenario_transfer.builder.story_board.action_builder import ActionBuilder
+from scenario_transformer.builder.storyboard.global_action_builder import GlobalActionBuilder
+from scenario_transformer.builder.storyboard.user_defined_action_builder import UserDefinedActionBuilder
+from scenario_transformer.builder.storyboard.private_action_builder import PrivateActionBuilder
+from scenario_transformer.builder.storyboard.routing_action_builder import RoutingActionBuilder
+from scenario_transformer.builder.storyboard.action_builder import ActionBuilder
 
 
 def assert_proto_type_equal(reflection_type, pb2_type):

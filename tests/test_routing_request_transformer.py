@@ -4,12 +4,12 @@ import lanelet2
 from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
 from openscenario_msgs import Private, TeleportAction, RoutingAction, AssignRouteAction, ScenarioObject
-from scenario_transfer.transformer import RoutingRequestTransformer
-from scenario_transfer.transformer.routing_request_transformer import RoutingRequestTransformerConfiguration
-from scenario_transfer.builder import EntitiesBuilder
-from scenario_transfer.builder.entities_builder import EntityType
-from scenario_transfer.openscenario import OpenScenarioEncoder
-from scenario_transfer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
+from scenario_transformer.transformer import RoutingRequestTransformer
+from scenario_transformer.transformer.routing_request_transformer import RoutingRequestTransformerConfiguration
+from scenario_transformer.builder import EntitiesBuilder
+from scenario_transformer.builder.entities_builder import EntityType
+from scenario_transformer.openscenario import OpenScenarioEncoder
+from scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
 
 
 @pytest.fixture

@@ -2,7 +2,7 @@ import unittest
 import yaml
 from definitions import TEST_ROOT
 from openscenario_msgs import Route, LanePosition, ObjectController, Vehicle, EntityObject, ScenarioObject, Entities, ParameterDeclarations
-from scenario_transfer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
+from scenario_transformer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
 
 
 class TestOpenScenarioCoder(unittest.TestCase):

@@ -1,9 +1,9 @@
 import yaml
 from definitions import TEST_ROOT
 from openscenario_msgs import Scenario, Storyboard
-from scenario_transfer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
-from scenario_transfer.builder.entities_builder import EntityType
-from scenario_transfer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
+from scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
+from scenario_transformer.builder.entities_builder import EntityType
+from scenario_transformer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
 
 
 def test_scenario_builder(storyboard):

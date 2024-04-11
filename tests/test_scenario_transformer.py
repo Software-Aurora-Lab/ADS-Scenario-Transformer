@@ -1,5 +1,5 @@
-from scenario_transfer.transformer.scenario_transformer import ScenarioTransformer, ScenarioTransformerConfiguration
-from scenario_transfer.openscenario import OpenScenarioEncoder
+from scenario_transformer.transformer.scenario_transformer import ScenarioTransformer, ScenarioTransformerConfiguration
+from scenario_transformer.openscenario import OpenScenarioEncoder
 
 def test_scenario_transformer(borregas_apollo_scenario9_path,
                               borregas_vector_map_path,

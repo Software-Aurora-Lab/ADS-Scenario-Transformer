@@ -4,8 +4,8 @@ from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
 from lanelet2.core import LaneletMap
 from modules.common.proto.geometry_pb2 import PointENU
-from scenario_transfer.transformer import PointENUTransformer
-from scenario_transfer.transformer.pointenu_transformer import PointENUTransformerConfiguration
+from scenario_transformer.transformer import PointENUTransformer
+from scenario_transformer.transformer.pointenu_transformer import PointENUTransformerConfiguration
 
 
 def test_transform_world_position(lanelet_map, mgrs_projector):
