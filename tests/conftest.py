@@ -16,6 +16,7 @@ from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
 from lanelet2.core import LaneletMap
 from scenario_transfer.tools.apollo_map_parser import ApolloMapParser
+from definitions import SAMPLE_ROOT
 
 
 @pytest.fixture
@@ -23,14 +24,36 @@ def mgrs_projector() -> MGRSProjector:
     origin = Origin(37.04622247590861, -123.00000000000001, 0)
     return MGRSProjector(origin)
 
-@pytest.fixture
-def lanelet_map(mgrs_projector) -> LaneletMap:
-    return lanelet2.io.load("./samples/map/BorregasAve/lanelet2_map.osm", mgrs_projector)
 
 @pytest.fixture
-def apollo_map_parser() -> ApolloMapParser:
-    return ApolloMapParser(filepath="./samples/map/BorregasAve/base_map.bin")
-    
+def borregas_apollo_scenario9_path() -> str:
+    return SAMPLE_ROOT + "/apollo_borregas/00000009.00000"
+
+
+@pytest.fixture
+def borregas_apollo_scenario35_path() -> str:
+    return SAMPLE_ROOT + "/apollo_borregas/00000035.00000"
+
+
+@pytest.fixture
+def borregas_vector_map_path() -> str:
+    return SAMPLE_ROOT + "/map/BorregasAve/lanelet2_map.osm"
+
+
+@pytest.fixture
+def borregas_apollo_map_path() -> str:
+    return SAMPLE_ROOT + "/map/BorregasAve/base_map.bin"
+
+
+@pytest.fixture
+def lanelet_map(borregas_vector_map_path, mgrs_projector) -> LaneletMap:
+    return lanelet2.io.load(borregas_vector_map_path, mgrs_projector)
+
+
+@pytest.fixture
+def apollo_map_parser(borregas_apollo_map_path) -> ApolloMapParser:
+    return ApolloMapParser(filepath=borregas_apollo_map_path)
+
 
 @pytest.fixture
 def scenario(storyboard) -> Scenario:

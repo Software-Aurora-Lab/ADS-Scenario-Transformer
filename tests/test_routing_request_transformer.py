@@ -11,6 +11,7 @@ from scenario_transfer.builder.entities_builder import EntityType
 from scenario_transfer.openscenario import OpenScenarioEncoder
 from scenario_transfer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
 
+
 @pytest.fixture
 def ego_scenario_object() -> ScenarioObject:
     builder = EntitiesBuilder(entities=[EntityType.EGO])
@@ -20,18 +21,19 @@ def ego_scenario_object() -> ScenarioObject:
 def assert_proto_type_equal(reflection_type, pb2_type):
     assert str(reflection_type.__class__) == str(pb2_type)
 
-def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object, apollo_map_parser):
 
-    routing_request_transformer = RoutingRequestTransformer(configuration=RoutingRequestTransformerConfiguration(
-                                                                lanelet_map=lanelet_map,
-                                                                projector=mgrs_projector,
-                                                                apollo_map_parser=apollo_map_parser,
-                                                                ego_scenario_object=ego_scenario_object
-                                                            )
-    )
+def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object,
+                         apollo_map_parser, borregas_apollo_scenario9_path):
+
+    routing_request_transformer = RoutingRequestTransformer(
+        configuration=RoutingRequestTransformerConfiguration(
+            lanelet_map=lanelet_map,
+            projector=mgrs_projector,
+            apollo_map_parser=apollo_map_parser,
+            ego_scenario_object=ego_scenario_object))
 
     routing_requests = CyberRecordReader.read_channel(
-        source_path="./samples/apollo_borregas/00000009.00000",
+        source_path=borregas_apollo_scenario9_path,
         channel=CyberRecordChannel.ROUTING_REQUEST)
 
     routing_request = routing_requests[0]
@@ -53,7 +55,7 @@ def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object, apoll
     assert start_lane_position.orientation.h == 2.883901414579166
 
     assert_proto_type_equal(routing_action.assignRouteAction,
-                                 AssignRouteAction)
+                            AssignRouteAction)
 
     end_waypoint = routing_action.assignRouteAction.route.waypoints[-1]
     end_lane_position = end_waypoint.position.lanePosition
@@ -64,15 +66,14 @@ def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object, apoll
     assert end_lane_position.orientation.h == -1.9883158777364047
 
 
-
-def test_routing_request_from_response(lanelet_map, mgrs_projector, ego_scenario_object, apollo_map_parser):
-    routing_request_transformer = RoutingRequestTransformer(configuration=RoutingRequestTransformerConfiguration(
-                                                                lanelet_map=lanelet_map,
-                                                                projector=mgrs_projector,
-                                                                apollo_map_parser=apollo_map_parser,
-                                                                ego_scenario_object=ego_scenario_object
-                                                            )
-    )
+def test_routing_request_from_response(lanelet_map, mgrs_projector,
+                                       ego_scenario_object, apollo_map_parser):
+    routing_request_transformer = RoutingRequestTransformer(
+        configuration=RoutingRequestTransformerConfiguration(
+            lanelet_map=lanelet_map,
+            projector=mgrs_projector,
+            apollo_map_parser=apollo_map_parser,
+            ego_scenario_object=ego_scenario_object))
     routing_responses = CyberRecordReader.read_channel(
         source_path="./samples/apollo_borregas/00000035.00000",
         channel=CyberRecordChannel.ROUTING_RESPONSE)
@@ -84,4 +85,3 @@ def test_routing_request_from_response(lanelet_map, mgrs_projector, ego_scenario
         routing_request)
 
     assert_proto_type_equal(openscenario_private, Private)
-    
