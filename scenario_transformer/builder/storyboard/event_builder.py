@@ -50,6 +50,7 @@ class EventBuilder(Builder):
         self.product = Event(
             maximumExecutionCount=self.maximum_execution_count,
             name=self.name,
+            priority=self.priority,
             startTrigger=self.start_trigger,
             actions=self.actions)
         return self.product

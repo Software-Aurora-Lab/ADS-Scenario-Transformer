@@ -52,7 +52,7 @@ def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object,
     assert start_lane_position.laneId == "22"
     assert start_lane_position.offset == 0.1750399287494411
     assert start_lane_position.s == 35.714714923990464
-    assert start_lane_position.orientation.h == 2.883901414579166
+    assert start_lane_position.orientation.h == 0.0
 
     assert_proto_type_equal(routing_action.assignRouteAction,
                             AssignRouteAction)
@@ -63,7 +63,7 @@ def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object,
     assert end_lane_position.laneId == "149"
     assert end_lane_position.offset == 1.4604610803960605
     assert end_lane_position.s == 26.739416492972932
-    assert end_lane_position.orientation.h == -1.9883158777364047
+    assert end_lane_position.orientation.h == 0.0
 
 
 def test_routing_request_from_response(lanelet_map, mgrs_projector,

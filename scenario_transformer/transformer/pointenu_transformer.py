@@ -9,6 +9,7 @@ from openscenario_msgs import Position, LanePosition, WorldPosition
 from scenario_transformer.transformer import Transformer
 from scenario_transformer.tools.geometry import Geometry
 
+
 @dataclass
 class PointENUTransformerConfiguration:
     supported_position: 'PointENUTransformer.SupportedPosition'
@@ -16,9 +17,9 @@ class PointENUTransformerConfiguration:
     projector: lanelet2.projection.MGRSProjector
 
 
-class PointENUTransformer(Transformer):    
+class PointENUTransformer(Transformer):
     configuration: PointENUTransformerConfiguration
-    
+
     class SupportedPosition(Enum):
         Lane = 1
         World = 2
@@ -41,11 +42,13 @@ class PointENUTransformer(Transformer):
         projected_point = Geometry.project_UTM_to_lanelet(projector=projector,
                                                           pose=source[0])
         lanelet = Geometry.find_lanelet(lanelet_map, projected_point)
+        # Discard heading value
         lane_position = Geometry.lane_position(lanelet=lanelet,
                                                basic_point=projected_point,
-                                               heading=source[1])
+                                               heading=0.0)
         return lane_position
 
     def transformToWorldPosition(self, source: Source) -> WorldPosition:
         pose = Geometry.utm_to_WGS(pose=source[0])
-        return WorldPosition(x=pose.lat, y=pose.lon, z=0, h=source[1])
+        # Discard heading value
+        return WorldPosition(x=pose.lat, y=pose.lon, z=0)
