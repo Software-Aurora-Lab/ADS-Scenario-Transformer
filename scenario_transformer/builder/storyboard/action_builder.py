@@ -1,7 +1,7 @@
 from typing import List, Optional
 from openscenario_msgs import Action, GlobalAction, UserDefinedAction, PrivateAction
 from scenario_transformer.builder import Builder
-
+from scenario_transformer.builder.storyboard.user_defined_action_builder import BuiltInUserDefinedActionType, UserDefinedActionBuilder
 
 class ActionBuilder(Builder):
     product: Action
@@ -23,5 +23,9 @@ class ActionBuilder(Builder):
                 "Action needs one of the following: globalAction, userDefinedAction, privateAction"
             )
 
+    def make_built_in_user_defined_action(self, type: BuiltInUserDefinedActionType):
+        action = UserDefinedActionBuilder.built_in_action(type=type)
+        self.product = Action(userDefinedAction=action)
+        
     def get_result(self) -> Action:
         return self.product

@@ -11,7 +11,9 @@ from scenario_transformer.transformer.routing_request_transformer import Routing
 from scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
 from scenario_transformer.builder.storyboard.init_builder import InitBuilder
 from scenario_transformer.builder.storyboard.storyboard_builder import StoryboardBuilder
+from scenario_transformer.builder.storyboard.story_builder import StoryBuilder
 from scenario_transformer.builder.storyboard.trigger_builder import StopTriggerBuilder
+
 
 class ScenarioTransformerConfiguration:
     apollo_scenario_path: str
@@ -44,10 +46,9 @@ class ScenarioTransformer:
             vector_map_path=configuration.vector_map_path)
         self.setup_entities()
 
-
     def setup_entities(self):
         self.entities = [EntityType.EGO]
-        
+
         obstacles = CyberRecordReader.read_channel(
             source_path=self.configuration.apollo_scenario_path,
             channel=CyberRecordChannel.PERCEPTION_OBSTACLES)
@@ -63,11 +64,13 @@ class ScenarioTransformer:
 
     def transform(self) -> Scenario:
 
-        builder = EntitiesBuilder(entities=[self.entities[0]])
-        ego_scenario_object = builder.get_result().scenarioObjects[0]
-        
+        entities_builder = EntitiesBuilder(entities=[self.entities[0]])
+        entities = entities_builder.get_result()
+        ego_scenario_object = entities.scenarioObjects[0]
+
         init_builder = InitBuilder()
-        ego_routing_private = self.transform_ego_routing(ego_scenario_object=ego_scenario_object)
+        ego_routing_private = self.transform_ego_routing(
+            ego_scenario_object=ego_scenario_object)
 
         init_builder.make_privates(privates=[ego_routing_private])
         init = init_builder.get_result()
@@ -75,25 +78,31 @@ class ScenarioTransformer:
         stop_trigger_builder = StopTriggerBuilder()
         stop_trigger_builder.make_condition_group(conditions=[])
         stop_trigger = stop_trigger_builder.get_result()
-        
+
         storyboard_builder = StoryboardBuilder()
         storyboard_builder.make_init(init=init)
         storyboard_builder.make_stop_trigger(trigger=stop_trigger)
+
+        default_end_story = StoryBuilder.default_end_story(
+            entities=entities,
+            routing_action=ego_routing_private.privateActions[1].routingAction)
+
+        storyboard_builder.make_stories(stories=[default_end_story])
         storyboard = storyboard_builder.get_result()
-        
+
         scenario_config = ScenarioConfiguration(
             entities=self.entities,
             lanelet_map_path=self.configuration.vector_map_path,
             traffic_signals=[])
         scenario_builder = ScenarioBuilder(
             scenario_configuration=scenario_config)
-        scenario_builder.make_scenario_definition(
-        storyboard=storyboard,
-        parameter_declarataions=[])
+        scenario_builder.make_scenario_definition(storyboard=storyboard,
+                                                  parameter_declarataions=[])
 
         return scenario_builder.get_result()
-    
-    def transform_ego_routing(self, ego_scenario_object: ScenarioObject) -> Private:
+
+    def transform_ego_routing(self,
+                              ego_scenario_object: ScenarioObject) -> Private:
         routing_request_transformer = RoutingRequestTransformer(
             configuration=RoutingRequestTransformerConfiguration(
                 lanelet_map=self.vector_map_parser.lanelet_map,
@@ -103,8 +112,7 @@ class ScenarioTransformer:
 
         routing_request = self.input_routing_request()
 
-        return routing_request_transformer.transform(
-            routing_request)
+        return routing_request_transformer.transform(routing_request)
 
     def input_routing_request(self) -> RoutingRequest:
         """

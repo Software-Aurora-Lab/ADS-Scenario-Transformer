@@ -1,5 +1,6 @@
-from openscenario_msgs import Condition, ByEntityCondition, ByValueCondition
+from openscenario_msgs import Condition, ByEntityCondition, ByValueCondition, Rule
 from scenario_transformer.builder import Builder
+from scenario_transformer.builder.storyboard.by_value_condition_builder import ByValueConditionBuilder
 
 
 class ConditionBuilder(Builder):
@@ -31,3 +32,15 @@ class ConditionBuilder(Builder):
 
     def get_result(self) -> Condition:
         return self.product
+
+    @staticmethod
+    def simulation_time_condition(rule: Rule,
+                                  value_in_sec: float) -> Condition:
+        builder = ByValueConditionBuilder()
+        builder.make_simulation_time_condition(rule=rule,
+                                               value_in_sec=value_in_sec)
+        by_value_condition = builder.get_result()
+
+        condition_builder = ConditionBuilder()
+        condition_builder.make_by_value_condition(by_value_condition)
+        return condition_builder.get_result()

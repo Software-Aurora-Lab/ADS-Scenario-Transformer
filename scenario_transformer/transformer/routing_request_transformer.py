@@ -9,14 +9,15 @@ from scenario_transformer.transformer.lane_waypoint_transformer import LaneWaypo
 from scenario_transformer.builder.private_builder import PrivateBuilder
 from scenario_transformer.tools.apollo_map_parser import ApolloMapParser
 
+
 @dataclass
 class RoutingRequestTransformerConfiguration:
     lanelet_map: LaneletMap
     projector: MGRSProjector
     ego_scenario_object: ScenarioObject
     apollo_map_parser: Optional[ApolloMapParser] = None
-    
-    
+
+
 class RoutingRequestTransformer(Transformer):
     configuiration: RoutingRequestTransformerConfiguration
     Source = RoutingRequest
@@ -25,23 +26,25 @@ class RoutingRequestTransformer(Transformer):
     def __init__(self, configuration: RoutingRequestTransformerConfiguration):
         self.configuration = configuration
 
-    def transform(self, source: Source) -> Target:
+    def transform(self, source: Source) -> Private:
+        assert len(source.waypoint
+                   ) > 1, "Number of waypoints should be greater than 1"
 
-        transformer = LaneWaypointTransformer(configuration=LaneWaypointTransformerConfiguration(
-            lanelet_map=self.configuration.lanelet_map, 
-            projector=self.configuration.projector,
-            apollo_map_parser = self.configuration.apollo_map_parser)
-        )
- 
+        transformer = LaneWaypointTransformer(
+            configuration=LaneWaypointTransformerConfiguration(
+                lanelet_map=self.configuration.lanelet_map,
+                projector=self.configuration.projector,
+                apollo_map_parser=self.configuration.apollo_map_parser))
+
         openscenario_waypoints = map(
             lambda lane_waypoint:
             (transformer.transform(source=lane_waypoint)), source.waypoint)
 
-        private_builder = PrivateBuilder(scenario_object=self.configuration.ego_scenario_object)
+        private_builder = PrivateBuilder(
+            scenario_object=self.configuration.ego_scenario_object)
         private_builder.make_routing_action_with_teleport_action(
             waypoints=list(openscenario_waypoints),
-            closed=False, 
+            closed=False,
             name="Routing Request Transformer Generated Route")
-        
-        private = private_builder.get_result()
-        return private
+
+        return private_builder.get_result()
