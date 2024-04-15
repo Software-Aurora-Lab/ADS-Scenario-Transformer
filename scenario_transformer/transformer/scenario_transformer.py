@@ -2,7 +2,7 @@ from typing import List, Type
 from modules.routing.proto.routing_pb2 import RoutingRequest
 from openscenario_msgs import Private, ScenarioObject, Scenario
 from scenario_transformer.builder import EntitiesBuilder
-from scenario_transformer.builder.entities_builder import EntityType
+from scenario_transformer.builder.entities_builder import EntityType, EntityMeta
 from scenario_transformer.transformer import RoutingRequestTransformer
 from scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
 from scenario_transformer.tools.apollo_map_parser import ApolloMapParser
@@ -35,7 +35,7 @@ class ScenarioTransformerConfiguration:
 class ScenarioTransformer:
     apollo_map_parser: ApolloMapParser
     vector_map_parser: VectorMapParser
-    entities: List[EntityType]
+    entities: List[EntityMeta]
 
     def __init__(self, configuration: ScenarioTransformerConfiguration):
         self.configuration = configuration
@@ -47,7 +47,7 @@ class ScenarioTransformer:
         self.setup_entities()
 
     def setup_entities(self):
-        self.entities = [EntityType.EGO]
+        self.entities = [EntityMeta(entity_type=EntityType.EGO)]
 
         obstacles = CyberRecordReader.read_channel(
             source_path=self.configuration.apollo_scenario_path,
@@ -58,9 +58,10 @@ class ScenarioTransformer:
 
         for id, type in uniq_obstacles:
             if type == 3:
-                self.entities.append(EntityType.PEDESTRIAN)
+                self.entities.append(
+                    EntityMeta(entity_type=EntityType.PEDESTRIAN))
             elif type == 5:
-                self.entities.append(EntityType.NPC)
+                self.entities.append(EntityMeta(entity_type=EntityType.NPC))
 
     def transform(self) -> Scenario:
 

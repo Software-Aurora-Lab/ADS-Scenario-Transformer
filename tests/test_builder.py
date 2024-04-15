@@ -1,17 +1,26 @@
 import pytest
 from datetime import datetime
+from typing import List
 from openscenario_msgs import CatalogDefinition, FileHeader, Entities, ParameterDeclarations, ParameterDeclaration, ScenarioDefinition, Private, ScenarioObject, TeleportAction, RoutingAction
 from scenario_transformer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, TrafficSignalControllerBuilder, TrafficSignalStateBuilder, ScenarioDefinitionBuilder
 from scenario_transformer.builder.private_builder import PrivateBuilder
-from scenario_transformer.builder.entities_builder import EntityType
+from scenario_transformer.builder.entities_builder import EntityType, EntityMeta
 
 
-def test_entities_builder():
-    builder = EntitiesBuilder(entities=[
-        EntityType.NPC, EntityType.NPC, EntityType.EGO, EntityType.PEDESTRIAN,
-        EntityType.NPC
-    ])
+@pytest.fixture
+def entity_meta() -> List[EntityMeta]:
 
+    return [
+        EntityMeta(entity_type=EntityType.NPC),
+        EntityMeta(embedding_id=100, entity_type=EntityType.NPC),
+        EntityMeta(entity_type=EntityType.EGO),
+        EntityMeta(embedding_id=200, entity_type=EntityType.PEDESTRIAN),
+        EntityMeta(embedding_id=300, entity_type=EntityType.NPC)
+    ]
+
+
+def test_entities_builder(entity_meta):
+    builder = EntitiesBuilder(entities=entity_meta)
     builder.add_default_entity(EntityType.NPC)
 
     entities = builder.get_result()
@@ -20,9 +29,9 @@ def test_entities_builder():
 
     assert entities.scenarioObjects[0].name == "ego"
     assert entities.scenarioObjects[1].name == "npc_1"
-    assert entities.scenarioObjects[2].name == "npc_2"
-    assert entities.scenarioObjects[3].name == "npc_3"
-    assert entities.scenarioObjects[4].name == "pedestrian_4"
+    assert entities.scenarioObjects[2].name == "npc_2_id_100"
+    assert entities.scenarioObjects[3].name == "npc_3_id_300"
+    assert entities.scenarioObjects[4].name == "pedestrian_4_id_200"
     assert entities.scenarioObjects[5].name == "npc_5"
 
 
@@ -94,7 +103,7 @@ def test_road_network_builder():
         0].trafficSignalId == "12515"
 
 
-def test_scenario_definition_builder(storyboard):
+def test_scenario_definition_builder(storyboard, entity_meta):
     parameter_declarations = [
         ParameterDeclaration(name="__ego_dimensions_length__",
                              parameterType=2,
@@ -108,9 +117,7 @@ def test_scenario_definition_builder(storyboard):
         parameter_declarations=parameter_declarations)
 
     builder.make_road_network(lanelet_map_path="lanelet_map.osm")
-    builder.make_default_entities(entities=[
-        EntityType.EGO, EntityType.NPC, EntityType.NPC, EntityType.PEDESTRIAN
-    ])
+    builder.make_default_entities(entity_meta=entity_meta)
     builder.make_storyboard(storyboard=storyboard)
     scenario_definition = builder.get_result()
 
@@ -123,7 +130,8 @@ def test_scenario_definition_builder(storyboard):
 
 def test_private_builder(waypoints):
 
-    entities_builder = EntitiesBuilder(entities=[EntityType.EGO])
+    entities_builder = EntitiesBuilder(
+        entities=[EntityMeta(entity_type=EntityType.EGO)])
     ego = entities_builder.get_result().scenarioObjects[0]
 
     assert_proto_type_equal(ego, ScenarioObject)

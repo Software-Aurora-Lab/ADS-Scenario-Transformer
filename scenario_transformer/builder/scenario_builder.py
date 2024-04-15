@@ -3,17 +3,17 @@ from openscenario_msgs import Scenario, ScenarioDefinition, ScenarioModifiers, F
 from scenario_transformer.builder import Builder
 from scenario_transformer.builder.file_header_builder import FileHeaderBuilder
 from scenario_transformer.builder.scenario_definition_builder import ScenarioDefinitionBuilder
-from scenario_transformer.builder.entities_builder import EntityType
+from scenario_transformer.builder.entities_builder import EntityMeta
 
 
 class ScenarioConfiguration:
-    entities: List[EntityType]
+    entities: List[EntityMeta]
     lanelet_map_path: str
     pcd_map_path: str
     traffic_signals: List[TrafficSignalController]
 
     def __init__(self,
-                 entities: List[EntityType],
+                 entities: List[EntityMeta],
                  lanelet_map_path: str,
                  pcd_map_path: str = "point_cloud.pcd",
                  traffic_signals: List[TrafficSignalController] = []):

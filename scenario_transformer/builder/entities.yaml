@@ -78,7 +78,7 @@ Entities:
               Property: []
       - name: pedestrian
         Pedestrian:
-          name: Pedestrian
+          name: ''
           mass: 60
           model: ''
           pedestrianCategory: pedestrian

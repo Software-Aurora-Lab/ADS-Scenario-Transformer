@@ -7,7 +7,7 @@ from scenario_transformer.builder.storyboard.private_action_builder import Priva
 from scenario_transformer.builder.storyboard.by_entity_condition_builder import ByEntityConditionBuilder
 from scenario_transformer.builder.storyboard.by_value_condition_builder import ByValueConditionBuilder
 from scenario_transformer.builder.parameter_declarations_builder import ParameterDeclarationsBuilder
-from scenario_transformer.builder.entities_builder import EntityType, EntitiesBuilder
+from scenario_transformer.builder.entities_builder import EntityType, EntitiesBuilder, EntityMeta
 from scenario_transformer.openscenario.openscenario_coder import OpenScenarioDecoder
 from scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
 
@@ -67,11 +67,19 @@ def scenario(storyboard) -> Scenario:
 
 
 @pytest.fixture
-def entities() -> Entities:
-    builder = EntitiesBuilder(entities=[
-        EntityType.NPC, EntityType.NPC, EntityType.EGO, EntityType.PEDESTRIAN,
-        EntityType.NPC
-    ])
+def entity_meta() -> List[EntityMeta]:
+    return [
+        EntityMeta(entity_type=EntityType.NPC),
+        EntityMeta(embedding_id=100, entity_type=EntityType.NPC),
+        EntityMeta(entity_type=EntityType.EGO),
+        EntityMeta(embedding_id=200, entity_type=EntityType.PEDESTRIAN),
+        EntityMeta(embedding_id=300, entity_type=EntityType.NPC)
+    ]
+
+
+@pytest.fixture
+def entities(entity_meta) -> Entities:
+    builder = EntitiesBuilder(entities=entity_meta)
     return builder.get_result()
 
 

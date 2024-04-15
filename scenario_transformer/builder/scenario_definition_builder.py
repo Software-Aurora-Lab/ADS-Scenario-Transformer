@@ -4,7 +4,7 @@ from scenario_transformer.builder import Builder
 from scenario_transformer.builder.catalog_locations_builder import CatalogLocationsBuilder
 from scenario_transformer.builder.road_network_builder import RoadNetworkBuilder
 from scenario_transformer.builder.parameter_declarations_builder import ParameterDeclarationsBuilder, ParameterDeclarationBuilder
-from scenario_transformer.builder.entities_builder import EntitiesBuilder, EntityType
+from scenario_transformer.builder.entities_builder import EntitiesBuilder, EntityMeta
 
 
 class ScenarioDefinitionBuilder(Builder):
@@ -45,8 +45,8 @@ class ScenarioDefinitionBuilder(Builder):
                                      trafficSignals)
         self.road_network = builder.get_result()
 
-    def make_default_entities(self, entities: [EntityType]):
-        builder = EntitiesBuilder(entities=entities)
+    def make_default_entities(self, entity_meta: List[EntityMeta]):
+        builder = EntitiesBuilder(entities=entity_meta)
         self.entities = builder.get_result()
 
     def make_storyboard(self, storyboard: Storyboard):

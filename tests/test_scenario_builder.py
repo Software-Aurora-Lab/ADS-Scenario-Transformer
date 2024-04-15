@@ -2,13 +2,17 @@ import yaml
 from definitions import TEST_ROOT
 from openscenario_msgs import Scenario, Storyboard
 from scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
-from scenario_transformer.builder.entities_builder import EntityType
+from scenario_transformer.builder.entities_builder import EntityType, EntityMeta
 from scenario_transformer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
 
 
 def test_scenario_builder(storyboard):
     scenario_config = ScenarioConfiguration(
-        entities=[EntityType.EGO, EntityType.NPC, EntityType.NPC],
+        entities=[
+            EntityMeta(entity_type=EntityType.EGO),
+            EntityMeta(entity_type=EntityType.NPC),
+            EntityMeta(entity_type=EntityType.NPC)
+        ],
         lanelet_map_path="/home/map/lanelet2.osm",
         traffic_signals=[])
     scenario_builder = ScenarioBuilder(scenario_configuration=scenario_config)
@@ -31,7 +35,11 @@ def test_scenario_key_value(parameter_declarations):
         storyboard_dict = yaml.safe_load(file)
 
     scenario_config = ScenarioConfiguration(
-        entities=[EntityType.EGO, EntityType.NPC, EntityType.NPC],
+        entities=[
+            EntityMeta(entity_type=EntityType.EGO),
+            EntityMeta(entity_type=EntityType.NPC),
+            EntityMeta(entity_type=EntityType.NPC)
+        ],
         lanelet_map_path=
         "/home/cloudsky/autoware_map/autoware_scenario_data/maps/awf_cicd_virtual_G_dev/lanelet2_map.osm",
         pcd_map_path=

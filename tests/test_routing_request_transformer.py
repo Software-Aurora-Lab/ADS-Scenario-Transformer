@@ -1,20 +1,16 @@
 import pytest
-import unittest
-import lanelet2
-from lanelet2.projection import MGRSProjector
-from lanelet2.io import Origin
 from openscenario_msgs import Private, TeleportAction, RoutingAction, AssignRouteAction, ScenarioObject
 from scenario_transformer.transformer import RoutingRequestTransformer
 from scenario_transformer.transformer.routing_request_transformer import RoutingRequestTransformerConfiguration
 from scenario_transformer.builder import EntitiesBuilder
-from scenario_transformer.builder.entities_builder import EntityType
-from scenario_transformer.openscenario import OpenScenarioEncoder
+from scenario_transformer.builder.entities_builder import EntityType, EntityMeta
 from scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
 
 
 @pytest.fixture
 def ego_scenario_object() -> ScenarioObject:
-    builder = EntitiesBuilder(entities=[EntityType.EGO])
+    builder = EntitiesBuilder(
+        entities=[EntityMeta(entity_type=EntityType.EGO)])
     return builder.get_result().scenarioObjects[0]
 
 

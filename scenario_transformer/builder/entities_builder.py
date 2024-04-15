@@ -1,6 +1,7 @@
 import os
-from typing import List
+from typing import List, Optional
 from enum import Enum
+from dataclasses import dataclass
 import yaml
 import copy
 from openscenario_msgs import Entities, ScenarioObject
@@ -12,6 +13,12 @@ class EntityType(Enum):
     EGO = "ego"
     NPC = "npc"
     PEDESTRIAN = "pedestrian"
+
+
+@dataclass
+class EntityMeta:
+    entity_type: EntityType
+    embedding_id: Optional[int] = None
 
 
 class EntitiesBuilder(Builder):
@@ -26,17 +33,15 @@ class EntitiesBuilder(Builder):
 
     product: Entities
 
-    def __init__(self, entities: List[EntityType] = [EntityType.EGO]):
+    def __init__(self,
+                 entities: List[EntityMeta] = [
+                     EntityMeta(entity_type=EntityType.EGO)
+                 ]):
         self.not_ego_label = 1
         self.load_default_scenario_objects(self.config_path())
 
-        scenario_objects = self.make_default_scenario_objects(
+        self.scenario_objects = self.make_default_scenario_objects(
             entities=entities)
-
-        self.product = Entities(
-            scenarioObjects=scenario_objects,
-            entitySelections=[]  # Not in used
-        )
 
     def config_path(self) -> str:
         directory = os.path.dirname(os.path.realpath(__file__))
@@ -62,27 +67,31 @@ class EntitiesBuilder(Builder):
             EntityType.PEDESTRIAN.value] = entities.scenarioObjects[2]
 
     def make_default_scenario_objects(
-            self, entities: List[EntityType]) -> List[ScenarioObject]:
+            self, entities: List[EntityMeta]) -> List[ScenarioObject]:
 
         ego = None
         scenario_objects = []
-        sorted_entities = sorted(entities, key=lambda x: x.value)
+        sorted_entities = sorted(entities, key=lambda x: x.entity_type.value)
 
-        for entity_type in sorted_entities:
+        for entity_meta in sorted_entities:
 
             entity = copy.deepcopy(
-                self.default_scenario_objects[entity_type.value])
+                self.default_scenario_objects[entity_meta.entity_type.value])
 
-            if entity_type == EntityType.EGO:
+            if entity_meta.entity_type == EntityType.EGO:
                 ego = entity
             else:
-                entity.name = f"{entity_type.value}_{self.not_ego_label}"
+                entity.name = f"{entity_meta.entity_type.value}_{self.not_ego_label}"
+                if entity_meta.embedding_id:
+                    entity.name = entity.name + f"_id_{entity_meta.embedding_id}"
                 self.not_ego_label += 1
                 scenario_objects.append(entity)
 
         return [ego] + scenario_objects
 
-    def add_default_entity(self, entity_type: EntityType):
+    def add_default_entity(self,
+                           entity_type: EntityType,
+                           id: Optional[int] = None):
         if entity_type == EntityType.EGO:
             return
 
@@ -90,7 +99,13 @@ class EntitiesBuilder(Builder):
             self.default_scenario_objects[entity_type.value])
         copied_entity.name = f"{entity_type.value}_{self.not_ego_label}"
         self.not_ego_label += 1
-        self.product.scenarioObjects.append(copied_entity)
+        self.scenario_objects.append(copied_entity)
 
     def get_result(self) -> Entities:
+        assert len(self.scenario_objects) > 0
+
+        self.product = Entities(
+            scenarioObjects=self.scenario_objects,
+            entitySelections=[]  # Not in used
+        )
         return self.product
