@@ -55,12 +55,11 @@ class StoryBuilder(Builder):
         maneuver_builder.make_events(
             events=[exit_success_event, exit_failure_event])
 
-        actors_builder = ActorsBuilder(entities=entities,
-                                       scenario_object_name=ego_name)
+        actors_builder = ActorsBuilder()
+        actors_builder.add_entity_ref(scenario_object_name=ego_name)
 
         maneuver_group_builder = ManeuverGroupBuilder()
-        maneuver_group_builder.make_maneuvers(
-            maneuvers=[maneuver_builder.get_result()])
+        maneuver_group_builder.make_maneuvers(maneuvers=[maneuver_builder.get_result()])
 
         maneuver_group_builder.make_actors(actors=actors_builder.get_result())
         maneuver_group = maneuver_group_builder.get_result()

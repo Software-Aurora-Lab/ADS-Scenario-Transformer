@@ -21,14 +21,14 @@ class RoutingActionBuilder(Builder):
 
     def make_acquire_position_action(
             self,
+            position: Optional[Position] = None,
             lane_position: Optional[LanePosition] = None,
             world_position: Optional[WorldPosition] = None):
-        assert lane_position is not None or world_position is not None, "AcquirePositionAction needs one type of position"
+        assert position is not None or lane_position is not None or world_position is not None, "AcquirePositionAction needs one type of position"
 
-        position = None
         if lane_position is not None:
             position = Position(lanePosition=lane_position)
-        else:
+        elif world_position is not None:
             position = Position(worldPosition=world_position)
         self.product = RoutingAction(
             acquirePositionAction=AcquirePositionAction(position=position))

@@ -57,8 +57,14 @@ def apollo_map_parser(borregas_apollo_map_path) -> ApolloMapParser:
 
 @pytest.fixture
 def scenario(storyboard) -> Scenario:
+    entities_builder = EntitiesBuilder(entities=[
+        EntityMeta(entity_type=EntityType.EGO),
+        EntityMeta(entity_type=EntityType.NPC),
+        EntityMeta(entity_type=EntityType.NPC)])
+    entities = entities_builder.get_result()
+    
     scenario_config = ScenarioConfiguration(
-        entities=[EntityType.EGO, EntityType.NPC, EntityType.NPC],
+        entities=entities,
         lanelet_map_path="/home/map/lanelet2.osm",
         traffic_signals=[])
     scenario_builder = ScenarioBuilder(scenario_configuration=scenario_config)

@@ -2,17 +2,19 @@ import yaml
 from definitions import TEST_ROOT
 from openscenario_msgs import Scenario, Storyboard
 from scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
-from scenario_transformer.builder.entities_builder import EntityType, EntityMeta
+from scenario_transformer.builder.entities_builder import EntitiesBuilder, EntityType, EntityMeta
 from scenario_transformer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
 
 
 def test_scenario_builder(storyboard):
+    entities_builder = EntitiesBuilder(entities=[
+        EntityMeta(entity_type=EntityType.EGO),
+        EntityMeta(entity_type=EntityType.NPC),
+        EntityMeta(entity_type=EntityType.NPC)])
+    entities = entities_builder.get_result()
+    
     scenario_config = ScenarioConfiguration(
-        entities=[
-            EntityMeta(entity_type=EntityType.EGO),
-            EntityMeta(entity_type=EntityType.NPC),
-            EntityMeta(entity_type=EntityType.NPC)
-        ],
+        entities=entities,
         lanelet_map_path="/home/map/lanelet2.osm",
         traffic_signals=[])
     scenario_builder = ScenarioBuilder(scenario_configuration=scenario_config)
@@ -34,12 +36,14 @@ def test_scenario_key_value(parameter_declarations):
     with open(storyboard_path, 'r') as file:
         storyboard_dict = yaml.safe_load(file)
 
+    entities_builder = EntitiesBuilder(entities=[
+        EntityMeta(entity_type=EntityType.EGO),
+        EntityMeta(entity_type=EntityType.NPC),
+        EntityMeta(entity_type=EntityType.NPC)])
+    entities = entities_builder.get_result()
+
     scenario_config = ScenarioConfiguration(
-        entities=[
-            EntityMeta(entity_type=EntityType.EGO),
-            EntityMeta(entity_type=EntityType.NPC),
-            EntityMeta(entity_type=EntityType.NPC)
-        ],
+        entities=entities,
         lanelet_map_path=
         "/home/cloudsky/autoware_map/autoware_scenario_data/maps/awf_cicd_virtual_G_dev/lanelet2_map.osm",
         pcd_map_path=

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from openscenario_msgs import ScenarioDefinition, ParameterDeclaration, RoadNetwork, Entities, Storyboard, TrafficSignalController
 from scenario_transformer.builder import Builder
 from scenario_transformer.builder.catalog_locations_builder import CatalogLocationsBuilder
@@ -30,6 +30,7 @@ class ScenarioDefinitionBuilder(Builder):
         params_builder = ParameterDeclarationsBuilder(
             parameterDeclarations=parameter_declarations)
         self.parameter_declarations = params_builder.get_result()
+        self.entities = None
 
     def add_parameter_declaration(self, name: str, parameterType: int,
                                   value: str):
@@ -45,10 +46,9 @@ class ScenarioDefinitionBuilder(Builder):
                                      trafficSignals)
         self.road_network = builder.get_result()
 
-    def make_default_entities(self, entity_meta: List[EntityMeta]):
-        builder = EntitiesBuilder(entities=entity_meta)
-        self.entities = builder.get_result()
-
+    def make_entities(self, entities: Entities):
+        self.entities = entities
+        
     def make_storyboard(self, storyboard: Storyboard):
         self.storyboard = storyboard
 

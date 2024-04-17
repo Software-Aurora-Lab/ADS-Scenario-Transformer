@@ -1,5 +1,5 @@
 from typing import List, Optional, Dict
-from openscenario_msgs import Scenario, ScenarioDefinition, ScenarioModifiers, FileHeader, TrafficSignalController, OpenSCENARIO, Storyboard, ParameterDeclaration
+from openscenario_msgs import Scenario, ScenarioDefinition, ScenarioModifiers, FileHeader, TrafficSignalController, OpenSCENARIO, Storyboard, ParameterDeclaration, Entities
 from scenario_transformer.builder import Builder
 from scenario_transformer.builder.file_header_builder import FileHeaderBuilder
 from scenario_transformer.builder.scenario_definition_builder import ScenarioDefinitionBuilder
@@ -7,13 +7,13 @@ from scenario_transformer.builder.entities_builder import EntityMeta
 
 
 class ScenarioConfiguration:
-    entities: List[EntityMeta]
+    entities: Entities
     lanelet_map_path: str
     pcd_map_path: str
     traffic_signals: List[TrafficSignalController]
 
     def __init__(self,
-                 entities: List[EntityMeta],
+                 entities: Entities,
                  lanelet_map_path: str,
                  pcd_map_path: str = "point_cloud.pcd",
                  traffic_signals: List[TrafficSignalController] = []):
@@ -55,8 +55,7 @@ class ScenarioBuilder(Builder):
         scenario_definition_builder = ScenarioDefinitionBuilder(
             parameter_declarations=parameter_declarataions)
 
-        scenario_definition_builder.make_default_entities(
-            self.configuration.entities)
+        scenario_definition_builder.make_entities(entities=self.configuration.entities)
         scenario_definition_builder.make_road_network(
             lanelet_map_path=self.configuration.lanelet_map_path,
             pcd_map_path=self.configuration.pcd_map_path,

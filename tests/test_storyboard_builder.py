@@ -12,8 +12,9 @@ from scenario_transformer.builder.storyboard.init_builder import InitBuilder
 from scenario_transformer.builder.storyboard.storyboard_builder import StoryboardBuilder
 
 
-def test_actors_builder(entities):
-    builder = ActorsBuilder(entities=entities, scenario_object_name="ego")
+def test_actors_builder():
+    builder = ActorsBuilder()
+    builder.add_entity_ref(scenario_object_name="ego")
     actors = builder.get_result()
 
     assert isinstance(actors, Actors)

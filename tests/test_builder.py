@@ -113,11 +113,14 @@ def test_scenario_definition_builder(storyboard, entity_meta):
                              value='0')
     ]
 
+    entities_builder = EntitiesBuilder(
+        entities=entity_meta)
+    
     builder = ScenarioDefinitionBuilder(
         parameter_declarations=parameter_declarations)
 
     builder.make_road_network(lanelet_map_path="lanelet_map.osm")
-    builder.make_default_entities(entity_meta=entity_meta)
+    builder.make_entities(entities=entities_builder.get_result())
     builder.make_storyboard(storyboard=storyboard)
     scenario_definition = builder.get_result()
 
