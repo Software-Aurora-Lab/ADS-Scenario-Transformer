@@ -18,6 +18,10 @@ class PointENUTransformerConfiguration:
 
 
 class PointENUTransformer(Transformer):
+    """
+    We are using LanePosition instead of WorldPosition below reason.
+    - InternalError: The specified WorldPosition = [87040.4, 41553.1, 0] could not be approximated to the proper Lane. Perhaps the WorldPosition points to a location where multiple lanes overlap, and there are at least two or more candidates for a LanePosition that can be approximated to that WorldPosition. This issue can be resolved by strictly specifying the location using LanePosition instead of WorldPosition
+    """
     configuration: PointENUTransformerConfiguration
 
     class SupportedPosition(Enum):
@@ -50,5 +54,8 @@ class PointENUTransformer(Transformer):
 
     def transformToWorldPosition(self, source: Source) -> WorldPosition:
         pose = Geometry.utm_to_WGS(pose=source[0])
+        projected_point = Geometry.project_UTM_to_lanelet(
+            projector=self.configuration.projector,
+            pose=source[0])
         # Discard heading value
-        return WorldPosition(x=pose.lat, y=pose.lon, z=0)
+        return WorldPosition(x=projected_point.x, y=projected_point.y, z=projected_point.z, h=0.0)

@@ -16,10 +16,11 @@ class PrivateBuilder(Builder):
 
     def make_teleport_action(self, position: Position):
         builder = PrivateActionBuilder()
-        if position.lanePosition:
+
+        if position.HasField("lanePosition"):
             builder.make_teleport_action(lane_position = position.lanePosition)
         else:
-            builder.make_teleport_action(lane_position = position.worldPosition)
+            builder.make_teleport_action(world_position = position.worldPosition)
 
         self.private_actions.append(builder.get_result())
 
