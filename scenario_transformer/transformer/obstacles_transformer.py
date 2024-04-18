@@ -1,3 +1,4 @@
+import math
 from dataclasses import dataclass
 from typing import List, Optional, Dict, Tuple
 import lanelet2
@@ -5,7 +6,7 @@ from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
 from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacles, PerceptionObstacle
 from modules.common.proto.geometry_pb2 import PointENU, Point3D
-from openscenario_msgs import Story, ScenarioObject, Position, Waypoint, RouteStrategy, Entities, Rule
+from openscenario_msgs import Story, ScenarioObject, Position, Rule, SpeedActionDynamics, TransitionDynamics, Event, Condition, Act
 from scenario_transformer.transformer import Transformer
 from scenario_transformer.transformer.pointenu_transformer import PointENUTransformer, PointENUTransformerConfiguration
 from scenario_transformer.builder.storyboard.story_builder import StoryBuilder
@@ -15,7 +16,7 @@ from scenario_transformer.builder.storyboard.maneuver_group_builder import Maneu
 from scenario_transformer.builder.storyboard.maneuver_builder import ManeuverBuilder
 from scenario_transformer.builder.storyboard.event_builder import EventBuilder
 from scenario_transformer.builder.storyboard.private_action_builder import PrivateActionBuilder
-from scenario_transformer.builder.storyboard.routing_action_builder import RoutingActionBuilder
+from scenario_transformer.builder.storyboard.global_action_builder import GlobalActionBuilder
 from scenario_transformer.builder.storyboard.condition_builder import ConditionBuilder
 from scenario_transformer.builder.storyboard.trigger_builder import StartTriggerBuilder
 from scenario_transformer.builder.entities_builder import EntityType, EntityMeta
@@ -26,7 +27,7 @@ class ObstaclesTransformerConfiguration:
     scenario_objects: List[Tuple[EntityMeta, ScenarioObject]]
     sceanrio_start_timestamp: float
     lanelet_map: LaneletMap
-    projector: lanelet2.projection.MGRSProjector
+    projector: MGRSProjector
 
 
 class ObstaclesTransformer(Transformer):
@@ -39,8 +40,7 @@ class ObstaclesTransformer(Transformer):
     def __init__(self, configuration: ObstaclesTransformerConfiguration):
         self.configuration = configuration
 
-    def transform(self,
-                  source: List[PerceptionObstacles]) -> List[Story]:
+    def transform(self, source: List[PerceptionObstacles]) -> List[Story]:
 
         if source[0].error_code:
             return []
@@ -49,71 +49,136 @@ class ObstaclesTransformer(Transformer):
 
         stories = []
         for id, obstacles in grouped_obstacles.items():
-            
-            target_object = next(scenario_object for (meta, scenario_object) in self.configuration.scenario_objects if meta.embedding_id == id)
-            
+            target_object = self.find_scenario_object(id=id)
+
             if not target_object:
                 continue
 
             start = obstacles[0]
-            mid = obstacles[len(obstacles) // 2]
-            end = obstacles[-1]
-
+            start_position = self.transform_coordinate_value(
+                position=start.position)
             simulation_start_condition = ConditionBuilder.simulation_time_condition(
                 rule=Rule.GREATER_THAN, value_in_sec=0)
 
-            start_moving_time = self.obstacle_start_moving_time(obstacles)
-            start_condition = ConditionBuilder.simulation_time_condition(
-                rule=Rule.GREATER_THAN, value_in_sec=start_moving_time)
-            event_builder = EventBuilder(start_conditions=[start_condition])
-            start_position = self.transform_coordinate_value(
-                position=start.position)
+            locating_event = self.create_locating_obstacle_event(
+                start_condition=simulation_start_condition,
+                position=start_position,
+                entity_name=target_object.name)
 
-            private_action_builder = PrivateActionBuilder()
-            private_action_builder.make_teleport_action(position=start_position)
-            teleport_action = private_action_builder.get_result()
-            event_builder.add_private_action(name="Locate an obstacle", private_action=teleport_action)
-            
-            
-            if start.position != end.position:
+            events = [locating_event]
+            if self.is_obstacle_moved(obstacles):
+                start_moving_time = self.obstacle_start_moving_time(obstacles)
+                start_condition = ConditionBuilder.ego_start_moving_condition(
+                    delay=start_moving_time)
+                mid = obstacles[len(obstacles) // 2]
+                end = obstacles[-1]
                 mid_position = self.transform_coordinate_value(
                     position=mid.position)
                 end_position = self.transform_coordinate_value(
                     position=end.position)
-                
-                private_action_builder.make_routing_action(positions=[mid_position, end_position], name="")
-                private_action = private_action_builder.get_result()
-                event_builder.add_private_action(name="Route an obstacle", 
-                                                 private_action=private_action)
-                
-            event = event_builder.get_result()
-            maneuver_builder = ManeuverBuilder()
-            maneuver_builder.add_event(event=event)
 
-            maneuver_group_builder = ManeuverGroupBuilder()
-            maneuver_group_builder.make_maneuvers(
-                maneuvers=[maneuver_builder.get_result()])
-            actors_builder = ActorsBuilder()
-            actors_builder.add_entity_ref(scenario_object_name=target_object.name)
+                routing_event = self.create_routing_event(
+                    start_condition=start_condition,
+                    routing_positions=[
+                        start_position, mid_position, end_position
+                    ],
+                    max_velocity=self.max_velocity_meter_per_sec(
+                        obstacles=obstacles),
+                    entity_name=target_object.name)
+                events.append(routing_event)
 
-            maneuver_group_builder.make_actors(actors=actors_builder.get_result())
-            maneuver_group = maneuver_group_builder.get_result()
-            strat_trigger = StartTriggerBuilder()
-            strat_trigger.make_condition_group(conditions=[simulation_start_condition])
-            act_builder = ActBuilder(name="")
-            act_builder.make_maneuver_groups(maneuver_groups=[maneuver_group])
-            act_builder.make_start_trigger(trigger=strat_trigger.get_result())
-            act = act_builder.get_result()
-            story_builder = StoryBuilder(name=f"Run {target_object.name}")
+            act = self.wrap_events_to_act(
+                events=events,
+                start_condition=simulation_start_condition,
+                entity_names=[target_object.name])
+            story_builder = StoryBuilder(
+                name=f"Story for {target_object.name}")
             story_builder.make_acts(acts=[act])
             stories.append(story_builder.get_result())
 
         return stories
 
     # helper functions
-    
-    def group_obstacles(self, 
-                        obstacles: List[PerceptionObstacles]) -> Dict[str, List[PerceptionObstacles]]:
+
+    def create_locating_obstacle_event(self, start_condition: Condition,
+                                       position: Position,
+                                       entity_name: str) -> Event:
+        event_builder = EventBuilder(start_conditions=[start_condition])
+        global_action_builder = GlobalActionBuilder()
+        global_action_builder.make_add_entity_action(position=position,
+                                                     entity_name=entity_name)
+        global_action = global_action_builder.get_result()
+        event_builder.add_global_action(
+            name=f"Locate {entity_name} on the road",
+            global_action=global_action)
+
+        # If you don't set its speed to 0, obstacles start running ignoring specified condition.
+        private_action_builder = PrivateActionBuilder()
+        private_action_builder.make_absolute_speed_action(
+            speed_action_dynamics=SpeedActionDynamics(
+                dynamicsDimension=TransitionDynamics.DynamicsDimension.TIME,
+                dynamicsShape=TransitionDynamics.DynamicsShape.STEP,
+                value=0),
+            value=0)
+        speed_action = private_action_builder.get_result()
+        event_builder.add_private_action(
+            name=f"Stop {entity_name} at starting point",
+            private_action=speed_action)
+
+        return event_builder.get_result()
+
+    def create_routing_event(self, start_condition: Condition,
+                             routing_positions: List[Position],
+                             max_velocity: float, entity_name: str) -> Event:
+        event_builder = EventBuilder(start_conditions=[start_condition])
+
+        private_action_builder = PrivateActionBuilder()
+        private_action_builder.make_absolute_speed_action(
+            speed_action_dynamics=SpeedActionDynamics(
+                dynamicsDimension=TransitionDynamics.DynamicsDimension.TIME,
+                dynamicsShape=TransitionDynamics.DynamicsShape.STEP,
+                value=0),
+            value=max_velocity)
+        speed_action = private_action_builder.get_result()
+        event_builder.add_private_action(name=f"Speed of {entity_name}",
+                                         private_action=speed_action)
+
+        private_action_builder.make_routing_action(positions=routing_positions,
+                                                   name="")
+        private_action = private_action_builder.get_result()
+        event_builder.add_private_action(name=f"Route {entity_name}",
+                                         private_action=private_action)
+        return event_builder.get_result()
+
+    def wrap_events_to_act(self, events: List[Event],
+                           start_condition: Condition,
+                           entity_names: List[str]) -> Act:
+        maneuver_builder = ManeuverBuilder()
+        maneuver_builder.make_events(events=events)
+
+        maneuver_group_builder = ManeuverGroupBuilder()
+        maneuver_group_builder.make_maneuvers(
+            maneuvers=[maneuver_builder.get_result()])
+
+        actors_builder = ActorsBuilder()
+        for entity_name in entity_names:
+            actors_builder.add_entity_ref(scenario_object_name=entity_name)
+
+        maneuver_group_builder.make_actors(actors=actors_builder.get_result())
+        maneuver_group = maneuver_group_builder.get_result()
+        strat_trigger = StartTriggerBuilder()
+        strat_trigger.make_condition_group(conditions=[start_condition])
+        act_builder = ActBuilder(name="")
+        act_builder.make_maneuver_groups(maneuver_groups=[maneuver_group])
+        act_builder.make_start_trigger(trigger=strat_trigger.get_result())
+        return act_builder.get_result()
+
+    def is_obstacle_moved(self, obstacles: List[PerceptionObstacle]) -> bool:
+        return self.max_velocity_meter_per_sec(obstacles=obstacles) != 0.0
+
+    def group_obstacles(
+        self, obstacles: List[PerceptionObstacles]
+    ) -> Dict[str, List[PerceptionObstacles]]:
         grouped_obstacles = {}
         for perception_obstacles in obstacles:
             for obstacle in perception_obstacles.perception_obstacle:
@@ -123,14 +188,52 @@ class ObstaclesTransformer(Transformer):
                 grouped_obstacles[obstacle.id].append(obstacle)
         return grouped_obstacles
 
-    def obstacle_start_moving_time(self, obstacles: List[PerceptionObstacle]) -> float:
+    def obstacle_start_moving_idx(self,
+                                  obstacles: List[PerceptionObstacle]) -> int:
         obstacle_start_moving_idx = 0
-        for idx, (ob_prev, ob_cur) in enumerate(zip(obstacles[:-1], obstacles[1:])):
-            if ob_prev.position != ob_cur.position:
+        threshold = 0.0001
+        for idx, (ob_prev,
+                  ob_cur) in enumerate(zip(obstacles[:-1], obstacles[1:])):
+            delta = (ob_prev.position.x - ob_cur.position.x) + (
+                ob_prev.position.y - ob_cur.position.y) + (ob_prev.position.z -
+                                                           ob_cur.position.z)
+
+            if abs(delta) > threshold:
                 obstacle_start_moving_idx = idx
                 break
 
-        return max(obstacles[obstacle_start_moving_idx].timestamp - self.configuration.sceanrio_start_timestamp, 0)
+        return obstacle_start_moving_idx
+
+    def obstacle_start_moving_time(
+            self, obstacles: List[PerceptionObstacle]) -> float:
+        obstacle_start_moving_idx = 0
+
+        for i, obstacle in enumerate(obstacles):
+            velocity = self.calculate_velocity_meter_per_sec(obstacle.velocity)
+            if velocity != 0:
+                obstacle_start_moving_idx = i
+                break
+
+        return max(
+            obstacles[obstacle_start_moving_idx].timestamp -
+            self.configuration.sceanrio_start_timestamp, 0)
+
+    def calculate_velocity_meter_per_sec(self, velocity) -> float:
+        x, y, z = velocity.x, velocity.y, velocity.z
+        return math.sqrt(x**2 + y**2)
+
+    def max_velocity_meter_per_sec(
+            self, obstacles: List[PerceptionObstacle]) -> float:
+        return max([
+            self.calculate_velocity_meter_per_sec(obstacle.velocity)
+            for obstacle in obstacles
+        ])
+
+    def find_scenario_object(self, id: str) -> Optional[ScenarioObject]:
+        return next(
+            scenario_object
+            for (meta, scenario_object) in self.configuration.scenario_objects
+            if meta.embedding_id == id)
 
     def transform_coordinate_value(self, position: Point3D) -> Position:
         point = PointENU(x=position.x, y=position.y, z=0)
