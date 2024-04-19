@@ -1,4 +1,4 @@
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
 from enum import Enum
 from dataclasses import dataclass
 import lanelet2
@@ -29,28 +29,32 @@ class PointENUTransformer(Transformer):
         World = 2
 
     Source = Tuple[PointENU, float]
-    Target = Position
+    Target = Optional[Position]
 
     def __init__(self, configuration: PointENUTransformerConfiguration):
         self.configuration = configuration
 
     def transform(self, source: Source) -> Target:
         if self.configuration.supported_position == PointENUTransformer.SupportedPosition.Lane:
-            return Position(lanePosition=self.transformToLanePosition(source))
+            lane_position = self.transformToLanePosition(source)
+            return Position(lanePosition=self.transformToLanePosition(source)) if lane_position else None
         return Position(worldPosition=self.transformToWorldPosition(source))
 
-    def transformToLanePosition(self, source: Source) -> LanePosition:
+    def transformToLanePosition(self, source: Source) -> Optional[LanePosition]:
         lanelet_map = self.configuration.lanelet_map
         projector = self.configuration.projector
 
         projected_point = Geometry.project_UTM_to_lanelet(projector=projector,
                                                           pose=source[0])
         lanelet = Geometry.find_lanelet(lanelet_map, projected_point)
-        # Discard heading value
-        lane_position = Geometry.lane_position(lanelet=lanelet,
-                                               basic_point=projected_point,
-                                               heading=0.0)
-        return lane_position
+        
+        if lanelet:
+            # Discard heading value
+            lane_position = Geometry.lane_position(lanelet=lanelet,
+                                                   basic_point=projected_point,
+                                                   heading=0.0)
+            return lane_position
+        return None
 
     def transformToWorldPosition(self, source: Source) -> WorldPosition:
         pose = Geometry.utm_to_WGS(pose=source[0])

@@ -57,6 +57,10 @@ class ObstaclesTransformer(Transformer):
             start = obstacles[0]
             start_position = self.transform_coordinate_value(
                 position=start.position)
+
+            if not start_position:
+                raise ValueError("start poisiion of the obstacle cannot be projected")
+                
             simulation_start_condition = ConditionBuilder.simulation_time_condition(
                 rule=Rule.GREATER_THAN, value_in_sec=0)
 
@@ -67,25 +71,28 @@ class ObstaclesTransformer(Transformer):
 
             events = [locating_event]
             if self.is_obstacle_moved(obstacles):
+
                 start_moving_time = self.obstacle_start_moving_time(obstacles)
                 start_condition = ConditionBuilder.ego_start_moving_condition(
                     delay=start_moving_time)
-                mid = obstacles[len(obstacles) // 2]
-                end = obstacles[-1]
-                mid_position = self.transform_coordinate_value(
-                    position=mid.position)
-                end_position = self.transform_coordinate_value(
-                    position=end.position)
 
-                routing_event = self.create_routing_event(
-                    start_condition=start_condition,
-                    routing_positions=[
-                        start_position, mid_position, end_position
-                    ],
-                    max_velocity=self.max_velocity_meter_per_sec(
-                        obstacles=obstacles),
-                    entity_name=target_object.name)
-                events.append(routing_event)
+                routing_positions = []
+                for idx in self.obstacle_routing_indices(obstacles):
+                    position = self.transform_coordinate_value(
+                        obstacles[idx].position)
+                    if position:
+                        routing_positions.append(position)
+                    else:
+                        print(f"Warning: Position in {target_object.name} route cannot be projected, because it is not projected in Lanelet. It will not applied in result scenario")
+
+                if routing_positions:
+                    routing_event = self.create_routing_event(
+                        start_condition=start_condition,
+                        routing_positions=routing_positions,
+                        max_velocity=self.max_velocity_meter_per_sec(
+                            obstacles=obstacles),
+                        entity_name=target_object.name)
+                    events.append(routing_event)
 
             act = self.wrap_events_to_act(
                 events=events,
@@ -191,32 +198,58 @@ class ObstaclesTransformer(Transformer):
     def obstacle_start_moving_idx(self,
                                   obstacles: List[PerceptionObstacle]) -> int:
         obstacle_start_moving_idx = 0
-        threshold = 0.0001
-        for idx, (ob_prev,
-                  ob_cur) in enumerate(zip(obstacles[:-1], obstacles[1:])):
-            delta = (ob_prev.position.x - ob_cur.position.x) + (
-                ob_prev.position.y - ob_cur.position.y) + (ob_prev.position.z -
-                                                           ob_cur.position.z)
-
-            if abs(delta) > threshold:
-                obstacle_start_moving_idx = idx
+        for i, obstacle in enumerate(obstacles):
+            velocity = self.calculate_velocity_meter_per_sec(obstacle.velocity)
+            if velocity > 0:
+                obstacle_start_moving_idx = i
                 break
 
         return obstacle_start_moving_idx
 
+    def obstacle_end_moving_idx(self,
+                                obstacles: List[PerceptionObstacle]) -> int:
+        obstacle_end_moving_idx = len(obstacles) - 1
+        for i, obstacle in enumerate(reversed(obstacles)):
+            velocity = self.calculate_velocity_meter_per_sec(obstacle.velocity)
+            if velocity > 0:
+                obstacle_end_moving_idx = len(obstacles) - 1 - i
+                break
+
+        return obstacle_end_moving_idx
+
     def obstacle_start_moving_time(
             self, obstacles: List[PerceptionObstacle]) -> float:
-        obstacle_start_moving_idx = 0
-
-        for i, obstacle in enumerate(obstacles):
-            velocity = self.calculate_velocity_meter_per_sec(obstacle.velocity)
-            if velocity != 0:
-                obstacle_start_moving_idx = i
-                break
+        obstacle_start_moving_idx = self.obstacle_start_moving_idx(obstacles)
 
         return max(
             obstacles[obstacle_start_moving_idx].timestamp -
             self.configuration.sceanrio_start_timestamp, 0)
+
+    def obstacle_routing_indices(
+            self, obstacles: List[PerceptionObstacle]) -> List[int]:
+        start_moving_idx = self.obstacle_start_moving_idx(obstacles)
+        end_moving_idx = self.obstacle_end_moving_idx(obstacles)
+
+        direction_changed_indices = self.obstacle_direction_changed_indices(
+            obstacles)
+        result = [start_moving_idx] + [
+            idx for idx in direction_changed_indices if idx > start_moving_idx
+        ] + [end_moving_idx]
+        return result
+
+    def obstacle_direction_changed_indices(
+            self, obstacles: List[PerceptionObstacle]) -> List[int]:
+
+        is_positive = obstacles[0].theta > 0
+        routing_indices = []
+        for idx, obstacle in enumerate(obstacles):
+            if is_positive and obstacle.theta < 0:
+                routing_indices.append(idx)
+                is_positive = not is_positive
+            elif not is_positive and obstacle.theta > 0:
+                routing_indices.append(idx)
+                is_positive = not is_positive
+        return routing_indices
 
     def calculate_velocity_meter_per_sec(self, velocity) -> float:
         x, y, z = velocity.x, velocity.y, velocity.z
@@ -235,13 +268,14 @@ class ObstaclesTransformer(Transformer):
             for (meta, scenario_object) in self.configuration.scenario_objects
             if meta.embedding_id == id)
 
-    def transform_coordinate_value(self, position: Point3D) -> Position:
+    def transform_coordinate_value(self, position: Point3D) -> Optional[Position]:
         point = PointENU(x=position.x, y=position.y, z=0)
-        laneType = PointENUTransformer.SupportedPosition.Lane
         transformer = PointENUTransformer(
             configuration=PointENUTransformerConfiguration(
-                supported_position=laneType,
+                supported_position=PointENUTransformer.SupportedPosition.Lane,
                 lanelet_map=self.configuration.lanelet_map,
                 projector=self.configuration.projector))
 
-        return transformer.transform(source=(point, 0.0))
+        position = transformer.transform(source=(point, 0.0))
+        return position
+            

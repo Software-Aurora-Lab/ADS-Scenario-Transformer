@@ -26,3 +26,11 @@ def test_scenario_transformer(borregas_apollo_scenario9_path,
     assert len(
         encoded_scenario['OpenSCENARIO']['Entities']['ScenarioObject']) == 7
     assert len(encoded_scenario['OpenSCENARIO']['Storyboard']['Story']) == 7
+
+    # scenario_yaml = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
+    #     proto_pyobject=scenario, wrap_result_with_typename=False)
+
+    # with open("sce.yaml", 'w') as file:
+    #     file.write(scenario_yaml)
+
+    # assert True == False
