@@ -263,10 +263,16 @@ class ObstaclesTransformer(Transformer):
         ])
 
     def find_scenario_object(self, id: str) -> Optional[ScenarioObject]:
-        return next(
-            scenario_object
-            for (meta, scenario_object) in self.configuration.scenario_objects
-            if meta.embedding_id == id)
+
+        for (meta, scenario_object) in self.configuration.scenario_objects:
+            if meta.embedding_id == id:
+                return scenario_object
+        return None
+        
+        # return next(
+        #     scenario_object
+        #     for (meta, scenario_object) in self.configuration.scenario_objects
+        #     if meta.embedding_id == id)
 
     def transform_coordinate_value(self, position: Point3D) -> Optional[Position]:
         point = PointENU(x=position.x, y=position.y, z=0)

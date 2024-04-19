@@ -38,7 +38,7 @@ class StoryBuilder(Builder):
         - Exit_Success condition - ego car reaches destination
         """
         ego_end_position = None
-        if routing_action.assignRouteAction:
+        if routing_action.HasField("assignRouteAction"):
             ego_end_position = routing_action.assignRouteAction.route.waypoints[
                 -1].position
         else:

@@ -19,7 +19,7 @@ def assert_proto_type_equal(reflection_type, pb2_type):
 
 
 def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object,
-                         apollo_map_parser, borregas_apollo_scenario9_path):
+                         apollo_map_parser, borregas_doople_scenario9_path):
 
     routing_request_transformer = RoutingRequestTransformer(
         configuration=RoutingRequestTransformerConfiguration(
@@ -29,7 +29,7 @@ def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object,
             ego_scenario_object=ego_scenario_object))
 
     routing_requests = CyberRecordReader.read_channel(
-        source_path=borregas_apollo_scenario9_path,
+        source_path=borregas_doople_scenario9_path,
         channel=CyberRecordChannel.ROUTING_REQUEST)
 
     routing_request = routing_requests[0]
@@ -63,6 +63,7 @@ def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object,
 
 
 def test_routing_request_from_response(lanelet_map, mgrs_projector,
+                                       borregas_doople_scenario35_path,
                                        ego_scenario_object, apollo_map_parser):
     routing_request_transformer = RoutingRequestTransformer(
         configuration=RoutingRequestTransformerConfiguration(
@@ -71,7 +72,7 @@ def test_routing_request_from_response(lanelet_map, mgrs_projector,
             apollo_map_parser=apollo_map_parser,
             ego_scenario_object=ego_scenario_object))
     routing_responses = CyberRecordReader.read_channel(
-        source_path="./samples/apollo_borregas/00000035.00000",
+        source_path=borregas_doople_scenario35_path,
         channel=CyberRecordChannel.ROUTING_RESPONSE)
 
     routing_response = routing_responses[0]

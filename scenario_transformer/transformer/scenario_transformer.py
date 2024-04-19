@@ -165,7 +165,7 @@ class ScenarioTransformer:
             channel=CyberRecordChannel.ROUTING_RESPONSE)
         routing_response = routing_responses[0]
 
-        self.routing_request = routing_response.routingRequest
+        self.routing_request = routing_response.routing_request
         return self.routing_request
 
     def input_perception_obstacles(self) -> List[PerceptionObstacles]:
