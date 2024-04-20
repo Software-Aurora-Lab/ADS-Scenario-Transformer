@@ -1,19 +1,40 @@
-from typing import Optional
+from typing import Optional, List, Union
 import math
 import lanelet2
 from lanelet2.projection import MGRSProjector
-from lanelet2.core import (Lanelet, LaneletMap, GPSPoint, BasicPoint2d,
-                           BasicPoint3d, getId, Point3d)
-from lanelet2.io import Origin
-from lanelet2.geometry import (findNearest, distanceToCenterline2d, distance,
-                               findWithin3d, findWithin2d,
-                               approximatedLength2d, inside, length2d, project)
-from pyproj import Proj, transform
-from modules.common.proto.geometry_pb2 import PointENU
-from openscenario_msgs import LanePosition, WorldPosition, Orientation, ReferenceContext
+from lanelet2.core import Lanelet, LaneletMap, GPSPoint, BasicPoint2d, BasicPoint3d, getId, Point3d, TrafficLight
+from lanelet2.geometry import distanceToCenterline2d, distance, findWithin3d, inside, length2d, findNearest
+from pyproj import Proj
+from modules.common.proto.geometry_pb2 import PointENU, Point3D
+from modules.map.proto.map_signal_pb2 import Signal
+from openscenario_msgs import LanePosition, Orientation, ReferenceContext
 
 
 class Geometry:
+
+    @staticmethod
+    def find_nearest_traffic_light(
+            map: LaneletMap, signal: Signal,
+            projector: MGRSProjector) -> Optional[TrafficLight]:
+
+        candidates = set()
+        for point in signal.boundary.point:
+            basic_point = Geometry.project_UTM_point_on_lanelet(
+                point=point, projector=projector)
+            basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
+
+            nearest_traffic_light = findNearest(map.regulatoryElementLayer,
+                                                basic_point2d, 1)
+            if nearest_traffic_light:
+                candidates.update(nearest_traffic_light)
+
+        if not candidates:
+            return None
+
+        min_distance, nearest_traffic_light = min(
+            (distance, traffic_light)
+            for distance, traffic_light in candidates)
+        return nearest_traffic_light
 
     @staticmethod
     def find_lanelet(map: LaneletMap,
@@ -32,10 +53,11 @@ class Geometry:
             return None
 
         max_centerline_length = math.floor(length2d(lanelet))
-        
+
         # Calculation of s attribute is simplified.
         # https://releases.asam.net/OpenDRIVE/1.6.0/ASAM_OpenDRIVE_BS_V1-6-0.html#_reference_line_coordinate_systems
-        s_attribute = min(max_centerline_length, distance(lanelet.centerline[0], point3d))
+        s_attribute = min(max_centerline_length,
+                          distance(lanelet.centerline[0], point3d))
         t_attribute = distanceToCenterline2d(lanelet, basic_point2d)
 
         return LanePosition(
@@ -50,13 +72,14 @@ class Geometry:
                 type=ReferenceContext.REFERENCECONTEXT_RELATIVE))
 
     @staticmethod
-    def utm_to_WGS(pose: PointENU, zone=10) -> GPSPoint:
+    def utm_to_WGS(point: Union[PointENU, Point3D], zone=10) -> GPSPoint:
         utm_proj = Proj(proj="utm", zone=zone, ellps="WGS84")
-        lon, lat = utm_proj(pose.x, pose.y, inverse=True)
-        return GPSPoint(lat=lat, lon=lon, ele=0)
+        lon, lat = utm_proj(point.x, point.y, inverse=True)
+        return GPSPoint(lat=lat, lon=lon, ele=point.z)
 
     @staticmethod
-    def project_UTM_to_lanelet(projector: MGRSProjector,
-                               pose: PointENU) -> BasicPoint3d:
-        gps_point = Geometry.utm_to_WGS(pose)
+    def project_UTM_point_on_lanelet(point: Union[PointENU, Point3D],
+                                     projector: MGRSProjector,
+                                     zone: int = 10) -> BasicPoint3d:
+        gps_point = Geometry.utm_to_WGS(point, zone=zone)
         return projector.forward(gps_point)

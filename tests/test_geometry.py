@@ -35,8 +35,8 @@ class TestGeometry(unittest.TestCase):
         ]
 
         for pose, expectation in zip(poses, expectations):
-            projected = Geometry.project_UTM_to_lanelet(
-                projector=self.mgrs_Projector, pose=pose)
+            projected = Geometry.project_UTM_point_on_lanelet(
+                projector=self.mgrs_Projector, point=pose)
             self.assertAlmostEqual(
                 abs(projected.x - expectation.x),
                 second=1.0,

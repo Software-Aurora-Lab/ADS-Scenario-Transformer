@@ -16,6 +16,7 @@ from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
 from lanelet2.core import LaneletMap
 from scenario_transformer.tools.apollo_map_parser import ApolloMapParser
+from scenario_transformer.tools.vector_map_parser import VectorMapParser
 from definitions import SAMPLE_ROOT
 
 
@@ -33,7 +34,8 @@ def borregas_scenorita_scenario9_path() -> str:
 @pytest.fixture
 def borregas_scenorita_scenario75_path() -> str:
     return SAMPLE_ROOT + "/apollo_borregas/scenoRITA/00000075.00000"
-    
+
+
 @pytest.fixture
 def borregas_doople_scenario9_path() -> str:
     return SAMPLE_ROOT + "/apollo_borregas/DoppleTest/00000009.00000"
@@ -65,13 +67,19 @@ def apollo_map_parser(borregas_apollo_map_path) -> ApolloMapParser:
 
 
 @pytest.fixture
+def vector_map_parser(borregas_vector_map_path) -> ApolloMapParser:
+    return VectorMapParser(borregas_vector_map_path)
+
+
+@pytest.fixture
 def scenario(storyboard) -> Scenario:
     entities_builder = EntitiesBuilder(entities=[
         EntityMeta(entity_type=EntityType.EGO),
         EntityMeta(entity_type=EntityType.NPC),
-        EntityMeta(entity_type=EntityType.NPC)])
+        EntityMeta(entity_type=EntityType.NPC)
+    ])
     entities = entities_builder.get_result()
-    
+
     scenario_config = ScenarioConfiguration(
         entities=entities,
         lanelet_map_path="/home/map/lanelet2.osm",

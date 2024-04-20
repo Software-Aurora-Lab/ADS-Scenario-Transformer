@@ -1,7 +1,6 @@
-from typing import Dict, Tuple, Optional
+from typing import Tuple, Optional
 from enum import Enum
 from dataclasses import dataclass
-import lanelet2
 from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
 from modules.common.proto.geometry_pb2 import PointENU
@@ -14,7 +13,7 @@ from scenario_transformer.tools.geometry import Geometry
 class PointENUTransformerConfiguration:
     supported_position: 'PointENUTransformer.SupportedPosition'
     lanelet_map: LaneletMap
-    projector: lanelet2.projection.MGRSProjector
+    projector: MGRSProjector
 
 
 class PointENUTransformer(Transformer):
@@ -37,17 +36,19 @@ class PointENUTransformer(Transformer):
     def transform(self, source: Source) -> Target:
         if self.configuration.supported_position == PointENUTransformer.SupportedPosition.Lane:
             lane_position = self.transformToLanePosition(source)
-            return Position(lanePosition=self.transformToLanePosition(source)) if lane_position else None
+            return Position(lanePosition=self.transformToLanePosition(
+                source)) if lane_position else None
         return Position(worldPosition=self.transformToWorldPosition(source))
 
-    def transformToLanePosition(self, source: Source) -> Optional[LanePosition]:
+    def transformToLanePosition(self,
+                                source: Source) -> Optional[LanePosition]:
         lanelet_map = self.configuration.lanelet_map
         projector = self.configuration.projector
 
-        projected_point = Geometry.project_UTM_to_lanelet(projector=projector,
-                                                          pose=source[0])
+        projected_point = Geometry.project_UTM_point_on_lanelet(
+            projector=projector, point=source[0])
         lanelet = Geometry.find_lanelet(lanelet_map, projected_point)
-        
+
         if lanelet:
             # Discard heading value
             lane_position = Geometry.lane_position(lanelet=lanelet,
@@ -57,9 +58,11 @@ class PointENUTransformer(Transformer):
         return None
 
     def transformToWorldPosition(self, source: Source) -> WorldPosition:
-        pose = Geometry.utm_to_WGS(pose=source[0])
-        projected_point = Geometry.project_UTM_to_lanelet(
-            projector=self.configuration.projector,
-            pose=source[0])
+        pose = Geometry.utm_to_WGS(point=source[0])
+        projected_point = Geometry.project_UTM_point_on_lanelet(
+            projector=self.configuration.projector, point=source[0])
         # Discard heading value
-        return WorldPosition(x=projected_point.x, y=projected_point.y, z=projected_point.z, h=0.0)
+        return WorldPosition(x=projected_point.x,
+                             y=projected_point.y,
+                             z=projected_point.z,
+                             h=0.0)

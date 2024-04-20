@@ -1,7 +1,6 @@
 import math
 from dataclasses import dataclass
 from typing import List, Optional, Dict, Tuple
-import lanelet2
 from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
 from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacles, PerceptionObstacle
@@ -19,7 +18,7 @@ from scenario_transformer.builder.storyboard.private_action_builder import Priva
 from scenario_transformer.builder.storyboard.global_action_builder import GlobalActionBuilder
 from scenario_transformer.builder.storyboard.condition_builder import ConditionBuilder
 from scenario_transformer.builder.storyboard.trigger_builder import StartTriggerBuilder
-from scenario_transformer.builder.entities_builder import EntityType, EntityMeta
+from scenario_transformer.builder.entities_builder import EntityMeta
 
 
 @dataclass
@@ -59,8 +58,9 @@ class ObstaclesTransformer(Transformer):
                 position=start.position)
 
             if not start_position:
-                raise ValueError("start poisiion of the obstacle cannot be projected")
-                
+                raise ValueError(
+                    "start poisiion of the obstacle cannot be projected")
+
             simulation_start_condition = ConditionBuilder.simulation_time_condition(
                 rule=Rule.GREATER_THAN, value_in_sec=0)
 
@@ -83,7 +83,9 @@ class ObstaclesTransformer(Transformer):
                     if position:
                         routing_positions.append(position)
                     else:
-                        print(f"Warning: Position in {target_object.name} route cannot be projected, because it is not projected in Lanelet. It will not applied in result scenario")
+                        print(
+                            f"Warning: Position in {target_object.name} route cannot be projected, because it is not projected in Lanelet. It will not applied in result scenario"
+                        )
 
                 if routing_positions:
                     routing_event = self.create_routing_event(
@@ -268,13 +270,9 @@ class ObstaclesTransformer(Transformer):
             if meta.embedding_id == id:
                 return scenario_object
         return None
-        
-        # return next(
-        #     scenario_object
-        #     for (meta, scenario_object) in self.configuration.scenario_objects
-        #     if meta.embedding_id == id)
 
-    def transform_coordinate_value(self, position: Point3D) -> Optional[Position]:
+    def transform_coordinate_value(self,
+                                   position: Point3D) -> Optional[Position]:
         point = PointENU(x=position.x, y=position.y, z=0)
         transformer = PointENUTransformer(
             configuration=PointENUTransformerConfiguration(
@@ -284,4 +282,3 @@ class ObstaclesTransformer(Transformer):
 
         position = transformer.transform(source=(point, 0.0))
         return position
-            

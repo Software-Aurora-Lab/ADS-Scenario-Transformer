@@ -1,6 +1,6 @@
 from typing import List, Dict, Type, TypeVar
 import lanelet2
-from lanelet2.core import Lanelet, LaneletMap
+from lanelet2.core import Lanelet, LaneletMap, TrafficSign, TrafficLight
 from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
 
@@ -14,8 +14,7 @@ class VectorMapParser:
     def __init__(self, vector_map_path: str):
         origin = Origin(0.0, 0.0, 0.0)
         self.projector = MGRSProjector(origin)
-        self.lanelet_map = lanelet2.io.load(vector_map_path,
-                                            self.projector)
+        self.lanelet_map = lanelet2.io.load(vector_map_path, self.projector)
 
     def get_attributes(self, key: str,
                        attribute_type: Type[T]) -> Dict[int, T]:
@@ -39,3 +38,12 @@ class VectorMapParser:
         - return: Dict[lanelet id: turn_direction type]
         """
         return self.get_attributes(key='turn_direction', attribute_type=str)
+
+    def get_all_traffic_lights(self) -> List[TrafficLight]:
+        return [
+            element for element in self.lanelet_map.regulatoryElementLayer
+            if isinstance(element, TrafficLight)
+        ]
+
+    def regualtory_element_layer(self):
+        return self.lanelet_map.regulatoryElementLayer

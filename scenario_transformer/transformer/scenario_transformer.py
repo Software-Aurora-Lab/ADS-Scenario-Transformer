@@ -41,6 +41,9 @@ class ScenarioTransformerConfiguration:
         self.pcd_map_path = pcd_map_path
 
 
+# traffic_signal_all_green: bool
+
+
 class ScenarioTransformer:
     apollo_map_parser: ApolloMapParser
     vector_map_parser: VectorMapParser
@@ -78,16 +81,20 @@ class ScenarioTransformer:
         entities_builder = EntitiesBuilder(entities=entity_meta)
         self.entities = entities_builder.get_result()
 
-        sorted_entity_meta = sorted(entity_meta, key=lambda x: x.entity_type.value)
-        
+        sorted_entity_meta = sorted(entity_meta,
+                                    key=lambda x: x.entity_type.value)
+
         assert len(sorted_entity_meta) == len(self.entities.scenarioObjects)
-        self.entities_with_id = [(entity, scenario_object) for entity, scenario_object in zip(sorted_entity_meta, self.entities.scenarioObjects)]
+        self.entities_with_id = [
+            (entity, scenario_object) for entity, scenario_object in zip(
+                sorted_entity_meta, self.entities.scenarioObjects)
+        ]
 
     def transform(self) -> Scenario:
         init_builder = InitBuilder()
         ego_routing_private = self.transform_ego_routing(
             ego_scenario_object=self.entities.scenarioObjects[0])
-        
+
         init_builder.make_privates(privates=[ego_routing_private])
         init = init_builder.get_result()
 
@@ -105,7 +112,8 @@ class ScenarioTransformer:
 
         obstacle_stories = self.transform_obstacle_movements()
 
-        storyboard_builder.make_stories(stories=obstacle_stories + [default_end_story])
+        storyboard_builder.make_stories(stories=obstacle_stories +
+                                        [default_end_story])
         storyboard = storyboard_builder.get_result()
 
         scenario_config = ScenarioConfiguration(
@@ -119,20 +127,19 @@ class ScenarioTransformer:
 
         return scenario_builder.get_result()
 
-    def transform_obstacle_movements(self) -> List[Story]:        
+    def transform_obstacle_movements(self) -> List[Story]:
         obstacles = self.input_perception_obstacles()
 
         sceanrio_start_timestamp = obstacles[0].header.timestamp_sec
-        obstacles_transformer = ObstaclesTransformer(configuration=ObstaclesTransformerConfiguration(
-                                scenario_objects = self.entities_with_id,
-                                sceanrio_start_timestamp = sceanrio_start_timestamp,
-                                lanelet_map=self.vector_map_parser.lanelet_map,
-                                projector=self.vector_map_parser.projector
-                            ))
+        obstacles_transformer = ObstaclesTransformer(
+            configuration=ObstaclesTransformerConfiguration(
+                scenario_objects=self.entities_with_id,
+                sceanrio_start_timestamp=sceanrio_start_timestamp,
+                lanelet_map=self.vector_map_parser.lanelet_map,
+                projector=self.vector_map_parser.projector))
         obstacles = self.input_perception_obstacles()
         return obstacles_transformer.transform(source=obstacles)
-                                                
-                                                     
+
     def transform_ego_routing(self,
                               ego_scenario_object: ScenarioObject) -> Private:
         routing_request_transformer = RoutingRequestTransformer(
@@ -152,7 +159,7 @@ class ScenarioTransformer:
         """
         if self.routing_request:
             return self.routing_request
-            
+
         routing_requests = CyberRecordReader.read_channel(
             source_path=self.configuration.apollo_scenario_path,
             channel=CyberRecordChannel.ROUTING_REQUEST)
@@ -171,9 +178,20 @@ class ScenarioTransformer:
     def input_perception_obstacles(self) -> List[PerceptionObstacles]:
         if self.obstacles:
             return self.obstacles
-            
+
         self.obstacles = CyberRecordReader.read_channel(
-        source_path=self.configuration.apollo_scenario_path,
-        channel=CyberRecordChannel.PERCEPTION_OBSTACLES)
+            source_path=self.configuration.apollo_scenario_path,
+            channel=CyberRecordChannel.PERCEPTION_OBSTACLES)
 
         return self.obstacles
+
+    def input_traffic_lights_behavior(self) -> List[str]:
+        # if self.obstacles:
+        #     return self.obstacles
+
+        self.traffic_lights = CyberRecordReader.read_channel(
+            source_path=self.configuration.apollo_scenario_path,
+            channel=CyberRecordChannel.TRAFFIC_LIGHT)
+
+        print(type(self.traffic_lights))
+        # return self.obstacles
