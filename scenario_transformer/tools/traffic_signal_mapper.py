@@ -14,10 +14,13 @@ class TrafficSignalMapper:
                  vector_map_parser: VectorMapParser):
         self.apollo_map_parser = apollo_map_parser
         self.vector_map_parser = vector_map_parser
-        self.traffic_light_id_map = self.map_traffic_light_id()
+        self.traffic_light_id_map = self.map_traffic_light_id_using_coordinate(
+        )
 
-    def map_traffic_light_id(self) -> Dict[str, TrafficLight]:
-
+    def map_traffic_light_id_using_coordinate(self) -> Dict[str, TrafficLight]:
+        """
+        - Map Apollo HD map signals and Autoware Vector map traffic lights.
+        """
         traffic_light_mapping = {}
         for signal_id in self.apollo_map_parser.get_signals():
             signal = self.apollo_map_parser.get_signal_by_id(signal_id)
@@ -28,6 +31,11 @@ class TrafficSignalMapper:
                     map=self.vector_map_parser.lanelet_map,
                     signal=signal,
                     projector=self.vector_map_parser.projector)
-                traffic_light_mapping[signal_id] = nearest_traffic_light
+                if nearest_traffic_light:
+                    traffic_light_mapping[signal_id] = nearest_traffic_light
+                else:
+                    print(
+                        f"Warning: signal_id: {signal_id} cannot be mapped to a traffic light"
+                    )
 
         return traffic_light_mapping
