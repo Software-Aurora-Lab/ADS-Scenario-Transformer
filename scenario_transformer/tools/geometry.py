@@ -1,6 +1,5 @@
-from typing import Optional, List, Union
+from typing import Optional, Union
 import math
-import lanelet2
 from lanelet2.projection import MGRSProjector
 from lanelet2.core import Lanelet, LaneletMap, GPSPoint, BasicPoint2d, BasicPoint3d, getId, Point3d, TrafficLight
 from lanelet2.geometry import distanceToCenterline2d, distance, findWithin3d, inside, length2d, findNearest

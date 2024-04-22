@@ -1,5 +1,4 @@
 import math
-from collections import defaultdict
 from typing import List, Set, Tuple
 import networkx as nx
 from shapely.geometry import LineString, Point

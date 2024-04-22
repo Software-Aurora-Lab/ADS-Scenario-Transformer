@@ -1,6 +1,6 @@
 from typing import List, Dict, Type, TypeVar
 import lanelet2
-from lanelet2.core import Lanelet, LaneletMap, TrafficSign, TrafficLight
+from lanelet2.core import Lanelet, LaneletMap, TrafficLight
 from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
 

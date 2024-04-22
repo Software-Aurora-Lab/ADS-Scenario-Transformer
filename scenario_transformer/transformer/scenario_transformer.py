@@ -1,6 +1,4 @@
-from typing import List, Type, Dict, Optional, Tuple
-from lanelet2.core import LaneletMap
-from lanelet2.projection import MGRSProjector
+from typing import List, Optional, Tuple
 from modules.perception.proto.traffic_light_detection_pb2 import TrafficLightDetection
 from modules.routing.proto.routing_pb2 import RoutingRequest
 from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacles

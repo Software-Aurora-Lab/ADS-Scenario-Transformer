@@ -1,7 +1,4 @@
-from typing import List
-
 from openscenario_msgs import Rule
-
 from openscenario_msgs.common_pb2 import ByValueCondition, SimulationTimeCondition, StoryboardElementStateCondition, TimeOfDayCondition, VariableCondition, UserDefinedValueCondition
 from openscenario_msgs.parameter_pb2 import ParameterCondition, ParameterDeclaration
 from openscenario_msgs.traffic_signal_pb2 import TrafficSignalCondition, TrafficSignalControllerCondition

@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 from enum import Enum
 from openscenario_msgs import TrafficSignalController, Phase, TrafficSignalState
 from scenario_transformer.builder import Builder

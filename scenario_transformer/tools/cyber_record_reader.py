@@ -1,7 +1,4 @@
 from enum import Enum
-import base64
-import math
-from protobuf_to_dict import protobuf_to_dict
 from cyber_record.record import Record
 
 

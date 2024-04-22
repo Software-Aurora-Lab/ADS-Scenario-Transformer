@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import TypeVar, Dict
+from typing import TypeVar
 
 Product = TypeVar('Product')
+
 
 class Builder(ABC):
     """

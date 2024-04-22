@@ -101,7 +101,7 @@ class ObstaclesTransformer(Transformer):
                 start_condition=simulation_start_condition,
                 entity_names=[target_object.name])
             story_builder = StoryBuilder(
-                name=f"Story for {target_object.name}")
+                name=f"{target_object.name} Story")
             story_builder.make_acts(acts=[act])
             stories.append(story_builder.get_result())
 

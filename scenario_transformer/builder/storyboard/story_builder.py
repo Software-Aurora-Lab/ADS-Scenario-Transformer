@@ -65,10 +65,8 @@ class StoryBuilder(Builder):
         maneuver_group = maneuver_group_builder.get_result()
 
         strat_trigger = StartTriggerBuilder()
-
         start_condtion = ConditionBuilder.simulation_time_condition(
             rule=Rule.GREATER_THAN, value_in_sec=0)
-
         strat_trigger.make_condition_group(conditions=[start_condtion])
 
         act_builder = ActBuilder(name="End Condition")

@@ -1,9 +1,9 @@
-from typing import Dict, Optional
+from typing import Optional
 from dataclasses import dataclass
 from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
 from modules.routing.proto.routing_pb2 import RoutingRequest
-from openscenario_msgs import Route, Private, ScenarioObject
+from openscenario_msgs import Private, ScenarioObject
 from scenario_transformer.transformer import Transformer
 from scenario_transformer.transformer.lane_waypoint_transformer import LaneWaypointTransformer, LaneWaypointTransformerConfiguration
 from scenario_transformer.builder.private_builder import PrivateBuilder

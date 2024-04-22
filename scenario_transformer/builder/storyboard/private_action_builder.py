@@ -1,5 +1,5 @@
 from typing import Optional, List
-from openscenario_msgs import PrivateAction, SpeedAction, LongitudinalAction, SpeedActionDynamics, SpeedTargetValueType, SpeedActionTarget, AbsoluteTargetSpeed, RelativeTargetSpeed, LateralAction, LaneChangeAction, LaneChangeActionDynamics, LaneChangeTarget, AbsoluteTargetLane, RelativeTargetLane, AssignControllerAction, ControllerAction, CatalogReference, Controller, TeleportAction, Position, LanePosition, WorldPosition, RoutingAction, Waypoint, RouteStrategy
+from openscenario_msgs import PrivateAction, SpeedAction, LongitudinalAction, SpeedActionDynamics, SpeedTargetValueType, SpeedActionTarget, AbsoluteTargetSpeed, RelativeTargetSpeed, LateralAction, LaneChangeAction, LaneChangeActionDynamics, LaneChangeTarget, AbsoluteTargetLane, RelativeTargetLane, AssignControllerAction, ControllerAction, CatalogReference, Controller, TeleportAction, Position, LanePosition, WorldPosition, Waypoint, RouteStrategy
 from openscenario_msgs.transition_dynamics_pb2 import LaneChangeActionDynamics
 from scenario_transformer.builder.builder import Builder
 from scenario_transformer.builder.storyboard.routing_action_builder import RoutingActionBuilder
@@ -97,22 +97,29 @@ class PrivateActionBuilder(Builder):
         self.product = PrivateAction(teleportAction=TeleportAction(
             position=position))
 
-    def make_routing_action(self, positions: List[Position], name: str, closed: bool=False):
+    def make_routing_action(self,
+                            positions: List[Position],
+                            name: str,
+                            closed: bool = False):
         assert len(positions) > 0
-        
+
         routing_action_builder = RoutingActionBuilder()
         if len(positions) > 1:
-            waypoints = [Waypoint(routeStrategy=RouteStrategy.ROUTESTRATEGY_SHORTEST,
-                position=position) for position in positions]
-            routing_action_builder.make_assign_route_action(closed=False,
-                                                            name=name,
-                                                            parameter_declarations=[],
-                                                            waypoints=waypoints)
+            waypoints = [
+                Waypoint(routeStrategy=RouteStrategy.ROUTESTRATEGY_SHORTEST,
+                         position=position) for position in positions
+            ]
+            routing_action_builder.make_assign_route_action(
+                closed=False,
+                name=name,
+                parameter_declarations=[],
+                waypoints=waypoints)
         else:
-            routing_action_builder.make_acquire_position_action(position=positions[0])
+            routing_action_builder.make_acquire_position_action(
+                position=positions[0])
 
-        self.product = PrivateAction(routingAction=routing_action_builder.get_result())
-
+        self.product = PrivateAction(
+            routingAction=routing_action_builder.get_result())
 
     def get_result(self) -> PrivateAction:
         return self.product

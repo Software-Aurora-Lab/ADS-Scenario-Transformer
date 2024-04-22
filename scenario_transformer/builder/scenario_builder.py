@@ -3,7 +3,6 @@ from openscenario_msgs import Scenario, ScenarioDefinition, ScenarioModifiers, F
 from scenario_transformer.builder import Builder
 from scenario_transformer.builder.file_header_builder import FileHeaderBuilder
 from scenario_transformer.builder.scenario_definition_builder import ScenarioDefinitionBuilder
-from scenario_transformer.builder.entities_builder import EntityMeta
 
 
 class ScenarioConfiguration:
@@ -55,7 +54,8 @@ class ScenarioBuilder(Builder):
         scenario_definition_builder = ScenarioDefinitionBuilder(
             parameter_declarations=parameter_declarataions)
 
-        scenario_definition_builder.make_entities(entities=self.configuration.entities)
+        scenario_definition_builder.make_entities(
+            entities=self.configuration.entities)
         scenario_definition_builder.make_road_network(
             lanelet_map_path=self.configuration.lanelet_map_path,
             pcd_map_path=self.configuration.pcd_map_path,
