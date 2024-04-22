@@ -1,6 +1,7 @@
 from typing import List, Type, Dict, Optional, Tuple
 from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
+from modules.perception.proto.traffic_light_detection_pb2 import TrafficLightDetection
 from modules.routing.proto.routing_pb2 import RoutingRequest
 from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacles
 from openscenario_msgs import Private, ScenarioObject, Scenario, Entities, Story
@@ -17,6 +18,7 @@ from scenario_transformer.builder.storyboard.init_builder import InitBuilder
 from scenario_transformer.builder.storyboard.storyboard_builder import StoryboardBuilder
 from scenario_transformer.builder.storyboard.story_builder import StoryBuilder
 from scenario_transformer.builder.storyboard.trigger_builder import StopTriggerBuilder
+from scenario_transformer.transformer.traffic_signal_transformer import TrafficSignalTransformer, TrafficSignalTransformerConfiguration, TrafficSignalTransformerResult
 
 
 class ScenarioTransformerConfiguration:
@@ -24,24 +26,24 @@ class ScenarioTransformerConfiguration:
     apollo_hd_map_path: str
     vector_map_path: str
     pcd_map_path: str
+    enable_traffic_signal: bool
 
     def __init__(self,
                  apollo_scenario_path: str,
                  apollo_hd_map_path: str,
                  vector_map_path: str,
+                 enable_traffic_signal: bool = True,
                  road_network_lanelet_map_path: Optional[str] = None,
                  pcd_map_path: str = "point_cloud.pcd"):
         self.apollo_scenario_path = apollo_scenario_path
         self.apollo_hd_map_path = apollo_hd_map_path
         self.vector_map_path = vector_map_path
+        self.enable_traffic_signal = enable_traffic_signal
         if road_network_lanelet_map_path:
             self.road_network_lanelet_map_path = road_network_lanelet_map_path
         else:
             self.road_network_lanelet_map_path = vector_map_path
         self.pcd_map_path = pcd_map_path
-
-
-# traffic_signal_all_green: bool
 
 
 class ScenarioTransformer:
@@ -51,6 +53,7 @@ class ScenarioTransformer:
     entities_with_id: List[Tuple[EntityMeta, ScenarioObject]]
     routing_request: Optional[RoutingRequest]
     obstacles: Optional[PerceptionObstacles]
+    traffic_light_detections: List[TrafficLightDetection]
 
     def __init__(self, configuration: ScenarioTransformerConfiguration):
         self.configuration = configuration
@@ -61,6 +64,7 @@ class ScenarioTransformer:
             vector_map_path=configuration.vector_map_path)
         self.routing_request = None
         self.obstacles = None
+        self.traffic_light_detections = []
         self.setup_entities()
 
     def setup_entities(self):
@@ -116,10 +120,11 @@ class ScenarioTransformer:
                                         [default_end_story])
         storyboard = storyboard_builder.get_result()
 
+        traffic_signal_result = self.transform_traffic_environment()
         scenario_config = ScenarioConfiguration(
             entities=self.entities,
             lanelet_map_path=self.configuration.road_network_lanelet_map_path,
-            traffic_signals=[])
+            traffic_signals=traffic_signal_result.road_network_traffic)
         scenario_builder = ScenarioBuilder(
             scenario_configuration=scenario_config)
         scenario_builder.make_scenario_definition(storyboard=storyboard,
@@ -153,6 +158,15 @@ class ScenarioTransformer:
 
         return routing_request_transformer.transform(routing_request)
 
+    def transform_traffic_environment(self) -> TrafficSignalTransformerResult:
+        traffic_signal_transformer = TrafficSignalTransformer(
+            configuration=TrafficSignalTransformerConfiguration(
+                vector_map_parser=self.vector_map_parser,
+                apollo_map_parser=self.apollo_map_parser))
+
+        traffic_light_detections = self.input_traffic_light_detections()
+        return traffic_signal_transformer.transform(traffic_light_detections)
+
     def input_routing_request(self) -> RoutingRequest:
         """
         Read RoutingRequest channel first and then read RoutingRequest in RoutingResponse if needed
@@ -185,13 +199,12 @@ class ScenarioTransformer:
 
         return self.obstacles
 
-    def input_traffic_lights_behavior(self) -> List[str]:
-        # if self.obstacles:
-        #     return self.obstacles
+    def input_traffic_light_detections(self) -> List[TrafficLightDetection]:
+        if self.traffic_light_detections:
+            return self.traffic_light_detections
 
-        self.traffic_lights = CyberRecordReader.read_channel(
+        self.traffic_light_detections = CyberRecordReader.read_channel(
             source_path=self.configuration.apollo_scenario_path,
             channel=CyberRecordChannel.TRAFFIC_LIGHT)
 
-        print(type(self.traffic_lights))
-        # return self.obstacles
+        return self.traffic_light_detections

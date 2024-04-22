@@ -2,9 +2,10 @@ import pytest
 from datetime import datetime
 from typing import List
 from openscenario_msgs import CatalogDefinition, FileHeader, Entities, ParameterDeclarations, ParameterDeclaration, ScenarioDefinition, Private, ScenarioObject, TeleportAction, RoutingAction
-from scenario_transformer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, TrafficSignalControllerBuilder, TrafficSignalStateBuilder, ScenarioDefinitionBuilder
+from scenario_transformer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, ScenarioDefinitionBuilder
 from scenario_transformer.builder.private_builder import PrivateBuilder
 from scenario_transformer.builder.entities_builder import EntityType, EntityMeta
+from scenario_transformer.builder.traffic_signal_controller_builder import TrafficSignalControllerBuilder, PhaseBuilder, TrafficSignalStateBuilder, TrafficLightbulbState
 
 
 @pytest.fixture
@@ -73,18 +74,23 @@ def test_parameter_declarations_builder():
 
 
 def test_road_network_builder():
+
+    state_builder = TrafficSignalStateBuilder()
+    state_builder.make_state(id='12515',
+                             state=TrafficLightbulbState.RED_ON_CIRCLE)
+
+    phase_builder = PhaseBuilder(name="RED")
+    phase_builder.add_state(state=state_builder.get_result())
+
     controller_builder = TrafficSignalControllerBuilder(name="StraghtSignal")
-    state_builder = TrafficSignalStateBuilder(
-        id_states=[('12515',
-                    "red;solidOn;circle"), ('12504', "red;solidOn;circle")])
-    controller_builder.add_phase(name="RED", states=state_builder.get_result())
+    controller_builder.add_phase(phase_builder.get_result())
 
-    state_builder = TrafficSignalStateBuilder(
-        id_states=[('12515',
-                    "green;solidOn;circle"), ('12504',
-                                              "green;solidOn;circle")])
-
-    controller_builder.add_phase(name="RED", states=state_builder.get_result())
+    state_builder = TrafficSignalStateBuilder()
+    state_builder.make_state(id='12515',
+                             state=TrafficLightbulbState.GREEN_ON_CIRCLE)
+    phase_builder = PhaseBuilder(name="GREEN")
+    phase_builder.add_state(state=state_builder.get_result())
+    controller_builder.add_phase(phase_builder.get_result())
 
     builder = RoadNetworkBuilder(
         lanelet_map_path="/home/users/lanelet_map.osm",
@@ -113,9 +119,8 @@ def test_scenario_definition_builder(storyboard, entity_meta):
                              value='0')
     ]
 
-    entities_builder = EntitiesBuilder(
-        entities=entity_meta)
-    
+    entities_builder = EntitiesBuilder(entities=entity_meta)
+
     builder = ScenarioDefinitionBuilder(
         parameter_declarations=parameter_declarations)
 

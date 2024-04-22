@@ -34,21 +34,16 @@ def test_scenario_transformer(borregas_doople_scenario9_path,
     # with open("doople_9.yaml", 'w') as file:
     #     file.write(scenario_yaml)
 
-    # assert True == False
 
-def test_gen_all_samples(
-    borregas_vector_map_path,
-    borregas_apollo_map_path,
-    borregas_scenorita_scenario9_path,
-    borregas_scenorita_scenario75_path,
-    borregas_doople_scenario9_path,
-    borregas_doople_scenario35_path):
+def test_gen_all_samples(borregas_vector_map_path, borregas_apollo_map_path,
+                         borregas_scenorita_scenario9_path,
+                         borregas_scenorita_scenario75_path,
+                         borregas_doople_scenario9_path,
+                         borregas_doople_scenario35_path):
 
     scenario_paths = [
-        borregas_scenorita_scenario9_path,
-        borregas_scenorita_scenario75_path,
-        borregas_doople_scenario9_path,
-        borregas_doople_scenario35_path
+        borregas_scenorita_scenario9_path, borregas_scenorita_scenario75_path,
+        borregas_doople_scenario9_path, borregas_doople_scenario35_path
     ]
 
     for scenario_path in scenario_paths:
@@ -64,9 +59,8 @@ def test_gen_all_samples(
         scenario_yaml = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
             proto_pyobject=scenario, wrap_result_with_typename=False)
 
-        filename = Path(scenario_path).parent.stem + "-" + Path(scenario_path).stem
-        
+        # filename = Path(scenario_path).parent.stem + "-" + Path(
+        #     scenario_path).stem
+
         # with open(f"{filename}.yaml", 'w') as file:
         #     file.write(scenario_yaml)
-
-    # assert True == False
