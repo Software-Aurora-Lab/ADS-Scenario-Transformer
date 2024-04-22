@@ -32,7 +32,7 @@ class ScenarioTransformerConfiguration:
                  apollo_scenario_path: str,
                  apollo_hd_map_path: str,
                  vector_map_path: str,
-                 enable_traffic_signal: bool = True,
+                 enable_traffic_signal: bool = False,
                  road_network_lanelet_map_path: Optional[str] = None,
                  pcd_map_path: str = "point_cloud.pcd"):
         self.apollo_scenario_path = apollo_scenario_path
@@ -120,11 +120,15 @@ class ScenarioTransformer:
                                         [default_end_story])
         storyboard = storyboard_builder.get_result()
 
-        traffic_signal_result = self.transform_traffic_environment()
+        traffic_signals = []
+        if self.configuration.enable_traffic_signal:
+            traffic_signal_result = self.transform_traffic_environment()
+            traffic_signals = traffic_signal_result.road_network_traffic
+
         scenario_config = ScenarioConfiguration(
             entities=self.entities,
             lanelet_map_path=self.configuration.road_network_lanelet_map_path,
-            traffic_signals=traffic_signal_result.road_network_traffic)
+            traffic_signals=traffic_signals)
         scenario_builder = ScenarioBuilder(
             scenario_configuration=scenario_config)
         scenario_builder.make_scenario_definition(storyboard=storyboard,
