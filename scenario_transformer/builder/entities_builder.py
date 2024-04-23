@@ -87,7 +87,7 @@ class EntitiesBuilder(Builder):
                 self.not_ego_label += 1
                 scenario_objects.append(entity)
 
-        return [ego] + scenario_objects
+        return [ego] + scenario_objects if ego else scenario_objects
 
     def add_default_entity(self,
                            entity_type: EntityType,

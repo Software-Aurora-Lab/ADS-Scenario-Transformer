@@ -10,7 +10,7 @@ from scenario_transformer.tools.cyber_record_reader import CyberRecordReader, Cy
 from scenario_transformer.tools.apollo_map_parser import ApolloMapParser
 from scenario_transformer.tools.vector_map_parser import VectorMapParser
 from scenario_transformer.transformer.routing_request_transformer import RoutingRequestTransformerConfiguration
-from scenario_transformer.transformer.obstacles_transformer import ObstaclesTransformer, ObstaclesTransformerConfiguration
+from scenario_transformer.transformer.obstacles_transformer import ObstaclesTransformer, ObstaclesTransformerConfiguration, ObstaclesTransformerResult
 from scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
 from scenario_transformer.builder.storyboard.init_builder import InitBuilder
 from scenario_transformer.builder.storyboard.storyboard_builder import StoryboardBuilder
@@ -30,7 +30,7 @@ class ScenarioTransformerConfiguration:
                  apollo_scenario_path: str,
                  apollo_hd_map_path: str,
                  vector_map_path: str,
-                 enable_traffic_signal: bool = False,
+                 enable_traffic_signal: bool = True,
                  road_network_lanelet_map_path: Optional[str] = None,
                  pcd_map_path: str = "point_cloud.pcd"):
         self.apollo_scenario_path = apollo_scenario_path
@@ -48,7 +48,6 @@ class ScenarioTransformer:
     apollo_map_parser: ApolloMapParser
     vector_map_parser: VectorMapParser
     entities: Entities
-    entities_with_id: List[Tuple[EntityMeta, ScenarioObject]]
     routing_request: Optional[RoutingRequest]
     obstacles: Optional[PerceptionObstacles]
     traffic_light_detections: List[TrafficLightDetection]
@@ -63,36 +62,14 @@ class ScenarioTransformer:
         self.routing_request = None
         self.obstacles = None
         self.traffic_light_detections = []
-        self.setup_entities()
-
-    def setup_entities(self):
-        entity_meta = [EntityMeta(entity_type=EntityType.EGO)]
-        obstacles = self.input_perception_obstacles()
-        uniq_obstacles = set([(ob.id, ob.type) for obstacle in obstacles
-                              for ob in obstacle.perception_obstacle])
-
-        for id, type in uniq_obstacles:
-            if type == 3:
-                entity_meta.append(
-                    EntityMeta(entity_type=EntityType.PEDESTRIAN,
-                               embedding_id=id))
-            elif type == 5:
-                entity_meta.append(
-                    EntityMeta(entity_type=EntityType.NPC, embedding_id=id))
-
-        entities_builder = EntitiesBuilder(entities=entity_meta)
-        self.entities = entities_builder.get_result()
-
-        sorted_entity_meta = sorted(entity_meta,
-                                    key=lambda x: x.entity_type.value)
-
-        assert len(sorted_entity_meta) == len(self.entities.scenarioObjects)
-        self.entities_with_id = [
-            (entity, scenario_object) for entity, scenario_object in zip(
-                sorted_entity_meta, self.entities.scenarioObjects)
-        ]
 
     def transform(self) -> Scenario:
+        transformed_obstacle_result = self.transform_obstacle_movements()
+        obstacles = [
+            meta for meta, obj in transformed_obstacle_result.entities_with_id
+        ]
+        self.setup_entities(obstacles=obstacles)
+
         init_builder = InitBuilder()
         ego_routing_private = self.transform_ego_routing(
             ego_scenario_object=self.entities.scenarioObjects[0])
@@ -112,10 +89,8 @@ class ScenarioTransformer:
             entities=self.entities,
             routing_action=ego_routing_private.privateActions[1].routingAction)
 
-        obstacle_stories = self.transform_obstacle_movements()
-
-        storyboard_builder.make_stories(stories=obstacle_stories +
-                                        [default_end_story])
+        storyboard_builder.make_stories(
+            stories=transformed_obstacle_result.stories + [default_end_story])
         storyboard = storyboard_builder.get_result()
 
         traffic_signals = []
@@ -134,17 +109,21 @@ class ScenarioTransformer:
 
         return scenario_builder.get_result()
 
-    def transform_obstacle_movements(self) -> List[Story]:
+    def setup_entities(self, obstacles: List[EntityMeta]):
+        entity_meta = [EntityMeta(entity_type=EntityType.EGO)] + obstacles
+        entities_builder = EntitiesBuilder(entities=entity_meta)
+        self.entities = entities_builder.get_result()
+
+    def transform_obstacle_movements(self) -> ObstaclesTransformerResult:
         obstacles = self.input_perception_obstacles()
 
         sceanrio_start_timestamp = obstacles[0].header.timestamp_sec
         obstacles_transformer = ObstaclesTransformer(
             configuration=ObstaclesTransformerConfiguration(
-                scenario_objects=self.entities_with_id,
                 sceanrio_start_timestamp=sceanrio_start_timestamp,
                 lanelet_map=self.vector_map_parser.lanelet_map,
                 projector=self.vector_map_parser.projector))
-        obstacles = self.input_perception_obstacles()
+
         return obstacles_transformer.transform(source=obstacles)
 
     def transform_ego_routing(self,

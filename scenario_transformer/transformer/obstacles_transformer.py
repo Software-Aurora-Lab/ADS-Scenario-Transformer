@@ -18,37 +18,45 @@ from scenario_transformer.builder.storyboard.private_action_builder import Priva
 from scenario_transformer.builder.storyboard.global_action_builder import GlobalActionBuilder
 from scenario_transformer.builder.storyboard.condition_builder import ConditionBuilder
 from scenario_transformer.builder.storyboard.trigger_builder import StartTriggerBuilder
-from scenario_transformer.builder.entities_builder import EntityMeta
+from scenario_transformer.builder.entities_builder import EntitiesBuilder, EntityMeta, EntityType
 
 
 @dataclass
 class ObstaclesTransformerConfiguration:
-    scenario_objects: List[Tuple[EntityMeta, ScenarioObject]]
     sceanrio_start_timestamp: float
     lanelet_map: LaneletMap
     projector: MGRSProjector
 
 
-class ObstaclesTransformer(Transformer):
+@dataclass
+class ObstaclesTransformerResult:
+    entities_with_id: List[Tuple[EntityMeta, ScenarioObject]]
+    stories: List[Story]
 
+
+class ObstaclesTransformer(Transformer):
     configuration: ObstaclesTransformerConfiguration
 
     Source = List[PerceptionObstacles]
-    Target = List[Story]
+    Target = ObstaclesTransformerResult
 
     def __init__(self, configuration: ObstaclesTransformerConfiguration):
         self.configuration = configuration
 
-    def transform(self, source: List[PerceptionObstacles]) -> List[Story]:
+    def transform(
+            self,
+            source: List[PerceptionObstacles]) -> ObstaclesTransformerResult:
 
         if source[0].error_code:
             return []
 
+        entities_with_id = self.get_obstacles(source)
         grouped_obstacles = self.group_obstacles(obstacles=source)
 
         stories = []
         for id, obstacles in grouped_obstacles.items():
-            target_object = self.find_scenario_object(id=id)
+            target_object = self.find_scenario_object(
+                id=id, entities_with_id=entities_with_id)
 
             if not target_object:
                 continue
@@ -100,14 +108,40 @@ class ObstaclesTransformer(Transformer):
                 events=events,
                 start_condition=simulation_start_condition,
                 entity_names=[target_object.name])
-            story_builder = StoryBuilder(
-                name=f"{target_object.name} Story")
+            story_builder = StoryBuilder(name=f"{target_object.name} Story")
             story_builder.make_acts(acts=[act])
             stories.append(story_builder.get_result())
 
-        return stories
+        return ObstaclesTransformerResult(entities_with_id=entities_with_id,
+                                          stories=stories)
 
     # helper functions
+
+    def get_obstacles(
+        self, obstacles: List[PerceptionObstacles]
+    ) -> List[Tuple[EntityMeta, ScenarioObject]]:
+        entity_meta = []
+        uniq_obstacles = set([(ob.id, ob.type) for obstacle in obstacles
+                              for ob in obstacle.perception_obstacle])
+
+        for id, type in uniq_obstacles:
+            if type == 3:
+                entity_meta.append(
+                    EntityMeta(entity_type=EntityType.PEDESTRIAN,
+                               embedding_id=id))
+            elif type == 5:
+                entity_meta.append(
+                    EntityMeta(entity_type=EntityType.NPC, embedding_id=id))
+
+        entities_builder = EntitiesBuilder(entities=entity_meta)
+        entities = entities_builder.get_result()
+
+        sorted_entity_meta = sorted(entity_meta,
+                                    key=lambda x: x.entity_type.value)
+
+        assert len(sorted_entity_meta) == len(entities.scenarioObjects)
+        return [(entity, scenario_object) for entity, scenario_object in zip(
+            sorted_entity_meta, entities.scenarioObjects)]
 
     def create_locating_obstacle_event(self, start_condition: Condition,
                                        position: Position,
@@ -242,6 +276,8 @@ class ObstaclesTransformer(Transformer):
     def obstacle_direction_changed_indices(
             self, obstacles: List[PerceptionObstacle]) -> List[int]:
 
+        [print(obstacle.theta) for obstacle in obstacles]
+
         is_positive = obstacles[0].theta > 0
         routing_indices = []
         for idx, obstacle in enumerate(obstacles):
@@ -264,9 +300,12 @@ class ObstaclesTransformer(Transformer):
             for obstacle in obstacles
         ])
 
-    def find_scenario_object(self, id: str) -> Optional[ScenarioObject]:
+    def find_scenario_object(
+        self, id: str, entities_with_id: List[Tuple[EntityMeta,
+                                                    ScenarioObject]]
+    ) -> Optional[ScenarioObject]:
 
-        for (meta, scenario_object) in self.configuration.scenario_objects:
+        for (meta, scenario_object) in entities_with_id:
             if meta.embedding_id == id:
                 return scenario_object
         return None
