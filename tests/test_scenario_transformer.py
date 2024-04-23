@@ -59,8 +59,9 @@ def test_gen_all_samples(borregas_vector_map_path, borregas_apollo_map_path,
         scenario_yaml = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
             proto_pyobject=scenario, wrap_result_with_typename=False)
 
-        # filename = Path(scenario_path).parent.stem + "-" + Path(
-        #     scenario_path).stem
+    #     filename = Path(scenario_path).parent.stem + "-" + Path(
+    #         scenario_path).stem
 
-        # with open(f"{filename}.yaml", 'w') as file:
-        #     file.write(scenario_yaml)
+    #     with open(f"{filename}.yaml", 'w') as file:
+    #         file.write(scenario_yaml)
+    # assert True == False

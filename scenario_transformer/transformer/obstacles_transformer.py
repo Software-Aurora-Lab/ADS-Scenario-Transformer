@@ -26,6 +26,7 @@ class ObstaclesTransformerConfiguration:
     sceanrio_start_timestamp: float
     lanelet_map: LaneletMap
     projector: MGRSProjector
+    direction_change_detection_threshold: float = 60
 
 
 @dataclass
@@ -273,20 +274,25 @@ class ObstaclesTransformer(Transformer):
         ] + [end_moving_idx]
         return result
 
+    def normalize_radians(self, angle):
+        return angle % (2 * math.pi)
+
     def obstacle_direction_changed_indices(
             self, obstacles: List[PerceptionObstacle]) -> List[int]:
+        assert 0 <= self.configuration.direction_change_detection_threshold <= 360
 
-        [print(obstacle.theta) for obstacle in obstacles]
-
-        is_positive = obstacles[0].theta > 0
         routing_indices = []
-        for idx, obstacle in enumerate(obstacles):
-            if is_positive and obstacle.theta < 0:
+        for idx, (prev_obstacle, next_obstacle) in enumerate(
+                zip(obstacles[:-1], obstacles[1:])):
+            prev_degree = math.degrees(
+                self.normalize_radians(prev_obstacle.theta))
+            next_degree = math.degrees(
+                self.normalize_radians(next_obstacle.theta))
+
+            if abs(prev_degree - next_degree
+                   ) > self.configuration.direction_change_detection_threshold:
                 routing_indices.append(idx)
-                is_positive = not is_positive
-            elif not is_positive and obstacle.theta > 0:
-                routing_indices.append(idx)
-                is_positive = not is_positive
+
         return routing_indices
 
     def calculate_velocity_meter_per_sec(self, velocity) -> float:

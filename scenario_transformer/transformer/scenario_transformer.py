@@ -24,6 +24,7 @@ class ScenarioTransformerConfiguration:
     apollo_hd_map_path: str
     vector_map_path: str
     pcd_map_path: str
+    obstacle_direction_change_detection_threshold: float  # 0 ~ 360 degree
     enable_traffic_signal: bool
 
     def __init__(self,
@@ -31,11 +32,13 @@ class ScenarioTransformerConfiguration:
                  apollo_hd_map_path: str,
                  vector_map_path: str,
                  enable_traffic_signal: bool = True,
+                 obstacle_direction_change_detection_threshold=60,
                  road_network_lanelet_map_path: Optional[str] = None,
                  pcd_map_path: str = "point_cloud.pcd"):
         self.apollo_scenario_path = apollo_scenario_path
         self.apollo_hd_map_path = apollo_hd_map_path
         self.vector_map_path = vector_map_path
+        self.obstacle_direction_change_detection_threshold = obstacle_direction_change_detection_threshold
         self.enable_traffic_signal = enable_traffic_signal
         if road_network_lanelet_map_path:
             self.road_network_lanelet_map_path = road_network_lanelet_map_path
@@ -122,7 +125,9 @@ class ScenarioTransformer:
             configuration=ObstaclesTransformerConfiguration(
                 sceanrio_start_timestamp=sceanrio_start_timestamp,
                 lanelet_map=self.vector_map_parser.lanelet_map,
-                projector=self.vector_map_parser.projector))
+                projector=self.vector_map_parser.projector,
+                direction_change_detection_threshold=self.configuration.
+                obstacle_direction_change_detection_threshold))
 
         return obstacles_transformer.transform(source=obstacles)
 
