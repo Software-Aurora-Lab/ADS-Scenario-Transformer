@@ -39,9 +39,9 @@ class ScenarioDefinitionBuilder(Builder):
 
     def make_road_network(self,
                           lanelet_map_path: str,
-                          pcd_map_path: str = "point_cloud.pcd",
+                          road_network_pcd_map_path: str = "point_cloud.pcd",
                           trafficSignals: List[TrafficSignalController] = []):
-        builder = RoadNetworkBuilder(lanelet_map_path, pcd_map_path,
+        builder = RoadNetworkBuilder(lanelet_map_path, road_network_pcd_map_path,
                                      trafficSignals)
         self.road_network = builder.get_result()
 

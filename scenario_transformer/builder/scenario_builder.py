@@ -8,17 +8,17 @@ from scenario_transformer.builder.scenario_definition_builder import ScenarioDef
 class ScenarioConfiguration:
     entities: Entities
     lanelet_map_path: str
-    pcd_map_path: str
+    road_network_pcd_map_path: str
     traffic_signals: List[TrafficSignalController]
 
     def __init__(self,
                  entities: Entities,
                  lanelet_map_path: str,
-                 pcd_map_path: str = "point_cloud.pcd",
+                 road_network_pcd_map_path: str = "point_cloud.pcd",
                  traffic_signals: List[TrafficSignalController] = []):
         self.entities = entities
         self.lanelet_map_path = lanelet_map_path
-        self.pcd_map_path = pcd_map_path
+        self.road_network_pcd_map_path = road_network_pcd_map_path
         self.traffic_signals = traffic_signals
 
 
@@ -58,7 +58,7 @@ class ScenarioBuilder(Builder):
             entities=self.configuration.entities)
         scenario_definition_builder.make_road_network(
             lanelet_map_path=self.configuration.lanelet_map_path,
-            pcd_map_path=self.configuration.pcd_map_path,
+            road_network_pcd_map_path=self.configuration.road_network_pcd_map_path,
             trafficSignals=self.configuration.traffic_signals)
         scenario_definition_builder.make_storyboard(storyboard=storyboard)
 

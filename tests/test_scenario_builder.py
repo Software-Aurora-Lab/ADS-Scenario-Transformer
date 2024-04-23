@@ -46,7 +46,7 @@ def test_scenario_key_value(parameter_declarations):
         entities=entities,
         lanelet_map_path=
         "/home/cloudsky/autoware_map/autoware_scenario_data/maps/awf_cicd_virtual_G_dev/lanelet2_map.osm",
-        pcd_map_path=
+        road_network_pcd_map_path=
         "/home/cloudsky/autoware_map/autoware_scenario_data/maps/awf_cicd_virtual_G_dev/pointcloud_map.pcd",
         traffic_signals=[])
 

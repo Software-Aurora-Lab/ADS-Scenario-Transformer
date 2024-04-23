@@ -1,5 +1,6 @@
 import math
 from typing import List, Optional, Tuple
+from dataclasses import dataclass
 from modules.localization.proto.localization_pb2 import LocalizationEstimate
 from modules.perception.proto.traffic_light_detection_pb2 import TrafficLightDetection
 from modules.routing.proto.routing_pb2 import RoutingRequest
@@ -21,12 +22,13 @@ from scenario_transformer.builder.storyboard.story_builder import StoryBuilder
 from scenario_transformer.builder.storyboard.trigger_builder import StopTriggerBuilder
 from scenario_transformer.transformer.traffic_signal_transformer import TrafficSignalTransformer, TrafficSignalTransformerConfiguration, TrafficSignalTransformerResult
 
-
+@dataclass
 class ScenarioTransformerConfiguration:
     apollo_scenario_path: str
     apollo_hd_map_path: str
     vector_map_path: str
-    pcd_map_path: str
+    road_network_pcd_map_path: str
+    road_network_lanelet_map_path: str
     obstacle_direction_change_detection_threshold: float  # 0 ~ 360 degree
     enable_traffic_signal: bool
     use_last_position_as_destination: bool  # if True, the destination is the last position of the ego in LocalizationPose chanel, otherwise, the ego destination becomes the last position in routing request
@@ -39,7 +41,7 @@ class ScenarioTransformerConfiguration:
                  enable_traffic_signal: bool = True,
                  obstacle_direction_change_detection_threshold=60,
                  road_network_lanelet_map_path: Optional[str] = None,
-                 pcd_map_path: str = "point_cloud.pcd"):
+                 road_network_pcd_map_path: str = "point_cloud.pcd"):
         self.apollo_scenario_path = apollo_scenario_path
         self.apollo_hd_map_path = apollo_hd_map_path
         self.vector_map_path = vector_map_path
@@ -50,7 +52,7 @@ class ScenarioTransformerConfiguration:
             self.road_network_lanelet_map_path = road_network_lanelet_map_path
         else:
             self.road_network_lanelet_map_path = vector_map_path
-        self.pcd_map_path = pcd_map_path
+        self.road_network_pcd_map_path = road_network_pcd_map_path
 
 
 class ScenarioTransformer:

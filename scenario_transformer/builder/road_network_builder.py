@@ -14,8 +14,9 @@ class RoadNetworkBuilder(Builder):
 
         lanelet_map_file = LogicFile(filepath=lanelet_map_path)
         pcd_map_file = SceneGraphFile(filepath=pcd_map_path)
-        trafficSignals = TrafficSignals(trafficSignalControllers=trafficSignalControllers)
-        
+        trafficSignals = TrafficSignals(
+            trafficSignalControllers=trafficSignalControllers)
+
         self.product = RoadNetwork(logicFile=lanelet_map_file,
                                    sceneGraphFile=pcd_map_file,
                                    trafficSignals=trafficSignals)
