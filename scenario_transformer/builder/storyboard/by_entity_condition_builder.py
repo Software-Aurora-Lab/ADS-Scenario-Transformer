@@ -1,3 +1,4 @@
+from typing import Optional
 from openscenario_msgs import TriggeringEntities, Position, RelativeDistanceType, DirectionalDimension, CoordinateSystem, RoutingAlgorithm
 import openscenario_msgs.common_pb2 as common_pb2
 from openscenario_msgs.common_pb2 import ByEntityCondition, EntityCondition, EndOfRoadCondition, CollisionCondition, OffroadCondition, TimeHeadwayCondition, TimeToCollisionCondition, AccelerationCondition, StandStillCondition, SpeedCondition, RelativeSpeedCondition, TraveledDistanceCondition, ReachPositionCondition, DistanceCondition, RelativeDistanceCondition, RelativeClearanceCondition
@@ -63,12 +64,15 @@ class ByEntityConditionBuilder(Builder):
         self.entity_condition = EntityCondition(
             reachPositionCondition=condition)
 
-    def make_distance_condition(self, coordinateSystem: CoordinateSystem,
-                                freespace: bool,
-                                relativeDistanceType: RelativeDistanceType,
-                                routingAlgorithm: RoutingAlgorithm,
-                                value_in_meter: float, rule: Rule,
-                                position: Position):
+    def make_distance_condition(
+            self,
+            freespace: bool,
+            value_in_meter: float,
+            rule: Rule,
+            position: Position,
+            coordinateSystem: CoordinateSystem = None,
+            relativeDistanceType: RelativeDistanceType = None,
+            routingAlgorithm: RoutingAlgorithm = None):
         assert position.worldPosition is not None or position.lanePosition is not None
 
         condition = DistanceCondition(

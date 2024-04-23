@@ -1,5 +1,5 @@
 from typing import List
-from openscenario_msgs import Story, Act, ParameterDeclaration, Rule, Entities, RoutingAction
+from openscenario_msgs import Story, Act, ParameterDeclaration, Rule, Entities, Position
 from scenario_transformer.builder import Builder
 from scenario_transformer.builder.storyboard.act_builder import ActBuilder
 from scenario_transformer.builder.storyboard.maneuver_group_builder import ManeuverGroupBuilder
@@ -30,26 +30,22 @@ class StoryBuilder(Builder):
         return self.product
 
     @staticmethod
-    def default_end_story(entities: Entities,
-                          routing_action: RoutingAction) -> Story:
+    def default_end_story(entities: Entities, ego_end_position: Position,
+                          exit_failure_duration: float) -> Story:
         """
         Create a default ending condition story
-        - Exit_Failure condition: Simulation time exceeds 180 seconds
-        - Exit_Success condition - ego car reaches destination
+        - Exit_Failure condition: Simulation time exceeds exit_failure_duration seconds
+        - Exit_Success condition - distance between ego car and destination point is less than distance_threshold
         """
-        ego_end_position = None
-        if routing_action.HasField("assignRouteAction"):
-            ego_end_position = routing_action.assignRouteAction.route.waypoints[
-                -1].position
-        else:
-            ego_end_position = routing_action.acquirePositionAction.position
 
         exit_failure_event = EventBuilder.exit_failure_event(
-            rule=Rule.GREATER_THAN, value_in_sec=180)
+            rule=Rule.GREATER_THAN, value_in_sec=int(exit_failure_duration))
 
         ego_name = entities.scenarioObjects[0].name
         exit_success_event = EventBuilder.exit_success_event(
-            ego_name=ego_name, ego_end_position=ego_end_position)
+            ego_name=ego_name,
+            ego_end_position=ego_end_position,
+            distance_threshold=2.0)
 
         maneuver_builder = ManeuverBuilder()
         maneuver_builder.make_events(
@@ -59,7 +55,8 @@ class StoryBuilder(Builder):
         actors_builder.add_entity_ref(scenario_object_name=ego_name)
 
         maneuver_group_builder = ManeuverGroupBuilder()
-        maneuver_group_builder.make_maneuvers(maneuvers=[maneuver_builder.get_result()])
+        maneuver_group_builder.make_maneuvers(
+            maneuvers=[maneuver_builder.get_result()])
 
         maneuver_group_builder.make_actors(actors=actors_builder.get_result())
         maneuver_group = maneuver_group_builder.get_result()

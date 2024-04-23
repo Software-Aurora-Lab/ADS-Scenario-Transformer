@@ -1,5 +1,5 @@
 from typing import List
-from openscenario_msgs import Event, Action, Condition, Priority, GlobalAction, UserDefinedAction, PrivateAction, Rule, Position
+from openscenario_msgs import Event, Action, Condition, Priority, GlobalAction, UserDefinedAction, PrivateAction, Rule, Position, CoordinateSystem, RelativeDistanceType, RoutingAlgorithm
 from scenario_transformer.builder import Builder
 from scenario_transformer.builder.storyboard.action_builder import ActionBuilder
 from scenario_transformer.builder.storyboard.trigger_builder import StartTriggerBuilder
@@ -58,7 +58,7 @@ class EventBuilder(Builder):
     @staticmethod
     def exit_failure_event(rule: Rule, value_in_sec: float) -> Event:
         exit_failure_condtion = ConditionBuilder.simulation_time_condition(
-            rule=Rule.GREATER_THAN, value_in_sec=180)
+            rule=Rule.GREATER_THAN, value_in_sec=value_in_sec)
 
         event_builder = EventBuilder(start_conditions=[exit_failure_condtion])
 
@@ -69,13 +69,16 @@ class EventBuilder(Builder):
         return event_builder.get_result()
 
     @staticmethod
-    def exit_success_event(ego_name: str, ego_end_position: Position) -> Event:
+    def exit_success_event(ego_name: str, ego_end_position: Position,
+                           distance_threshold: float) -> Event:
 
         by_entity_condition_builder = ByEntityConditionBuilder(
             triggering_entity=ego_name)
-        by_entity_condition_builder.make_reach_position_condition(
-            position=ego_end_position, tolerance=1)
-
+        by_entity_condition_builder.make_distance_condition(
+            freespace=False,
+            value_in_meter=distance_threshold,
+            position=ego_end_position,
+            rule=Rule.LESS_THAN)
         condition_builder = ConditionBuilder()
         condition_builder.make_by_entity_condition(
             by_entity_condition=by_entity_condition_builder.get_result())

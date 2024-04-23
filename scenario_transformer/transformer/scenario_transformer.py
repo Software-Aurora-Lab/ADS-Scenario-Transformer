@@ -1,14 +1,17 @@
+import math
 from typing import List, Optional, Tuple
+from modules.localization.proto.localization_pb2 import LocalizationEstimate
 from modules.perception.proto.traffic_light_detection_pb2 import TrafficLightDetection
 from modules.routing.proto.routing_pb2 import RoutingRequest
 from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacles
-from openscenario_msgs import Private, ScenarioObject, Scenario, Entities, Story
+from openscenario_msgs import Private, ScenarioObject, Scenario, Entities, Story, RoutingAction
 from scenario_transformer.builder import EntitiesBuilder
 from scenario_transformer.builder.entities_builder import EntityType, EntityMeta
 from scenario_transformer.transformer import RoutingRequestTransformer
 from scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
 from scenario_transformer.tools.apollo_map_parser import ApolloMapParser
 from scenario_transformer.tools.vector_map_parser import VectorMapParser
+from scenario_transformer.transformer.pointenu_transformer import PointENUTransformer, PointENUTransformerConfiguration
 from scenario_transformer.transformer.routing_request_transformer import RoutingRequestTransformerConfiguration
 from scenario_transformer.transformer.obstacles_transformer import ObstaclesTransformer, ObstaclesTransformerConfiguration, ObstaclesTransformerResult
 from scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
@@ -26,11 +29,13 @@ class ScenarioTransformerConfiguration:
     pcd_map_path: str
     obstacle_direction_change_detection_threshold: float  # 0 ~ 360 degree
     enable_traffic_signal: bool
+    use_last_position_as_destination: bool  # if True, the destination is the last position of the ego in LocalizationPose chanel, otherwise, the ego destination becomes the last position in routing request
 
     def __init__(self,
                  apollo_scenario_path: str,
                  apollo_hd_map_path: str,
                  vector_map_path: str,
+                 use_last_position_as_destination: bool,
                  enable_traffic_signal: bool = True,
                  obstacle_direction_change_detection_threshold=60,
                  road_network_lanelet_map_path: Optional[str] = None,
@@ -39,6 +44,7 @@ class ScenarioTransformerConfiguration:
         self.apollo_hd_map_path = apollo_hd_map_path
         self.vector_map_path = vector_map_path
         self.obstacle_direction_change_detection_threshold = obstacle_direction_change_detection_threshold
+        self.use_last_position_as_destination = use_last_position_as_destination
         self.enable_traffic_signal = enable_traffic_signal
         if road_network_lanelet_map_path:
             self.road_network_lanelet_map_path = road_network_lanelet_map_path
@@ -51,6 +57,7 @@ class ScenarioTransformer:
     apollo_map_parser: ApolloMapParser
     vector_map_parser: VectorMapParser
     entities: Entities
+    localization_poses: List[LocalizationEstimate]
     routing_request: Optional[RoutingRequest]
     obstacles: Optional[PerceptionObstacles]
     traffic_light_detections: List[TrafficLightDetection]
@@ -62,9 +69,11 @@ class ScenarioTransformer:
             filepath=configuration.apollo_hd_map_path)
         self.vector_map_parser = VectorMapParser(
             vector_map_path=configuration.vector_map_path)
+        self.localization_poses = []
         self.routing_request = None
-        self.obstacles = None
+        self.obstacles = []
         self.traffic_light_detections = []
+        self.input_localization()
 
     def transform(self) -> Scenario:
         transformed_obstacle_result = self.transform_obstacle_movements()
@@ -88,8 +97,7 @@ class ScenarioTransformer:
         storyboard_builder.make_init(init=init)
         storyboard_builder.make_stop_trigger(trigger=stop_trigger)
 
-        default_end_story = StoryBuilder.default_end_story(
-            entities=self.entities,
+        default_end_story = self.setup_default_end_story(
             routing_action=ego_routing_private.privateActions[1].routingAction)
 
         storyboard_builder.make_stories(
@@ -117,13 +125,40 @@ class ScenarioTransformer:
         entities_builder = EntitiesBuilder(entities=entity_meta)
         self.entities = entities_builder.get_result()
 
+    def setup_default_end_story(self, routing_action: RoutingAction) -> Story:
+
+        ego_end_position = None
+        if self.configuration.use_last_position_as_destination:
+            last_pose = self.localization_poses[-1].pose.position
+            pointenu_transformer = PointENUTransformer(
+                configuration=PointENUTransformerConfiguration(
+                    supported_position=PointENUTransformer.SupportedPosition.
+                    Lane,
+                    lanelet_map=self.vector_map_parser.lanelet_map,
+                    projector=self.vector_map_parser.projector))
+            ego_end_position = pointenu_transformer.transform((last_pose, 0.0))
+        else:
+            if routing_action.HasField("assignRouteAction"):
+                ego_end_position = routing_action.assignRouteAction.route.waypoints[
+                    -1].position
+            else:
+                ego_end_position = routing_action.acquirePositionAction.position
+
+        assert ego_end_position is not None
+
+        total_duration = math.ceil(self.scenario_end_time -
+                                   self.scenario_start_time)
+        return StoryBuilder.default_end_story(
+            entities=self.entities,
+            ego_end_position=ego_end_position,
+            exit_failure_duration=total_duration)
+
     def transform_obstacle_movements(self) -> ObstaclesTransformerResult:
         obstacles = self.input_perception_obstacles()
 
-        sceanrio_start_timestamp = obstacles[0].header.timestamp_sec
         obstacles_transformer = ObstaclesTransformer(
             configuration=ObstaclesTransformerConfiguration(
-                sceanrio_start_timestamp=sceanrio_start_timestamp,
+                sceanrio_start_timestamp=self.scenario_start_time,
                 lanelet_map=self.vector_map_parser.lanelet_map,
                 projector=self.vector_map_parser.projector,
                 direction_change_detection_threshold=self.configuration.
@@ -194,3 +229,19 @@ class ScenarioTransformer:
             channel=CyberRecordChannel.TRAFFIC_LIGHT)
 
         return self.traffic_light_detections
+
+    def input_localization(self) -> List[LocalizationEstimate]:
+
+        if self.localization_poses:
+            return self.localization_poses
+
+        self.localization_poses = CyberRecordReader.read_channel(
+            source_path=self.configuration.apollo_scenario_path,
+            channel=CyberRecordChannel.LOCALIZATION_POSE)
+
+        self.scenario_start_time = self.localization_poses[
+            0].header.timestamp_sec
+        self.scenario_end_time = self.localization_poses[
+            -1].header.timestamp_sec
+
+        return self.localization_poses
