@@ -84,6 +84,6 @@ if __name__ == "__main__":
 # poetry run python -m scenario_transformer.__main__ \
 # --apollo-map-path "./samples/map/BorregasAve/base_map.bin" \
 # --vector-map-path "./samples/map/BorregasAve/lanelet2_map.osm" \
-# --apollo-scenario-path "./samples/apollo_borregas/DoppleTest/00000009.00000" \
+# --apollo-scenario-path "/home/sora/Desktop/changnam/ADS_DataSet/DoppelTest_borregas_ave_30/00000009.00000" \
 # --road-network-lanelet-map-path "/home/sora/Desktop/changnam/autoware_map/borregasave_map/lanelet2_map.osm" \
-# --source-name "DoppleTest"
+# --source-name "DoppelTest"

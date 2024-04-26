@@ -3,12 +3,12 @@ from scenario_transformer.transformer.scenario_transformer import ScenarioTransf
 from scenario_transformer.openscenario import OpenScenarioEncoder
 
 
-def test_scenario_transformer(borregas_doople_scenario9_path,
+def test_scenario_transformer(borregas_doppel_scenario9_path,
                               borregas_vector_map_path,
                               borregas_apollo_map_path):
 
     configuration = ScenarioTransformerConfiguration(
-        apollo_scenario_path=borregas_doople_scenario9_path,
+        apollo_scenario_path=borregas_doppel_scenario9_path,
         apollo_hd_map_path=borregas_apollo_map_path,
         vector_map_path=borregas_vector_map_path,
         road_network_lanelet_map_path=
@@ -31,19 +31,19 @@ def test_scenario_transformer(borregas_doople_scenario9_path,
     # scenario_yaml = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
     #     proto_pyobject=scenario, wrap_result_with_typename=False)
 
-    # with open("doople_9.yaml", 'w') as file:
+    # with open("doppel_9.yaml", 'w') as file:
     #     file.write(scenario_yaml)
 
 
 def test_gen_all_samples(borregas_vector_map_path, borregas_apollo_map_path,
                          borregas_scenorita_scenario9_path,
                          borregas_scenorita_scenario75_path,
-                         borregas_doople_scenario9_path,
-                         borregas_doople_scenario35_path):
+                         borregas_doppel_scenario9_path,
+                         borregas_doppel_scenario35_path):
 
     scenario_paths = [
         borregas_scenorita_scenario9_path, borregas_scenorita_scenario75_path,
-        borregas_doople_scenario9_path, borregas_doople_scenario35_path
+        borregas_doppel_scenario9_path, borregas_doppel_scenario35_path
     ]
 
     for scenario_path in scenario_paths:

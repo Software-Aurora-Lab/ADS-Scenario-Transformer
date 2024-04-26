@@ -8,9 +8,9 @@ from scenario_transformer.transformer.obstacles_transformer import ObstaclesTran
 
 @pytest.fixture
 def perception_obstacles(
-        borregas_doople_scenario9_path) -> List[PerceptionObstacles]:
+        borregas_doppel_scenario9_path) -> List[PerceptionObstacles]:
     return CyberRecordReader.read_channel(
-        source_path=borregas_doople_scenario9_path,
+        source_path=borregas_doppel_scenario9_path,
         channel=CyberRecordChannel.PERCEPTION_OBSTACLES)
 
 

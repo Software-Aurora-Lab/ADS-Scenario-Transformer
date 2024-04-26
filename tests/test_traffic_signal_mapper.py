@@ -2,7 +2,7 @@ from scenario_transformer.tools.traffic_signal_mapper import TrafficSignalMapper
 
 
 def test_traffic_signal_mapper(apollo_map_parser, vector_map_parser,
-                               borregas_doople_scenario9_path):
+                               borregas_doppel_scenario9_path):
     traffic_signal_mapper = TrafficSignalMapper(
         apollo_map_parser=apollo_map_parser,
         vector_map_parser=vector_map_parser)

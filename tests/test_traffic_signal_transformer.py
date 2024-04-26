@@ -7,10 +7,10 @@ from scenario_transformer.transformer.traffic_signal_transformer import TrafficS
 
 @pytest.fixture
 def traffic_light_detections(
-        borregas_doople_scenario9_path) -> List[TrafficLightDetection]:
+        borregas_doppel_scenario9_path) -> List[TrafficLightDetection]:
 
     return CyberRecordReader.read_channel(
-        source_path=borregas_doople_scenario9_path,
+        source_path=borregas_doppel_scenario9_path,
         channel=CyberRecordChannel.TRAFFIC_LIGHT)
 
 
