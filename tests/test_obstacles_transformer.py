@@ -22,6 +22,7 @@ def test_obstacle_transformer(perception_obstacles, vector_map_parser):
             sceanrio_start_timestamp=sceanrio_start_timestamp,
             lanelet_map=vector_map_parser.lanelet_map,
             projector=vector_map_parser.projector,
+            waypoint_frequency_in_sec=1,
             direction_change_detection_threshold=60))
 
     result = obstacles_transformer.transform(source=perception_obstacles)
@@ -36,4 +37,4 @@ def test_obstacle_transformer(perception_obstacles, vector_map_parser):
         0].name == "Locate pedestrian_5_id_2 on the road"
     assert pedestrian5_events[1].actions[-1].name == "Route pedestrian_5_id_2"
     assert len(pedestrian5_events[1].actions[-1].privateAction.routingAction.
-               assignRouteAction.route.waypoints) == 3
+               assignRouteAction.route.waypoints) == 31

@@ -26,6 +26,8 @@ class ObstaclesTransformerConfiguration:
     sceanrio_start_timestamp: float
     lanelet_map: LaneletMap
     projector: MGRSProjector
+    waypoint_frequency_in_sec: Optional[
+        float]  # None = direction detection, 0 = all waypoints, others = input frequency, Average frequency of the PerceptionObstacles channel is 0.04s to 0.05s. If you set lower than 0.04s, the obstacles will add all waypoints.
     direction_change_detection_threshold: float = 60
 
 
@@ -49,7 +51,7 @@ class ObstaclesTransformer(Transformer):
             source: List[PerceptionObstacles]) -> ObstaclesTransformerResult:
 
         if source[0].error_code:
-            return []
+            return None
 
         entities_with_id = self.get_obstacles(source)
         grouped_obstacles = self.group_obstacles(obstacles=source)
@@ -264,14 +266,28 @@ class ObstaclesTransformer(Transformer):
 
     def obstacle_routing_indices(
             self, obstacles: List[PerceptionObstacle]) -> List[int]:
-        start_moving_idx = self.obstacle_start_moving_idx(obstacles)
-        end_moving_idx = self.obstacle_end_moving_idx(obstacles)
+        frequency = self.configuration.waypoint_frequency_in_sec
 
-        direction_changed_indices = self.obstacle_direction_changed_indices(
-            obstacles)
-        result = [start_moving_idx] + [
-            idx for idx in direction_changed_indices if idx > start_moving_idx
-        ] + [end_moving_idx]
+        result = []
+        if frequency is None:
+            start_moving_idx = self.obstacle_start_moving_idx(obstacles)
+            end_moving_idx = self.obstacle_end_moving_idx(obstacles)
+
+            direction_changed_indices = self.obstacle_direction_changed_indices(
+                obstacles)
+            result = [start_moving_idx] + [
+                idx
+                for idx in direction_changed_indices if idx > start_moving_idx
+            ] + [end_moving_idx]
+        else:
+            if obstacles:
+                start_timestamp = obstacles[0].timestamp
+                result.append(0)
+                for idx, obstacle in enumerate(obstacles[1:]):
+                    if frequency < obstacle.timestamp - start_timestamp:
+                        result.append(idx + 1)
+                        start_timestamp = obstacle.timestamp
+
         return result
 
     def normalize_radians(self, angle):

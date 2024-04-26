@@ -13,6 +13,7 @@ def test_scenario_transformer(borregas_doppel_scenario9_path,
         vector_map_path=borregas_vector_map_path,
         road_network_lanelet_map_path=
         "/home/sora/Desktop/changnam/autoware_map/borregasave_map/lanelet2_map.osm",
+        obstacle_waypoint_frequency_in_sec=1,
         use_last_position_as_destination=True)
     transformer = ScenarioTransformer(configuration=configuration)
 
@@ -53,6 +54,7 @@ def test_gen_all_samples(borregas_vector_map_path, borregas_apollo_map_path,
             vector_map_path=borregas_vector_map_path,
             road_network_lanelet_map_path=
             "/home/sora/Desktop/changnam/autoware_map/borregasave_map/lanelet2_map.osm",
+            obstacle_waypoint_frequency_in_sec=1,
             use_last_position_as_destination=True)
         transformer = ScenarioTransformer(configuration=configuration)
         scenario = transformer.transform()

@@ -22,6 +22,7 @@ from scenario_transformer.builder.storyboard.story_builder import StoryBuilder
 from scenario_transformer.builder.storyboard.trigger_builder import StopTriggerBuilder
 from scenario_transformer.transformer.traffic_signal_transformer import TrafficSignalTransformer, TrafficSignalTransformerConfiguration, TrafficSignalTransformerResult
 
+
 @dataclass
 class ScenarioTransformerConfiguration:
     apollo_scenario_path: str
@@ -29,7 +30,8 @@ class ScenarioTransformerConfiguration:
     vector_map_path: str
     road_network_pcd_map_path: str
     road_network_lanelet_map_path: str
-    obstacle_direction_change_detection_threshold: float  # 0 ~ 360 degree
+    obstacle_waypoint_frequency_in_sec: Optional[float]
+    obstacle_direction_change_detection_threshold: float  # 0 ~ 360 degree, Will be used if obstacle_waypoint_frequency_in_sec is None
     enable_traffic_signal: bool
     use_last_position_as_destination: bool  # if True, the destination is the last position of the ego in LocalizationPose chanel, otherwise, the ego destination becomes the last position in routing request
 
@@ -38,6 +40,7 @@ class ScenarioTransformerConfiguration:
                  apollo_hd_map_path: str,
                  vector_map_path: str,
                  use_last_position_as_destination: bool,
+                 obstacle_waypoint_frequency_in_sec: Optional[float],
                  enable_traffic_signal: bool = True,
                  obstacle_direction_change_detection_threshold=60,
                  road_network_lanelet_map_path: Optional[str] = None,
@@ -45,6 +48,7 @@ class ScenarioTransformerConfiguration:
         self.apollo_scenario_path = apollo_scenario_path
         self.apollo_hd_map_path = apollo_hd_map_path
         self.vector_map_path = vector_map_path
+        self.obstacle_waypoint_frequency_in_sec = obstacle_waypoint_frequency_in_sec
         self.obstacle_direction_change_detection_threshold = obstacle_direction_change_detection_threshold
         self.use_last_position_as_destination = use_last_position_as_destination
         self.enable_traffic_signal = enable_traffic_signal
@@ -163,6 +167,8 @@ class ScenarioTransformer:
                 sceanrio_start_timestamp=self.scenario_start_time,
                 lanelet_map=self.vector_map_parser.lanelet_map,
                 projector=self.vector_map_parser.projector,
+                waypoint_frequency_in_sec=self.configuration.
+                obstacle_waypoint_frequency_in_sec,
                 direction_change_detection_threshold=self.configuration.
                 obstacle_direction_change_detection_threshold))
 
