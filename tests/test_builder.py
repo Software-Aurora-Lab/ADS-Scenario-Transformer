@@ -12,28 +12,28 @@ from scenario_transformer.builder.traffic_signal_controller_builder import Traff
 def entity_meta() -> List[EntityMeta]:
 
     return [
-        EntityMeta(entity_type=EntityType.NPC),
-        EntityMeta(embedding_id=100, entity_type=EntityType.NPC),
+        EntityMeta(entity_type=EntityType.CAR),
+        EntityMeta(embedding_id=100, entity_type=EntityType.CAR),
         EntityMeta(entity_type=EntityType.EGO),
         EntityMeta(embedding_id=200, entity_type=EntityType.PEDESTRIAN),
-        EntityMeta(embedding_id=300, entity_type=EntityType.NPC)
+        EntityMeta(embedding_id=300, entity_type=EntityType.CAR)
     ]
 
 
 def test_entities_builder(entity_meta):
     builder = EntitiesBuilder(entities=entity_meta)
-    builder.add_default_entity(EntityType.NPC)
+    builder.add_default_entity(EntityType.CAR)
 
     entities = builder.get_result()
     assert isinstance(entities, Entities)
     assert len(entities.scenarioObjects) == 6
 
     assert entities.scenarioObjects[0].name == "ego"
-    assert entities.scenarioObjects[1].name == "npc_1"
-    assert entities.scenarioObjects[2].name == "npc_2_id_100"
-    assert entities.scenarioObjects[3].name == "npc_3_id_300"
+    assert entities.scenarioObjects[1].name == "car_1"
+    assert entities.scenarioObjects[2].name == "car_2_id_100"
+    assert entities.scenarioObjects[3].name == "car_3_id_300"
     assert entities.scenarioObjects[4].name == "pedestrian_4_id_200"
-    assert entities.scenarioObjects[5].name == "npc_5"
+    assert entities.scenarioObjects[5].name == "car_5"
 
 
 def test_file_header_builder():

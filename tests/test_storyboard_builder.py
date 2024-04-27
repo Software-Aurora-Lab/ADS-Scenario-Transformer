@@ -62,7 +62,7 @@ def test_event_builder(by_entity_collision_condition,
     assert by_entity_condition.triggeringEntities.entityRefs[
         0].entityRef == "ego"
     assert by_entity_condition.entityCondition.collisionCondition is not None
-    assert by_entity_condition.entityCondition.collisionCondition.entityRef.entityRef == "npc_1"
+    assert by_entity_condition.entityCondition.collisionCondition.entityRef.entityRef == "car_1"
 
 
 def test_maneuver_group_builder(actors, maneuvers):

@@ -75,8 +75,8 @@ def vector_map_parser(borregas_vector_map_path) -> ApolloMapParser:
 def scenario(storyboard) -> Scenario:
     entities_builder = EntitiesBuilder(entities=[
         EntityMeta(entity_type=EntityType.EGO),
-        EntityMeta(entity_type=EntityType.NPC),
-        EntityMeta(entity_type=EntityType.NPC)
+        EntityMeta(entity_type=EntityType.CAR),
+        EntityMeta(entity_type=EntityType.CAR)
     ])
     entities = entities_builder.get_result()
 
@@ -92,11 +92,11 @@ def scenario(storyboard) -> Scenario:
 @pytest.fixture
 def entity_meta() -> List[EntityMeta]:
     return [
-        EntityMeta(entity_type=EntityType.NPC),
-        EntityMeta(embedding_id=100, entity_type=EntityType.NPC),
+        EntityMeta(entity_type=EntityType.CAR),
+        EntityMeta(embedding_id=100, entity_type=EntityType.CAR),
         EntityMeta(entity_type=EntityType.EGO),
         EntityMeta(embedding_id=200, entity_type=EntityType.PEDESTRIAN),
-        EntityMeta(embedding_id=300, entity_type=EntityType.NPC)
+        EntityMeta(embedding_id=300, entity_type=EntityType.CAR)
     ]
 
 

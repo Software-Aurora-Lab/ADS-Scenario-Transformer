@@ -39,7 +39,7 @@ Entities:
               Property:
                 - name: isEgo
                   value: 'true'
-      - name: npc
+      - name: car
         Vehicle:
           name: ''
           vehicleCategory: car
@@ -74,6 +74,42 @@ Entities:
         ObjectController:
           Controller:
             name: ''
+            Properties:
+              Property: []
+      - name: bicycle
+        Vehicle:
+          name: ''
+          vehicleCategory: bicycle
+          Axles:
+            FrontAxle:
+              maxSteering: 0.5236
+              positionX: 1
+              positionZ: 0.3
+              trackWidth: 0.8
+              wheelDiameter: 0.6
+            RearAxle:
+              maxSteering: 0.5236
+              positionX: 0
+              positionZ: 0.3
+              trackWidth: 0.8
+              wheelDiameter: 0.6
+          BoundingBox:
+            Center:
+              x: 0
+              y: 0
+              z: 1.25
+            Dimensions:
+              height: 2.5
+              length: 2
+              width: 0.8
+          Performance:
+            maxAcceleration: INF
+            maxDeceleration: INF
+            maxSpeed: 50
+          Properties:
+            Property: []
+        ObjectController:
+          Controller:
             Properties:
               Property: []
       - name: pedestrian

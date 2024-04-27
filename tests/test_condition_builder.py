@@ -19,7 +19,7 @@ def test_entity_condition_builder_collision(entities, ego_name):
     assert by_entity_condition.triggeringEntities.entityRefs[
         0].entityRef == "ego"
     assert by_entity_condition.entityCondition.collisionCondition is not None
-    assert by_entity_condition.entityCondition.collisionCondition.entityRef.entityRef == "npc_1"
+    assert by_entity_condition.entityCondition.collisionCondition.entityRef.entityRef == "car_1"
 
 
 def test_entity_condition_builder_acceleration(ego_name):
@@ -246,7 +246,7 @@ def test_condtion_builder_by_entity_condition(ego_name, entities):
     assert by_entity_condition.triggeringEntities.entityRefs[
         0].entityRef == "ego"
     assert by_entity_condition.entityCondition.collisionCondition is not None
-    assert by_entity_condition.entityCondition.collisionCondition.entityRef.entityRef == "npc_1"
+    assert by_entity_condition.entityCondition.collisionCondition.entityRef.entityRef == "car_1"
 
 
 def test_condtion_builder_by_value_condition(ego_name):

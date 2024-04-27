@@ -80,7 +80,7 @@ OpenSCENARIO:
           Property: []
         name: ''
         vehicleCategory: car
-      name: npc_1
+      name: car_1
     - ObjectController:
         Controller:
           Properties:
@@ -117,7 +117,7 @@ OpenSCENARIO:
           Property: []
         name: ''
         vehicleCategory: car
-      name: npc_2
+      name: car_2
   FileHeader:
     author: 'AKIRA TAMURA (last modified by: Berkay Karaman)'
     date: '2023-11-13T12:25:48.481Z'

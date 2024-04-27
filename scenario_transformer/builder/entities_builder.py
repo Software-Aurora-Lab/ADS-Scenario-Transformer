@@ -11,7 +11,8 @@ from scenario_transformer.openscenario.openscenario_coder import OpenScenarioDec
 
 class EntityType(Enum):
     EGO = "ego"
-    NPC = "npc"
+    CAR = "car"
+    BICYCLE = "bicycle"
     PEDESTRIAN = "pedestrian"
 
 
@@ -62,9 +63,11 @@ class EntitiesBuilder(Builder):
         self.default_scenario_objects[
             EntityType.EGO.value] = entities.scenarioObjects[0]
         self.default_scenario_objects[
-            EntityType.NPC.value] = entities.scenarioObjects[1]
+            EntityType.CAR.value] = entities.scenarioObjects[1]
         self.default_scenario_objects[
-            EntityType.PEDESTRIAN.value] = entities.scenarioObjects[2]
+            EntityType.BICYCLE.value] = entities.scenarioObjects[2]
+        self.default_scenario_objects[
+            EntityType.PEDESTRIAN.value] = entities.scenarioObjects[3]
 
     def make_default_scenario_objects(
             self, entities: List[EntityMeta]) -> List[ScenarioObject]:

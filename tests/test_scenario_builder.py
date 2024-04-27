@@ -9,8 +9,8 @@ from scenario_transformer.openscenario import OpenScenarioEncoder, OpenScenarioD
 def test_scenario_builder(storyboard):
     entities_builder = EntitiesBuilder(entities=[
         EntityMeta(entity_type=EntityType.EGO),
-        EntityMeta(entity_type=EntityType.NPC),
-        EntityMeta(entity_type=EntityType.NPC)])
+        EntityMeta(entity_type=EntityType.CAR),
+        EntityMeta(entity_type=EntityType.CAR)])
     entities = entities_builder.get_result()
     
     scenario_config = ScenarioConfiguration(
@@ -38,8 +38,8 @@ def test_scenario_key_value(parameter_declarations):
 
     entities_builder = EntitiesBuilder(entities=[
         EntityMeta(entity_type=EntityType.EGO),
-        EntityMeta(entity_type=EntityType.NPC),
-        EntityMeta(entity_type=EntityType.NPC)])
+        EntityMeta(entity_type=EntityType.CAR),
+        EntityMeta(entity_type=EntityType.CAR)])
     entities = entities_builder.get_result()
 
     scenario_config = ScenarioConfiguration(

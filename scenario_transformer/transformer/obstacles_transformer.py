@@ -132,9 +132,13 @@ class ObstaclesTransformer(Transformer):
                 entity_meta.append(
                     EntityMeta(entity_type=EntityType.PEDESTRIAN,
                                embedding_id=id))
+            elif type == 4:
+                entity_meta.append(
+                    EntityMeta(entity_type=EntityType.BICYCLE,
+                               embedding_id=id))
             elif type == 5:
                 entity_meta.append(
-                    EntityMeta(entity_type=EntityType.NPC, embedding_id=id))
+                    EntityMeta(entity_type=EntityType.CAR, embedding_id=id))
 
         entities_builder = EntitiesBuilder(entities=entity_meta)
         entities = entities_builder.get_result()
