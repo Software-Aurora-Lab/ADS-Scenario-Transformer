@@ -27,14 +27,14 @@ def test_obstacle_transformer(perception_obstacles, vector_map_parser):
 
     result = obstacles_transformer.transform(source=perception_obstacles)
 
-    assert len(result.entities_with_id) == 6
+    assert len(result.entities_with_id) == 7
     assert len(result.stories) == 6
 
     pedestrian5_events = result.stories[-1].acts[0].maneuverGroups[
         0].maneuvers[0].events
 
     assert pedestrian5_events[0].actions[
-        0].name == "Locate pedestrian_5_id_2 on the road"
-    assert pedestrian5_events[1].actions[-1].name == "Route pedestrian_5_id_2"
+        0].name == "Locate pedestrian_6_id_2 on the road"
+    assert pedestrian5_events[1].actions[-1].name == "Route pedestrian_6_id_2"
     assert len(pedestrian5_events[1].actions[-1].privateAction.routingAction.
                assignRouteAction.route.waypoints) == 31

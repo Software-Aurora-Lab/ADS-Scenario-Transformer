@@ -18,7 +18,7 @@ from scenario_transformer.builder.storyboard.private_action_builder import Priva
 from scenario_transformer.builder.storyboard.global_action_builder import GlobalActionBuilder
 from scenario_transformer.builder.storyboard.condition_builder import ConditionBuilder
 from scenario_transformer.builder.storyboard.trigger_builder import StartTriggerBuilder
-from scenario_transformer.builder.entities_builder import EntitiesBuilder, EntityMeta, EntityType
+from scenario_transformer.builder.entities_builder import EntitiesBuilder, ASTEntity, ASTEntityType
 
 
 @dataclass
@@ -33,7 +33,7 @@ class ObstaclesTransformerConfiguration:
 
 @dataclass
 class ObstaclesTransformerResult:
-    entities_with_id: List[Tuple[EntityMeta, ScenarioObject]]
+    entities_with_id: List[Tuple[ASTEntity, ScenarioObject]]
     stories: List[Story]
 
 
@@ -51,7 +51,7 @@ class ObstaclesTransformer(Transformer):
             source: List[PerceptionObstacles]) -> ObstaclesTransformerResult:
 
         if source[0].error_code:
-            return None
+            return ObstaclesTransformerResult(entities_with_id=[], stories=[])
 
         entities_with_id = self.get_obstacles(source)
         grouped_obstacles = self.group_obstacles(obstacles=source)
@@ -122,33 +122,35 @@ class ObstaclesTransformer(Transformer):
 
     def get_obstacles(
         self, obstacles: List[PerceptionObstacles]
-    ) -> List[Tuple[EntityMeta, ScenarioObject]]:
-        entity_meta = []
-        uniq_obstacles = set([(ob.id, ob.type) for obstacle in obstacles
-                              for ob in obstacle.perception_obstacle])
+    ) -> List[Tuple[ASTEntity, ScenarioObject]]:
 
-        for id, type in uniq_obstacles:
-            if type == 3:
-                entity_meta.append(
-                    EntityMeta(entity_type=EntityType.PEDESTRIAN,
-                               embedding_id=id))
-            elif type == 4:
-                entity_meta.append(
-                    EntityMeta(entity_type=EntityType.BICYCLE,
-                               embedding_id=id))
-            elif type == 5:
-                entity_meta.append(
-                    EntityMeta(entity_type=EntityType.CAR, embedding_id=id))
+        uniq_obstacles = {}
+        for obstacle in obstacles:
+            for ob in obstacle.perception_obstacle:
+                if ob.id not in uniq_obstacles:
+                    entity_type = None
+                    if ob.type == 3:
+                        entity_type = ASTEntityType.PEDESTRIAN
+                    elif ob.type == 4:
+                        entity_type = ASTEntityType.BICYCLE
+                    elif ob.type == 5:
+                        entity_type = ASTEntityType.CAR
+                    else:
+                        continue
 
-        entities_builder = EntitiesBuilder(entities=entity_meta)
-        entities = entities_builder.get_result()
+                    ast_entity = ASTEntity(entity_type=entity_type,
+                                           use_default_scenario_object=False,
+                                           embedding_id=ob.id,
+                                           length=ob.length,
+                                           height=ob.height,
+                                           width=ob.width)
+                    uniq_obstacles[ob.id] = ast_entity
 
-        sorted_entity_meta = sorted(entity_meta,
-                                    key=lambda x: x.entity_type.value)
+        entities_builder = EntitiesBuilder()
+        for id, ast_entity in uniq_obstacles.items():
+            entities_builder.add_entity(ast_entity=ast_entity)
 
-        assert len(sorted_entity_meta) == len(entities.scenarioObjects)
-        return [(entity, scenario_object) for entity, scenario_object in zip(
-            sorted_entity_meta, entities.scenarioObjects)]
+        return entities_builder.scenario_objects
 
     def create_locating_obstacle_event(self, start_condition: Condition,
                                        position: Position,
@@ -327,8 +329,7 @@ class ObstaclesTransformer(Transformer):
         ])
 
     def find_scenario_object(
-        self, id: str, entities_with_id: List[Tuple[EntityMeta,
-                                                    ScenarioObject]]
+        self, id: str, entities_with_id: List[Tuple[ASTEntity, ScenarioObject]]
     ) -> Optional[ScenarioObject]:
 
         for (meta, scenario_object) in entities_with_id:

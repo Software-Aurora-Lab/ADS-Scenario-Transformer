@@ -1,25 +1,29 @@
-import os
 from typing import List, Optional
 from enum import Enum
 from dataclasses import dataclass
 import yaml
 import copy
-from openscenario_msgs import Entities, ScenarioObject
+from definitions import DEFAULT_ENTITIES_PATH
+from openscenario_msgs import Entities, BoundingBox, BoundingBox, Center, Dimensions
 from scenario_transformer.builder import Builder
 from scenario_transformer.openscenario.openscenario_coder import OpenScenarioDecoder
 
 
-class EntityType(Enum):
+class ASTEntityType(Enum):
     EGO = "ego"
     CAR = "car"
     BICYCLE = "bicycle"
     PEDESTRIAN = "pedestrian"
 
 
-@dataclass
-class EntityMeta:
-    entity_type: EntityType
+@dataclass(frozen=True)
+class ASTEntity:
+    entity_type: ASTEntityType
+    use_default_scenario_object: bool
     embedding_id: Optional[int] = None
+    length: Optional[float] = None
+    height: Optional[float] = None
+    width: Optional[float] = None
 
 
 class EntitiesBuilder(Builder):
@@ -34,19 +38,18 @@ class EntitiesBuilder(Builder):
 
     product: Entities
 
-    def __init__(self,
-                 entities: List[EntityMeta] = [
-                     EntityMeta(entity_type=EntityType.EGO)
-                 ]):
+    def __init__(self):
         self.not_ego_label = 1
-        self.load_default_scenario_objects(self.config_path())
+        self.load_default_scenario_objects(DEFAULT_ENTITIES_PATH)
+        self.scenario_objects = []
+        self.make_ego_scenario_object()
 
-        self.scenario_objects = self.make_default_scenario_objects(
-            entities=entities)
-
-    def config_path(self) -> str:
-        directory = os.path.dirname(os.path.realpath(__file__))
-        return os.path.join(directory, 'entities.yaml')
+    def make_ego_scenario_object(self):
+        ego_scenario_obj = self.default_scenario_objects[
+            ASTEntityType.EGO.value]
+        self.scenario_objects.append(
+            (ASTEntity(entity_type=ASTEntityType.EGO,
+                       use_default_scenario_object=True), ego_scenario_obj))
 
     def load_default_scenario_objects(self, config_path: str):
 
@@ -61,54 +64,69 @@ class EntitiesBuilder(Builder):
             yaml_dict=dict, type_=Entities, exclude_top_level_key=True)
 
         self.default_scenario_objects[
-            EntityType.EGO.value] = entities.scenarioObjects[0]
+            ASTEntityType.EGO.value] = entities.scenarioObjects[0]
         self.default_scenario_objects[
-            EntityType.CAR.value] = entities.scenarioObjects[1]
+            ASTEntityType.CAR.value] = entities.scenarioObjects[1]
         self.default_scenario_objects[
-            EntityType.BICYCLE.value] = entities.scenarioObjects[2]
+            ASTEntityType.BICYCLE.value] = entities.scenarioObjects[2]
         self.default_scenario_objects[
-            EntityType.PEDESTRIAN.value] = entities.scenarioObjects[3]
+            ASTEntityType.PEDESTRIAN.value] = entities.scenarioObjects[3]
 
-    def make_default_scenario_objects(
-            self, entities: List[EntityMeta]) -> List[ScenarioObject]:
-
-        ego = None
-        scenario_objects = []
-        sorted_entities = sorted(entities, key=lambda x: x.entity_type.value)
-
-        for entity_meta in sorted_entities:
-
-            entity = copy.deepcopy(
-                self.default_scenario_objects[entity_meta.entity_type.value])
-
-            if entity_meta.entity_type == EntityType.EGO:
-                ego = entity
-            else:
-                entity.name = f"{entity_meta.entity_type.value}_{self.not_ego_label}"
-                if entity_meta.embedding_id:
-                    entity.name = entity.name + f"_id_{entity_meta.embedding_id}"
-                self.not_ego_label += 1
-                scenario_objects.append(entity)
-
-        return [ego] + scenario_objects if ego else scenario_objects
-
-    def add_default_entity(self,
-                           entity_type: EntityType,
-                           id: Optional[int] = None):
-        if entity_type == EntityType.EGO:
+    def add_default_entity(self, ast_entity: ASTEntity):
+        if ast_entity.entity_type == ASTEntityType.EGO:
             return
 
         copied_entity = copy.deepcopy(
-            self.default_scenario_objects[entity_type.value])
-        copied_entity.name = f"{entity_type.value}_{self.not_ego_label}"
+            self.default_scenario_objects[ast_entity.entity_type.value])
+        copied_entity.name = f"{ast_entity.entity_type.value}_{self.not_ego_label}"
+        if ast_entity.embedding_id:
+            copied_entity.name = copied_entity.name + f"_id_{ast_entity.embedding_id}"
+
         self.not_ego_label += 1
-        self.scenario_objects.append(copied_entity)
+        self.scenario_objects.append((ast_entity, copied_entity))
+
+    def add_entity(self, ast_entity: ASTEntity):
+        if ast_entity.use_default_scenario_object:
+            self.add_default_entity(ast_entity=ast_entity)
+            return
+
+        copied_entity = copy.deepcopy(
+            self.default_scenario_objects[ast_entity.entity_type.value])
+
+        copied_entity.name = f"{ast_entity.entity_type.value}_{self.not_ego_label}"
+        if ast_entity.embedding_id:
+            copied_entity.name = copied_entity.name + f"_id_{ast_entity.embedding_id}"
+
+        bounding_box = BoundingBox(
+            center=self.get_default_center(ast_entity.entity_type),
+            dimensions=Dimensions(height=round(ast_entity.height, 3),
+                                  width=round(ast_entity.width, 3),
+                                  length=round(ast_entity.length, 3)))
+
+        if ast_entity.entity_type == ASTEntityType.PEDESTRIAN:
+            copied_entity.entityObject.pedestrian.boundingBox.CopyFrom(
+                bounding_box)
+        else:
+            copied_entity.entityObject.vehicle.boundingBox.CopyFrom(
+                bounding_box)
+
+        self.not_ego_label += 1
+        self.scenario_objects.append((ast_entity, copied_entity))
+
+    def get_default_center(self, entity_type: ASTEntityType) -> Center:
+        if entity_type == ASTEntityType.CAR:
+            return Center(x=1.355, y=0, z=1.25)
+        elif entity_type == ASTEntityType.BICYCLE:
+            return Center(x=0, y=0, z=1.25)
+        elif entity_type == ASTEntityType.PEDESTRIAN:
+            return Center(x=0, y=0, z=1)
+        return Center(x=0, y=0, z=0)
 
     def get_result(self) -> Entities:
         assert len(self.scenario_objects) > 0
 
         self.product = Entities(
-            scenarioObjects=self.scenario_objects,
+            scenarioObjects=[obj for ast_entity, obj in self.scenario_objects],
             entitySelections=[]  # Not in used
         )
         return self.product

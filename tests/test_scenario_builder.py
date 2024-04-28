@@ -1,18 +1,29 @@
 import yaml
+import pytest
 from definitions import TEST_ROOT
-from openscenario_msgs import Scenario, Storyboard
+from openscenario_msgs import Scenario, Storyboard, Entities
 from scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
-from scenario_transformer.builder.entities_builder import EntitiesBuilder, EntityType, EntityMeta
+from scenario_transformer.builder.entities_builder import EntitiesBuilder, ASTEntityType, ASTEntity
 from scenario_transformer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
 
 
-def test_scenario_builder(storyboard):
-    entities_builder = EntitiesBuilder(entities=[
-        EntityMeta(entity_type=EntityType.EGO),
-        EntityMeta(entity_type=EntityType.CAR),
-        EntityMeta(entity_type=EntityType.CAR)])
-    entities = entities_builder.get_result()
-    
+@pytest.fixture
+def entities() -> Entities:
+    entities_builder = EntitiesBuilder()
+    ast_entities = [
+        ASTEntity(entity_type=ASTEntityType.EGO,
+                  use_default_scenario_object=True),
+        ASTEntity(entity_type=ASTEntityType.CAR,
+                  use_default_scenario_object=True),
+        ASTEntity(entity_type=ASTEntityType.CAR, use_default_scenario_object=True)
+    ]
+    for ast_entity in ast_entities:
+        entities_builder.add_default_entity(ast_entity)
+    return entities_builder.get_result()
+
+
+def test_scenario_builder(entities, storyboard):
+
     scenario_config = ScenarioConfiguration(
         entities=entities,
         lanelet_map_path="/home/map/lanelet2.osm",
@@ -27,7 +38,7 @@ def test_scenario_builder(storyboard):
     assert scenario.openScenario.storyboard == storyboard
 
 
-def test_scenario_key_value(parameter_declarations):
+def test_scenario_key_value(entities, parameter_declarations):
     scenario_path = TEST_ROOT + "/data/scenario.yaml"
     storyboard_path = TEST_ROOT + "/data/scenario_storyboard.yaml"
     with open(scenario_path, 'r') as file:
@@ -35,12 +46,6 @@ def test_scenario_key_value(parameter_declarations):
 
     with open(storyboard_path, 'r') as file:
         storyboard_dict = yaml.safe_load(file)
-
-    entities_builder = EntitiesBuilder(entities=[
-        EntityMeta(entity_type=EntityType.EGO),
-        EntityMeta(entity_type=EntityType.CAR),
-        EntityMeta(entity_type=EntityType.CAR)])
-    entities = entities_builder.get_result()
 
     scenario_config = ScenarioConfiguration(
         entities=entities,

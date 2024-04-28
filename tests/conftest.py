@@ -7,7 +7,7 @@ from scenario_transformer.builder.storyboard.private_action_builder import Priva
 from scenario_transformer.builder.storyboard.by_entity_condition_builder import ByEntityConditionBuilder
 from scenario_transformer.builder.storyboard.by_value_condition_builder import ByValueConditionBuilder
 from scenario_transformer.builder.parameter_declarations_builder import ParameterDeclarationsBuilder
-from scenario_transformer.builder.entities_builder import EntityType, EntitiesBuilder, EntityMeta
+from scenario_transformer.builder.entities_builder import ASTEntityType, EntitiesBuilder, ASTEntity
 from scenario_transformer.openscenario.openscenario_coder import OpenScenarioDecoder
 from scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
 
@@ -73,11 +73,18 @@ def vector_map_parser(borregas_vector_map_path) -> ApolloMapParser:
 
 @pytest.fixture
 def scenario(storyboard) -> Scenario:
-    entities_builder = EntitiesBuilder(entities=[
-        EntityMeta(entity_type=EntityType.EGO),
-        EntityMeta(entity_type=EntityType.CAR),
-        EntityMeta(entity_type=EntityType.CAR)
-    ])
+    ast_entities=[
+        ASTEntity(entity_type=ASTEntityType.EGO,
+                   use_default_scenario_object=True),
+        ASTEntity(entity_type=ASTEntityType.CAR,
+                   use_default_scenario_object=True),
+        ASTEntity(entity_type=ASTEntityType.CAR,
+                   use_default_scenario_object=True)
+    ]
+    entities_builder = EntitiesBuilder()
+    for ast_entity in ast_entities:
+        builder.add_entity(ast_entity)
+        
     entities = entities_builder.get_result()
 
     scenario_config = ScenarioConfiguration(
@@ -90,19 +97,29 @@ def scenario(storyboard) -> Scenario:
 
 
 @pytest.fixture
-def entity_meta() -> List[EntityMeta]:
+def ast_entities() -> List[ASTEntity]:
     return [
-        EntityMeta(entity_type=EntityType.CAR),
-        EntityMeta(embedding_id=100, entity_type=EntityType.CAR),
-        EntityMeta(entity_type=EntityType.EGO),
-        EntityMeta(embedding_id=200, entity_type=EntityType.PEDESTRIAN),
-        EntityMeta(embedding_id=300, entity_type=EntityType.CAR)
+        ASTEntity(entity_type=ASTEntityType.CAR,
+                   use_default_scenario_object=True),
+        ASTEntity(embedding_id=100,
+                   entity_type=ASTEntityType.CAR,
+                   use_default_scenario_object=True),
+        ASTEntity(entity_type=ASTEntityType.EGO,
+                   use_default_scenario_object=True),
+        ASTEntity(embedding_id=200,
+                   entity_type=ASTEntityType.PEDESTRIAN,
+                   use_default_scenario_object=True),
+        ASTEntity(embedding_id=300,
+                   entity_type=ASTEntityType.CAR,
+                   use_default_scenario_object=True)
     ]
 
 
 @pytest.fixture
-def entities(entity_meta) -> Entities:
-    builder = EntitiesBuilder(entities=entity_meta)
+def entities(ast_entities) -> Entities:
+    builder = EntitiesBuilder()
+    for ast_entity in ast_entities:
+        builder.add_entity(ast_entity)
     return builder.get_result()
 
 

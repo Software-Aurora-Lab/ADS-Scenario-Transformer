@@ -54,17 +54,17 @@ def test_gen_all_samples(borregas_vector_map_path, borregas_apollo_map_path,
             vector_map_path=borregas_vector_map_path,
             road_network_lanelet_map_path=
             "/home/sora/Desktop/changnam/autoware_map/borregasave_map/lanelet2_map.osm",
-            obstacle_waypoint_frequency_in_sec=1,
+            obstacle_waypoint_frequency_in_sec=2,
             use_last_position_as_destination=True)
         transformer = ScenarioTransformer(configuration=configuration)
         scenario = transformer.transform()
         scenario_yaml = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
             proto_pyobject=scenario, wrap_result_with_typename=False)
 
-        filename = Path(scenario_path).parent.stem + "-" + Path(
-            scenario_path).stem
+        # filename = Path(scenario_path).parent.stem + "-" + Path(
+        #     scenario_path).stem
 
-        with open(f"{filename}.yaml", 'w') as file:
-            file.write(scenario_yaml)
+        # with open(f"{filename}.yaml", 'w') as file:
+        #     file.write(scenario_yaml)
 
     # assert True == False

@@ -4,36 +4,44 @@ from typing import List
 from openscenario_msgs import CatalogDefinition, FileHeader, Entities, ParameterDeclarations, ParameterDeclaration, ScenarioDefinition, Private, ScenarioObject, TeleportAction, RoutingAction
 from scenario_transformer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, ScenarioDefinitionBuilder
 from scenario_transformer.builder.private_builder import PrivateBuilder
-from scenario_transformer.builder.entities_builder import EntityType, EntityMeta
+from scenario_transformer.builder.entities_builder import ASTEntityType, ASTEntity
 from scenario_transformer.builder.traffic_signal_controller_builder import TrafficSignalControllerBuilder, PhaseBuilder, TrafficSignalStateBuilder, TrafficLightbulbState
 
 
 @pytest.fixture
-def entity_meta() -> List[EntityMeta]:
+def ast_entity() -> List[ASTEntity]:
 
     return [
-        EntityMeta(entity_type=EntityType.CAR),
-        EntityMeta(embedding_id=100, entity_type=EntityType.CAR),
-        EntityMeta(entity_type=EntityType.EGO),
-        EntityMeta(embedding_id=200, entity_type=EntityType.PEDESTRIAN),
-        EntityMeta(embedding_id=300, entity_type=EntityType.CAR)
+        ASTEntity(entity_type=ASTEntityType.CAR,
+                  use_default_scenario_object=True),
+        ASTEntity(embedding_id=100,
+                  entity_type=ASTEntityType.CAR,
+                  use_default_scenario_object=True),
+        ASTEntity(entity_type=ASTEntityType.EGO,
+                  use_default_scenario_object=True),
+        ASTEntity(embedding_id=200,
+                  entity_type=ASTEntityType.PEDESTRIAN,
+                  use_default_scenario_object=True),
+        ASTEntity(embedding_id=300,
+                  entity_type=ASTEntityType.CAR,
+                  use_default_scenario_object=True)
     ]
 
 
-def test_entities_builder(entity_meta):
-    builder = EntitiesBuilder(entities=entity_meta)
-    builder.add_default_entity(EntityType.CAR)
+def test_entities_builder(ast_entities):
+    builder = EntitiesBuilder()
+    for ast_entity in ast_entities:
+        builder.add_entity(ast_entity)
 
     entities = builder.get_result()
     assert isinstance(entities, Entities)
-    assert len(entities.scenarioObjects) == 6
+    assert len(entities.scenarioObjects) == 5
 
     assert entities.scenarioObjects[0].name == "ego"
     assert entities.scenarioObjects[1].name == "car_1"
     assert entities.scenarioObjects[2].name == "car_2_id_100"
-    assert entities.scenarioObjects[3].name == "car_3_id_300"
-    assert entities.scenarioObjects[4].name == "pedestrian_4_id_200"
-    assert entities.scenarioObjects[5].name == "car_5"
+    assert entities.scenarioObjects[3].name == "pedestrian_3_id_200"
+    assert entities.scenarioObjects[4].name == "car_4_id_300"
 
 
 def test_file_header_builder():
@@ -109,7 +117,7 @@ def test_road_network_builder():
         0].trafficSignalId == "12515"
 
 
-def test_scenario_definition_builder(storyboard, entity_meta):
+def test_scenario_definition_builder(storyboard, ast_entities):
     parameter_declarations = [
         ParameterDeclaration(name="__ego_dimensions_length__",
                              parameterType=2,
@@ -119,7 +127,9 @@ def test_scenario_definition_builder(storyboard, entity_meta):
                              value='0')
     ]
 
-    entities_builder = EntitiesBuilder(entities=entity_meta)
+    entities_builder = EntitiesBuilder()
+    for ast_entity in ast_entities:
+        entities_builder.add_default_entity(ast_entity)
 
     builder = ScenarioDefinitionBuilder(
         parameter_declarations=parameter_declarations)
@@ -138,8 +148,7 @@ def test_scenario_definition_builder(storyboard, entity_meta):
 
 def test_private_builder(waypoints):
 
-    entities_builder = EntitiesBuilder(
-        entities=[EntityMeta(entity_type=EntityType.EGO)])
+    entities_builder = EntitiesBuilder()
     ego = entities_builder.get_result().scenarioObjects[0]
 
     assert_proto_type_equal(ego, ScenarioObject)

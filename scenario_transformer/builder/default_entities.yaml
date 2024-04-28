@@ -110,6 +110,7 @@ Entities:
             Property: []
         ObjectController:
           Controller:
+            name: ''
             Properties:
               Property: []
       - name: pedestrian

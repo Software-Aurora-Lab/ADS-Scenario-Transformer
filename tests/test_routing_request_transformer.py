@@ -3,14 +3,13 @@ from openscenario_msgs import Private, TeleportAction, RoutingAction, AssignRout
 from scenario_transformer.transformer import RoutingRequestTransformer
 from scenario_transformer.transformer.routing_request_transformer import RoutingRequestTransformerConfiguration
 from scenario_transformer.builder import EntitiesBuilder
-from scenario_transformer.builder.entities_builder import EntityType, EntityMeta
+from scenario_transformer.builder.entities_builder import ASTEntityType, ASTEntity
 from scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
 
 
 @pytest.fixture
 def ego_scenario_object() -> ScenarioObject:
-    builder = EntitiesBuilder(
-        entities=[EntityMeta(entity_type=EntityType.EGO)])
+    builder = EntitiesBuilder()
     return builder.get_result().scenarioObjects[0]
 
 

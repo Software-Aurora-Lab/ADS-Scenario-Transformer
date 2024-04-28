@@ -7,7 +7,7 @@ from modules.routing.proto.routing_pb2 import RoutingRequest
 from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacles
 from openscenario_msgs import Private, ScenarioObject, Scenario, Entities, Story, RoutingAction
 from scenario_transformer.builder import EntitiesBuilder
-from scenario_transformer.builder.entities_builder import EntityType, EntityMeta
+from scenario_transformer.builder.entities_builder import ASTEntityType, ASTEntity
 from scenario_transformer.transformer import RoutingRequestTransformer
 from scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
 from scenario_transformer.tools.apollo_map_parser import ApolloMapParser
@@ -126,9 +126,10 @@ class ScenarioTransformer:
 
         return scenario_builder.get_result()
 
-    def setup_entities(self, obstacles: List[EntityMeta]):
-        entity_meta = [EntityMeta(entity_type=EntityType.EGO)] + obstacles
-        entities_builder = EntitiesBuilder(entities=entity_meta)
+    def setup_entities(self, obstacles: List[ASTEntity]):
+        entities_builder = EntitiesBuilder()
+        for obstacle in obstacles:
+            entities_builder.add_entity(ast_entity=obstacle)
         self.entities = entities_builder.get_result()
 
     def setup_default_end_story(self, routing_action: RoutingAction) -> Story:
@@ -252,4 +253,5 @@ class ScenarioTransformer:
         self.scenario_end_time = self.localization_poses[
             -1].header.timestamp_sec
 
+        print("time", self.scenario_start_time - self.scenario_end_time)
         return self.localization_poses
