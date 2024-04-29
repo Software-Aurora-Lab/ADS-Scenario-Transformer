@@ -1,10 +1,10 @@
 import pytest
 from openscenario_msgs import Private, TeleportAction, RoutingAction, AssignRouteAction, ScenarioObject
-from scenario_transformer.transformer import RoutingRequestTransformer
-from scenario_transformer.transformer.routing_request_transformer import RoutingRequestTransformerConfiguration
-from scenario_transformer.builder import EntitiesBuilder
-from scenario_transformer.builder.entities_builder import ASTEntityType, ASTEntity
-from scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
+from ads_scenario_transformer.transformer import RoutingRequestTransformer
+from ads_scenario_transformer.transformer.routing_request_transformer import RoutingRequestTransformerConfiguration
+from ads_scenario_transformer.builder import EntitiesBuilder
+from ads_scenario_transformer.builder.entities_builder import ASTEntityType, ASTEntity
+from ads_scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
 
 
 @pytest.fixture

@@ -2,21 +2,21 @@ import pytest
 import yaml
 from typing import List
 from openscenario_msgs import GlobalAction, Entities, Position, LanePosition, WorldPosition, SpeedActionDynamics, LaneChangeActionDynamics, TransitionDynamics, FollowingMode, Properties, Property, Controller, Waypoint, Route, Trajectory, ReferenceContext, TimeReference, Timing, PrivateAction, ByEntityCondition, ByValueCondition, Story, Act, ManeuverGroup, Maneuver, Event, Actors, StartTrigger, StopTrigger, Storyboard, Actions, Scenario, ParameterDeclarations, ParameterDeclaration, ParameterType
-from scenario_transformer.builder.storyboard.global_action_builder import GlobalActionBuilder
-from scenario_transformer.builder.storyboard.private_action_builder import PrivateActionBuilder
-from scenario_transformer.builder.storyboard.by_entity_condition_builder import ByEntityConditionBuilder
-from scenario_transformer.builder.storyboard.by_value_condition_builder import ByValueConditionBuilder
-from scenario_transformer.builder.parameter_declarations_builder import ParameterDeclarationsBuilder
-from scenario_transformer.builder.entities_builder import ASTEntityType, EntitiesBuilder, ASTEntity
-from scenario_transformer.openscenario.openscenario_coder import OpenScenarioDecoder
-from scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
+from ads_scenario_transformer.builder.storyboard.global_action_builder import GlobalActionBuilder
+from ads_scenario_transformer.builder.storyboard.private_action_builder import PrivateActionBuilder
+from ads_scenario_transformer.builder.storyboard.by_entity_condition_builder import ByEntityConditionBuilder
+from ads_scenario_transformer.builder.storyboard.by_value_condition_builder import ByValueConditionBuilder
+from ads_scenario_transformer.builder.parameter_declarations_builder import ParameterDeclarationsBuilder
+from ads_scenario_transformer.builder.entities_builder import ASTEntityType, EntitiesBuilder, ASTEntity
+from ads_scenario_transformer.openscenario.openscenario_coder import OpenScenarioDecoder
+from ads_scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
 
 import lanelet2
 from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
 from lanelet2.core import LaneletMap
-from scenario_transformer.tools.apollo_map_parser import ApolloMapParser
-from scenario_transformer.tools.vector_map_parser import VectorMapParser
+from ads_scenario_transformer.tools.apollo_map_parser import ApolloMapParser
+from ads_scenario_transformer.tools.vector_map_parser import VectorMapParser
 from definitions import SAMPLE_ROOT
 
 

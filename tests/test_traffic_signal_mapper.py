@@ -1,4 +1,4 @@
-from scenario_transformer.tools.traffic_signal_mapper import TrafficSignalMapper
+from ads_scenario_transformer.tools.traffic_signal_mapper import TrafficSignalMapper
 
 
 def test_traffic_signal_mapper(apollo_map_parser, vector_map_parser,

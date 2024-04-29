@@ -1,5 +1,5 @@
 import pytest
-from scenario_transformer.tools.apollo_map_parser import ApolloMapParser
+from ads_scenario_transformer.tools.apollo_map_parser import ApolloMapParser
 
 
 def test_apollo_map_lane_to_utm(apollo_map_parser):

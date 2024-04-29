@@ -2,8 +2,8 @@ import math
 from typing import List
 import pytest
 from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacles
-from scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
-from scenario_transformer.transformer.obstacles_transformer import ObstaclesTransformer, ObstaclesTransformerConfiguration
+from ads_scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
+from ads_scenario_transformer.transformer.obstacles_transformer import ObstaclesTransformer, ObstaclesTransformerConfiguration
 
 
 @pytest.fixture

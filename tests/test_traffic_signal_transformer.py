@@ -1,8 +1,8 @@
 from typing import List
 import pytest
 from modules.perception.proto.traffic_light_detection_pb2 import TrafficLightDetection, TrafficLight
-from scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
-from scenario_transformer.transformer.traffic_signal_transformer import TrafficSignalTransformer, TrafficSignalTransformerConfiguration, TrafficSignalTransformerResult
+from ads_scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
+from ads_scenario_transformer.transformer.traffic_signal_transformer import TrafficSignalTransformer, TrafficSignalTransformerConfiguration, TrafficSignalTransformerResult
 
 
 @pytest.fixture

@@ -5,8 +5,8 @@ from lanelet2.io import Origin
 from modules.common.proto.geometry_pb2 import PointENU
 from modules.routing.proto.routing_pb2 import LaneWaypoint
 from openscenario_msgs import Waypoint, LanePosition
-from scenario_transformer.transformer import LaneWaypointTransformer
-from scenario_transformer.transformer.lane_waypoint_transformer import LaneWaypointTransformerConfiguration
+from ads_scenario_transformer.transformer import LaneWaypointTransformer
+from ads_scenario_transformer.transformer.lane_waypoint_transformer import LaneWaypointTransformerConfiguration
 
 
 def test_utm_type_lane_waypoint_transformer(lanelet_map, mgrs_projector):

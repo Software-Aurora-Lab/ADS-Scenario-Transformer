@@ -5,7 +5,7 @@ from lanelet2.core import BasicPoint3d
 from lanelet2.io import Origin
 from modules.common.proto.geometry_pb2 import PointENU
 from openscenario_msgs import LanePosition
-from scenario_transformer.tools.geometry import Geometry
+from ads_scenario_transformer.tools.geometry import Geometry
 
 
 class TestGeometry(unittest.TestCase):

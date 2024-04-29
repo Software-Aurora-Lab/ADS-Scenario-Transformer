@@ -1,8 +1,8 @@
 from openscenario_msgs import Rule, LanePosition, Position, DirectionalDimension, RelativeDistanceType, CoordinateSystem, RoutingAlgorithm, StoryboardElementStateCondition
 from openscenario_msgs.parameter_pb2 import ParameterDeclaration, ParameterType
-from scenario_transformer.builder.storyboard.by_entity_condition_builder import ByEntityConditionBuilder
-from scenario_transformer.builder.storyboard.by_value_condition_builder import ByValueConditionBuilder
-from scenario_transformer.builder.storyboard.condition_builder import ConditionBuilder
+from ads_scenario_transformer.builder.storyboard.by_entity_condition_builder import ByEntityConditionBuilder
+from ads_scenario_transformer.builder.storyboard.by_value_condition_builder import ByValueConditionBuilder
+from ads_scenario_transformer.builder.storyboard.condition_builder import ConditionBuilder
 
 # Entity Condition
 

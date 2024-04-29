@@ -2,10 +2,10 @@ import pytest
 from datetime import datetime
 from typing import List
 from openscenario_msgs import CatalogDefinition, FileHeader, Entities, ParameterDeclarations, ParameterDeclaration, ScenarioDefinition, Private, ScenarioObject, TeleportAction, RoutingAction
-from scenario_transformer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, ScenarioDefinitionBuilder
-from scenario_transformer.builder.private_builder import PrivateBuilder
-from scenario_transformer.builder.entities_builder import ASTEntityType, ASTEntity
-from scenario_transformer.builder.traffic_signal_controller_builder import TrafficSignalControllerBuilder, PhaseBuilder, TrafficSignalStateBuilder, TrafficLightbulbState
+from ads_scenario_transformer.builder import CatalogDefinitionBuilder, FileHeaderBuilder, EntitiesBuilder, ParameterDeclarationsBuilder, RoadNetworkBuilder, ScenarioDefinitionBuilder
+from ads_scenario_transformer.builder.private_builder import PrivateBuilder
+from ads_scenario_transformer.builder.entities_builder import ASTEntityType, ASTEntity
+from ads_scenario_transformer.builder.traffic_signal_controller_builder import TrafficSignalControllerBuilder, PhaseBuilder, TrafficSignalStateBuilder, TrafficLightbulbState
 
 
 @pytest.fixture

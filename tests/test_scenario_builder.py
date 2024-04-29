@@ -2,9 +2,9 @@ import yaml
 import pytest
 from definitions import TEST_ROOT
 from openscenario_msgs import Scenario, Storyboard, Entities
-from scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
-from scenario_transformer.builder.entities_builder import EntitiesBuilder, ASTEntityType, ASTEntity
-from scenario_transformer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
+from ads_scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
+from ads_scenario_transformer.builder.entities_builder import EntitiesBuilder, ASTEntityType, ASTEntity
+from ads_scenario_transformer.openscenario import OpenScenarioEncoder, OpenScenarioDecoder
 
 
 @pytest.fixture

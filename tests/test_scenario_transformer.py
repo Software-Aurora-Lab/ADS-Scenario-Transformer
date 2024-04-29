@@ -1,6 +1,6 @@
 from pathlib import Path
-from scenario_transformer.transformer.scenario_transformer import ScenarioTransformer, ScenarioTransformerConfiguration
-from scenario_transformer.openscenario import OpenScenarioEncoder
+from ads_scenario_transformer.transformer.scenario_transformer import ScenarioTransformer, ScenarioTransformerConfiguration
+from ads_scenario_transformer.openscenario import OpenScenarioEncoder
 
 
 def test_scenario_transformer(borregas_doppel_scenario9_path,
