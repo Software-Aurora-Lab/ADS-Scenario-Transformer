@@ -32,6 +32,10 @@ def main():
     parser.add_argument("--source-name",
                         required=False,
                         help="Input scenario source")
+    parser.add_argument("--obstacle-waypoint-frequency",
+                        required=False,
+                        default=2,
+                        help="")
 
     parser.add_argument(
         "--obstacle-threshold",
@@ -54,6 +58,8 @@ def main():
         road_network_pcd_map_path=args.road_network_pcd_map_path,
         road_network_lanelet_map_path=args.road_network_lanelet_map_path,
         obstacle_direction_change_detection_threshold=args.obstacle_threshold,
+        obstacle_waypoint_frequency_in_sec=float(
+            args.obstacle_waypoint_frequency),
         enable_traffic_signal=args.enable_traffic_signal,
         use_last_position_as_destination=args.use_last_position_destination)
 
@@ -80,10 +86,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# poetry run python -m scenario_transformer.__main__ \
-# --apollo-map-path "./samples/map/BorregasAve/base_map.bin" \
-# --vector-map-path "./samples/map/BorregasAve/lanelet2_map.osm" \
-# --apollo-scenario-path "/home/sora/Desktop/changnam/ADS_DataSet/DoppelTest_borregas_ave_30/00000009.00000" \
-# --road-network-lanelet-map-path "/home/sora/Desktop/changnam/autoware_map/borregasave_map/lanelet2_map.osm" \
-# --source-name "DoppelTest"
