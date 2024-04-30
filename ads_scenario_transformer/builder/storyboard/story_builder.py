@@ -39,7 +39,7 @@ class StoryBuilder(Builder):
         """
 
         exit_failure_event = EventBuilder.exit_failure_event(
-            rule=Rule.GREATER_THAN, value_in_sec=int(exit_failure_duration))
+            rule=Rule.GREATER_THAN, value_in_sec=int(exit_failure_duration) + 5)
 
         ego_name = entities.scenarioObjects[0].name
         exit_success_event = EventBuilder.exit_success_event(
