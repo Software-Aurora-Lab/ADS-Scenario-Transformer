@@ -2,6 +2,7 @@ import sys
 import os
 import subprocess
 from pathlib import Path
+import json
 
 
 def file_has_extension(filename, extension):
@@ -9,22 +10,13 @@ def file_has_extension(filename, extension):
     return file_path.suffix == '.' + extension
 
 
-def run_scenario_transformer(directory_path):
+def run_scenario_transformer(directory_path, config_path):
     """
     Transform all scenarios in given directory
     """
 
-    config = {
-        "apollo-map-path": "./samples/map/BorregasAve/base_map.bin",
-        "vector-map-path": "./samples/map/BorregasAve/lanelet2_map.osm",
-        "road-network-lanelet-map-path":
-        "/home/sora/Desktop/changnam/autoware_map/borregasave_map/lanelet2_map.osm",
-        "source-name": "DoppelTest",
-        "obstacle-waypoint-frequency": 2,
-        "output-scenario-path": "./DoppelTest-Borregas",
-        "disable-traffic-signal": False,
-        "use-last-position-destination": True
-    }
+    with open(config_path, 'r') as file:
+        config = json.load(file)
 
     for filename in os.listdir(directory_path):
         full_file_path = os.path.join(directory_path, filename)
@@ -59,8 +51,11 @@ def run_scenario_transformer(directory_path):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python run_scenarios.py <directory_path>")
+    if len(sys.argv) != 3:
+        print(
+            "Usage: python run_scenarios.py <directory_path> <json_config_path>"
+        )
         sys.exit(1)
     directory_path = sys.argv[1]
-    run_scenario_transformer(directory_path)
+    config_path = sys.argv[2]
+    run_scenario_transformer(directory_path, config_path)

@@ -1,0 +1,11 @@
+{
+    "apollo-map-path": "./samples/map/SanFrancisco/base_map.bin",
+    "vector-map-path": "./samples/map/SanFrancisco/lanelet2_map.osm",
+    "road-network-lanelet-map-path":
+    "/home/sora/Desktop/changnam/autoware_map/sanfrancisco_map/lanelet2_map.osm",
+    "source-name": "SanFrancisco-scenoRITA",
+    "obstacle-waypoint-frequency": 2,
+    "output-scenario-path": "./SanFrancisco-scenoRITA",
+    "disable-traffic-signal": true,
+    "use-last-position-destination": true
+}
