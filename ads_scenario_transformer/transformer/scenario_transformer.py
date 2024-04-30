@@ -21,7 +21,7 @@ from ads_scenario_transformer.builder.storyboard.storyboard_builder import Story
 from ads_scenario_transformer.builder.storyboard.story_builder import StoryBuilder
 from ads_scenario_transformer.builder.storyboard.trigger_builder import StopTriggerBuilder
 from ads_scenario_transformer.transformer.traffic_signal_transformer import TrafficSignalTransformer, TrafficSignalTransformerConfiguration, TrafficSignalTransformerResult
-
+from ads_scenario_transformer.tools.error import InvalidScenarioInputError
 
 @dataclass
 class ScenarioTransformerConfiguration:
@@ -217,6 +217,11 @@ class ScenarioTransformer:
         routing_response = routing_responses[0]
 
         self.routing_request = routing_response.routing_request
+
+        if not self.routing_request:
+            InvalidScenarioInputError(
+                "No RoutingRequest found in scenario")
+            
         return self.routing_request
 
     def input_perception_obstacles(self) -> List[PerceptionObstacles]:
@@ -248,10 +253,13 @@ class ScenarioTransformer:
             source_path=self.configuration.apollo_scenario_path,
             channel=CyberRecordChannel.LOCALIZATION_POSE)
 
+        if not self.localization_poses:
+            raise InvalidScenarioInputError(
+                "No localization poses found in scenario")
+        print(self.localization_poses)    
         self.scenario_start_time = self.localization_poses[
             0].header.timestamp_sec
         self.scenario_end_time = self.localization_poses[
             -1].header.timestamp_sec
 
-        print("time", self.scenario_start_time - self.scenario_end_time)
         return self.localization_poses

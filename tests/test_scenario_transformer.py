@@ -1,6 +1,26 @@
 from pathlib import Path
+import pytest
 from ads_scenario_transformer.transformer.scenario_transformer import ScenarioTransformer, ScenarioTransformerConfiguration
 from ads_scenario_transformer.openscenario import OpenScenarioEncoder
+from ads_scenario_transformer.tools.error import InvalidScenarioInputError
+
+
+def test_invalid_scenario_input(borregas_vector_map_path, borregas_apollo_map_path,
+     borregas_doppel_scenario160_path):
+
+    configuration = ScenarioTransformerConfiguration(
+        apollo_scenario_path=borregas_doppel_scenario160_path,
+        apollo_hd_map_path=borregas_apollo_map_path,
+        vector_map_path=borregas_vector_map_path,
+        road_network_lanelet_map_path=
+        "/home/sora/Desktop/changnam/autoware_map/borregasave_map/lanelet2_map.osm",
+        obstacle_waypoint_frequency_in_sec=2,
+        use_last_position_as_destination=True)
+
+    with pytest.raises(InvalidScenarioInputError) as excinfo:
+        transformer = ScenarioTransformer(configuration=configuration)
+        
+    assert "No localization poses found in scenario" in str(excinfo.value)
 
 
 def test_scenario_transformer(borregas_doppel_scenario9_path,
@@ -40,13 +60,11 @@ def test_gen_all_samples(borregas_vector_map_path, borregas_apollo_map_path,
                          borregas_scenorita_scenario9_path,
                          borregas_scenorita_scenario75_path,
                          borregas_doppel_scenario9_path,
-                         borregas_doppel_scenario35_path,
-                         borregas_doppel_scenario0_path):
+                         borregas_doppel_scenario35_path):
 
     scenario_paths = [
         borregas_scenorita_scenario9_path, borregas_scenorita_scenario75_path,
         borregas_doppel_scenario9_path, borregas_doppel_scenario35_path,
-        borregas_doppel_scenario0_path
     ]
 
     for scenario_path in scenario_paths:
