@@ -62,21 +62,17 @@ class Geometry:
 
         basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
 
-        print("bp", basic_point2d.x, basic_point2d.y, "lanelet:", lanelet)
-        print("inside:", inside(lanelet, basic_point2d))
-        
         if not inside(lanelet, basic_point2d):
-            # If point is not in lanelet, we find nearest one and use it
+            # If the point is not in lanelet, we find nearest one and use it
             nearest_point_in_lanelets = findWithin2d(layer=map.pointLayer, 
                geometry=basic_point2d, 
-               maxDist=1)
+               maxDist=2)
             if not nearest_point_in_lanelets:
                 return None
 
             nearest_point = nearest_point_in_lanelets[0][1]
             basic_point2d = BasicPoint2d(nearest_point.x, nearest_point.y)
             
-
         max_centerline_length = math.floor(length2d(lanelet))
         point3d = Point3d(getId(), basic_point.x, basic_point.y, basic_point.z)
         # Calculation of s attribute is simplified.
