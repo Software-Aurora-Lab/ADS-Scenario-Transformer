@@ -5,8 +5,9 @@ from ads_scenario_transformer.openscenario import OpenScenarioEncoder
 from ads_scenario_transformer.tools.error import InvalidScenarioInputError
 
 
-def test_invalid_scenario_input(borregas_vector_map_path, borregas_apollo_map_path,
-     borregas_doppel_scenario160_path):
+def test_invalid_scenario_input(borregas_vector_map_path,
+                                borregas_apollo_map_path,
+                                borregas_doppel_scenario160_path):
 
     configuration = ScenarioTransformerConfiguration(
         apollo_scenario_path=borregas_doppel_scenario160_path,
@@ -19,7 +20,7 @@ def test_invalid_scenario_input(borregas_vector_map_path, borregas_apollo_map_pa
 
     with pytest.raises(InvalidScenarioInputError) as excinfo:
         transformer = ScenarioTransformer(configuration=configuration)
-        
+
     assert "No localization poses found in scenario" in str(excinfo.value)
 
 
@@ -63,8 +64,10 @@ def test_gen_all_samples(borregas_vector_map_path, borregas_apollo_map_path,
                          borregas_doppel_scenario35_path):
 
     scenario_paths = [
-        borregas_scenorita_scenario9_path, borregas_scenorita_scenario75_path,
-        borregas_doppel_scenario9_path, borregas_doppel_scenario35_path,
+        borregas_scenorita_scenario9_path,
+        borregas_scenorita_scenario75_path,
+        borregas_doppel_scenario9_path,
+        borregas_doppel_scenario35_path,
     ]
 
     for scenario_path in scenario_paths:
@@ -87,4 +90,4 @@ def test_gen_all_samples(borregas_vector_map_path, borregas_apollo_map_path,
         # with open(f"{filename}.yaml", 'w') as file:
         #     file.write(scenario_yaml)
 
-    assert True == False
+    # assert True == False
