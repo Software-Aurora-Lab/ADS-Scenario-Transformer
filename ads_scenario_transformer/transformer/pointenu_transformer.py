@@ -49,11 +49,15 @@ class PointENUTransformer(Transformer):
             projector=projector, point=source[0])
         lanelet = Geometry.find_lanelet(lanelet_map, projected_point)
 
+        print("projected_point", projected_point)
+        print("lanelet", lanelet)
         if lanelet:
             # Discard heading value
-            lane_position = Geometry.lane_position(lanelet=lanelet,
+            lane_position = Geometry.nearest_lane_position(map=lanelet_map,
+                                                   lanelet=lanelet,
                                                    basic_point=projected_point,
                                                    heading=0.0)
+            print("lane_position", lane_position)
             return lane_position
         return None
 
