@@ -42,11 +42,13 @@ def main():
         type=float,
         default=60.0,
         help="Threshold for obstacle direction change detection (in degrees).")
-    parser.add_argument("--enable-traffic-signal",
-                        action="store_false",
+    parser.add_argument("--disable-traffic-signal",
+                        action="store_true",
+                        default=False,
                         help="Enable processing of traffic signals.")
     parser.add_argument("--use-last-position-destination",
-                        action="store_false",
+                        action="store_true",
+                        default=False,
                         help="Use the last known position as the destination.")
 
     args = parser.parse_args()
@@ -60,7 +62,7 @@ def main():
         obstacle_direction_change_detection_threshold=args.obstacle_threshold,
         obstacle_waypoint_frequency_in_sec=float(
             args.obstacle_waypoint_frequency),
-        enable_traffic_signal=args.enable_traffic_signal,
+        disable_traffic_signal=args.disable_traffic_signal,
         use_last_position_as_destination=args.use_last_position_destination)
 
     transformer = ScenarioTransformer(configuration=configuration)

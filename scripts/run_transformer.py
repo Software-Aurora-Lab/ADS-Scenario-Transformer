@@ -22,7 +22,7 @@ def run_scenario_transformer(directory_path):
         "source-name": "DoppelTest",
         "obstacle-waypoint-frequency": 2,
         "output-scenario-path": "./DoppelTest-Borregas",
-        "enable-traffic-signal": True,
+        "disable-traffic-signal": False,
         "use-last-position-destination": True
     }
 
@@ -42,8 +42,8 @@ def run_scenario_transformer(directory_path):
                 '--output-scenario-path', config["output-scenario-path"]
             ]
 
-            if config["enable-traffic-signal"]:
-                command.append('--enable-traffic-signal')
+            if config["disable-traffic-signal"]:
+                command.append('--disable-traffic-signal')
 
             if config["use-last-position-destination"]:
                 command.append('--use-last-position-destination')

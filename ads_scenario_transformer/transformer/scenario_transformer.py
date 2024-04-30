@@ -23,6 +23,7 @@ from ads_scenario_transformer.builder.storyboard.trigger_builder import StopTrig
 from ads_scenario_transformer.transformer.traffic_signal_transformer import TrafficSignalTransformer, TrafficSignalTransformerConfiguration, TrafficSignalTransformerResult
 from ads_scenario_transformer.tools.error import InvalidScenarioInputError
 
+
 @dataclass
 class ScenarioTransformerConfiguration:
     apollo_scenario_path: str
@@ -32,7 +33,7 @@ class ScenarioTransformerConfiguration:
     road_network_lanelet_map_path: str
     obstacle_waypoint_frequency_in_sec: Optional[float]
     obstacle_direction_change_detection_threshold: float  # 0 ~ 360 degree, Will be used if obstacle_waypoint_frequency_in_sec is None
-    enable_traffic_signal: bool
+    disable_traffic_signal: bool
     use_last_position_as_destination: bool  # if True, the destination is the last position of the ego in LocalizationPose chanel, otherwise, the ego destination becomes the last position in routing request
 
     def __init__(self,
@@ -41,7 +42,7 @@ class ScenarioTransformerConfiguration:
                  vector_map_path: str,
                  use_last_position_as_destination: bool,
                  obstacle_waypoint_frequency_in_sec: Optional[float],
-                 enable_traffic_signal: bool = True,
+                 disable_traffic_signal: bool = False,
                  obstacle_direction_change_detection_threshold=60,
                  road_network_lanelet_map_path: Optional[str] = None,
                  road_network_pcd_map_path: str = "point_cloud.pcd"):
@@ -51,7 +52,7 @@ class ScenarioTransformerConfiguration:
         self.obstacle_waypoint_frequency_in_sec = obstacle_waypoint_frequency_in_sec
         self.obstacle_direction_change_detection_threshold = obstacle_direction_change_detection_threshold
         self.use_last_position_as_destination = use_last_position_as_destination
-        self.enable_traffic_signal = enable_traffic_signal
+        self.disable_traffic_signal = disable_traffic_signal
         if road_network_lanelet_map_path:
             self.road_network_lanelet_map_path = road_network_lanelet_map_path
         else:
@@ -111,7 +112,7 @@ class ScenarioTransformer:
         storyboard = storyboard_builder.get_result()
 
         traffic_signals = []
-        if self.configuration.enable_traffic_signal:
+        if not self.configuration.disable_traffic_signal:
             traffic_signal_result = self.transform_traffic_environment()
             traffic_signals = traffic_signal_result.road_network_traffic
 
@@ -219,9 +220,8 @@ class ScenarioTransformer:
         self.routing_request = routing_response.routing_request
 
         if not self.routing_request:
-            InvalidScenarioInputError(
-                "No RoutingRequest found in scenario")
-            
+            InvalidScenarioInputError("No RoutingRequest found in scenario")
+
         return self.routing_request
 
     def input_perception_obstacles(self) -> List[PerceptionObstacles]:
@@ -256,7 +256,7 @@ class ScenarioTransformer:
         if not self.localization_poses:
             raise InvalidScenarioInputError(
                 "No localization poses found in scenario")
-        
+
         self.scenario_start_time = self.localization_poses[
             0].header.timestamp_sec
         self.scenario_end_time = self.localization_poses[
