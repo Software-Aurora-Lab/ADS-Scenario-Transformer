@@ -2,7 +2,7 @@ from typing import Optional, Union
 import math
 from lanelet2.projection import MGRSProjector
 from lanelet2.core import Lanelet, LaneletMap, GPSPoint, BasicPoint2d, BasicPoint3d, getId, Point3d, TrafficLight
-from lanelet2.geometry import distanceToCenterline2d, distance, findWithin3d, inside, length2d, findNearest
+from lanelet2.geometry import distanceToCenterline2d, distance, findWithin3d, inside, length2d, findNearest, findWithin2d
 from pyproj import Proj
 from modules.common.proto.geometry_pb2 import PointENU, Point3D
 from modules.map.proto.map_signal_pb2 import Signal
@@ -38,21 +38,47 @@ class Geometry:
     @staticmethod
     def find_lanelet(map: LaneletMap,
                      basic_point: BasicPoint3d) -> Optional[Lanelet]:
-        found_lanes = findWithin3d(map.laneletLayer, basic_point, 0)
-        return found_lanes[0][1] if found_lanes else None
+        found_lanes = findWithin3d(layer=map.laneletLayer, 
+                                   geometry=basic_point, 
+                                   maxDist=1)
+        if found_lanes:
+            return found_lanes[0][1]
 
-    @staticmethod
-    def lane_position(lanelet: Lanelet,
-                      basic_point: BasicPoint3d,
-                      heading=0.0) -> Optional[LanePosition]:
-        point3d = Point3d(getId(), basic_point.x, basic_point.y, basic_point.z)
         basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
 
+        found_lanes_2d = findWithin2d(layer=map.laneletLayer, 
+           geometry=basic_point2d, 
+           maxDist=1)
+        
+        if found_lanes_2d:
+            return found_lanes_2d[0][1]
+
+
+    @staticmethod
+    def nearest_lane_position(map: LaneletMap,
+                      lanelet: Lanelet,
+                      basic_point: BasicPoint3d,
+                      heading=0.0) -> Optional[LanePosition]:
+
+        basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
+
+        print("bp", basic_point2d.x, basic_point2d.y, "lanelet:", lanelet)
+        print("inside:", inside(lanelet, basic_point2d))
+        
         if not inside(lanelet, basic_point2d):
-            return None
+            # If point is not in lanelet, we find nearest one and use it
+            nearest_point_in_lanelets = findWithin2d(layer=map.pointLayer, 
+               geometry=basic_point2d, 
+               maxDist=1)
+            if not nearest_point_in_lanelets:
+                return None
+
+            nearest_point = nearest_point_in_lanelets[0][1]
+            basic_point2d = BasicPoint2d(nearest_point.x, nearest_point.y)
+            
 
         max_centerline_length = math.floor(length2d(lanelet))
-
+        point3d = Point3d(getId(), basic_point.x, basic_point.y, basic_point.z)
         # Calculation of s attribute is simplified.
         # https://releases.asam.net/OpenDRIVE/1.6.0/ASAM_OpenDRIVE_BS_V1-6-0.html#_reference_line_coordinate_systems
         s_attribute = min(max_centerline_length,

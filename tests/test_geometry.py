@@ -70,7 +70,8 @@ class TestGeometry(unittest.TestCase):
                                             basic_point=basic_point)
             self.assertIsNotNone(lanelet, "lanelet should not be None")
 
-            target_lane_position = Geometry.lane_position(
+            target_lane_position = Geometry.nearest_lane_position(
+                map=self.map,
                 lanelet=lanelet, basic_point=basic_point)
 
             self.assertEqual(target_lane_position.laneId, expectation.laneId,
