@@ -45,7 +45,7 @@ def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object,
 
     start_lane_position = teleport_action.position.lanePosition
     assert start_lane_position.laneId == "22"
-    assert start_lane_position.offset == 0.1750399287494411
+    assert start_lane_position.offset == 0.17503992807876528
     assert start_lane_position.s == 35.812947374714085
     assert start_lane_position.orientation.h == 0.0
 

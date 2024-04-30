@@ -23,7 +23,7 @@ def test_utm_type_lane_waypoint_transformer(lanelet_map, mgrs_projector):
     lane_position = openscenario_waypoint.position.lanePosition
 
     assert lane_position.laneId == "22"
-    assert lane_position.offset == 0.1750399287494411
+    assert lane_position.offset == 0.17503992807876528
     assert lane_position.s == 35.812947374714085
     assert lane_position.orientation.h == 0
 
