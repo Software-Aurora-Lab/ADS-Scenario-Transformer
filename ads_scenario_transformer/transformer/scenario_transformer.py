@@ -256,7 +256,7 @@ class ScenarioTransformer:
         if not self.localization_poses:
             raise InvalidScenarioInputError(
                 "No localization poses found in scenario")
-        print(self.localization_poses)    
+        
         self.scenario_start_time = self.localization_poses[
             0].header.timestamp_sec
         self.scenario_end_time = self.localization_poses[
