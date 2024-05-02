@@ -185,6 +185,9 @@ class ApolloMapParser:
         oid2 = set([x.id for x in obj2.overlap_id])
         return oid1 & oid2 != set()
 
+    def get_map(self) -> Map:
+        return self.__map
+
     def get_signals_wrt(self, signal_id: str) -> Tuple[str, str]:
         result = list()
         for u, v, data in self.__signal_relations.edges(signal_id, data=True):
