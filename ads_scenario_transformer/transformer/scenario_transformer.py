@@ -220,7 +220,7 @@ class ScenarioTransformer:
         self.routing_request = routing_response.routing_request
 
         if not self.routing_request:
-            InvalidScenarioInputError("No RoutingRequest found in scenario")
+            raise InvalidScenarioInputError("No RoutingRequest found in scenario")
 
         return self.routing_request
 
