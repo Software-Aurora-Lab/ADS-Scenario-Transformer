@@ -6,6 +6,6 @@
     "source-name": "BorregasAve-DoppelTest",
     "obstacle-waypoint-frequency": 2,
     "output-scenario-path": "./BorregasAve-DoppelTest",
-    "disable-traffic-signal": true,
+    "disable-traffic-signal": false,
     "use-last-position-destination": true
 }
