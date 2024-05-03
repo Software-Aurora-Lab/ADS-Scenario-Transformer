@@ -47,11 +47,6 @@ def borregas_doppel_scenario9_path() -> str:
 
 
 @pytest.fixture
-def borregas_doppel_scenario35_path() -> str:
-    return SAMPLE_ROOT + "/apollo_borregas/DoppelTest/00000035.00000"
-
-
-@pytest.fixture
 def borregas_vector_map_path() -> str:
     return SAMPLE_ROOT + "/map/BorregasAve/lanelet2_map.osm"
 

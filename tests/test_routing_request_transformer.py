@@ -62,7 +62,7 @@ def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object,
 
 
 def test_routing_request_from_response(lanelet_map, mgrs_projector,
-                                       borregas_doppel_scenario35_path,
+                                       borregas_doppel_scenario9_path,
                                        ego_scenario_object, apollo_map_parser):
     routing_request_transformer = RoutingRequestTransformer(
         configuration=RoutingRequestTransformerConfiguration(
@@ -71,7 +71,7 @@ def test_routing_request_from_response(lanelet_map, mgrs_projector,
             apollo_map_parser=apollo_map_parser,
             ego_scenario_object=ego_scenario_object))
     routing_responses = CyberRecordReader.read_channel(
-        source_path=borregas_doppel_scenario35_path,
+        source_path=borregas_doppel_scenario9_path,
         channel=CyberRecordChannel.ROUTING_RESPONSE)
 
     routing_response = routing_responses[0]

@@ -38,41 +38,35 @@ class Geometry:
     @staticmethod
     def find_lanelet(map: LaneletMap,
                      basic_point: BasicPoint3d) -> Optional[Lanelet]:
-        found_lanes = findWithin3d(layer=map.laneletLayer, 
-                                   geometry=basic_point, 
+        found_lanes = findWithin3d(layer=map.laneletLayer,
+                                   geometry=basic_point,
                                    maxDist=1)
         if found_lanes:
             return found_lanes[0][1]
 
         basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
-
-        found_lanes_2d = findWithin2d(layer=map.laneletLayer, 
-           geometry=basic_point2d, 
-           maxDist=1)
-        
+        found_lanes_2d = findNearest(map.laneletLayer, basic_point2d, 1)
         if found_lanes_2d:
             return found_lanes_2d[0][1]
 
-
     @staticmethod
     def nearest_lane_position(map: LaneletMap,
-                      lanelet: Lanelet,
-                      basic_point: BasicPoint3d,
-                      heading=0.0) -> Optional[LanePosition]:
+                              lanelet: Lanelet,
+                              basic_point: BasicPoint3d,
+                              heading=0.0) -> Optional[LanePosition]:
 
         basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
 
         if not inside(lanelet, basic_point2d):
             # If the point is not in lanelet, we find nearest one and use it
-            nearest_point_in_lanelets = findWithin2d(layer=map.pointLayer, 
-               geometry=basic_point2d, 
-               maxDist=2)
+            nearest_point_in_lanelets = findNearest(map.pointLayer,
+                                                    basic_point2d, 1)
             if not nearest_point_in_lanelets:
                 return None
 
             nearest_point = nearest_point_in_lanelets[0][1]
             basic_point2d = BasicPoint2d(nearest_point.x, nearest_point.y)
-            
+
         max_centerline_length = math.floor(length2d(lanelet))
         point3d = Point3d(getId(), basic_point.x, basic_point.y, basic_point.z)
         # Calculation of s attribute is simplified.

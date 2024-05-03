@@ -1,4 +1,5 @@
 import math
+import pickle
 from typing import List, Set, Tuple
 import networkx as nx
 from shapely.geometry import LineString, Point
@@ -25,6 +26,7 @@ class ApolloMapParser:
 
     def __init__(self, filepath: str) -> None:
         self.__map = self.load_hd_map(filepath)
+        print(f"Finish to Load Apollo HD map at {filepath}")
         self.load_junctions()
         self.load_signals()
         self.load_stop_signs()
@@ -37,6 +39,11 @@ class ApolloMapParser:
         self.load_instance()
 
     def load_hd_map(self, filepath: str):
+
+        if filepath.endswith(".pickle"):
+            with open(filepath, 'rb') as f:
+                return pickle.load(f)
+
         map = Map()
         f = open(filepath, 'rb')
         map.ParseFromString(f.read())
