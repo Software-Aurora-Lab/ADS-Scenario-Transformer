@@ -22,10 +22,12 @@ class Geometry:
                 point=point, projector=projector)
             basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
 
-            nearest_traffic_light = findNearest(map.regulatoryElementLayer,
-                                                basic_point2d, 1)
-            if nearest_traffic_light:
-                candidates.update(nearest_traffic_light)
+            nearest_traffic_elements = findNearest(map.regulatoryElementLayer,
+                                                 basic_point2d, 10)
+
+            for traffic_element in nearest_traffic_elements:
+                if isinstance(traffic_element[1], TrafficLight):
+                    candidates.add(traffic_element)
 
         if not candidates:
             return None
@@ -56,7 +58,8 @@ class Geometry:
                               heading=0.0) -> Optional[LanePosition]:
 
         basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
-
+        t_attribute = distanceToCenterline2d(lanelet, basic_point2d)
+        
         if not inside(lanelet, basic_point2d):
             # If the point is not in lanelet, we find nearest one and use it
             nearest_point_in_lanelets = findNearest(map.pointLayer,
@@ -65,7 +68,7 @@ class Geometry:
                 return None
 
             nearest_point = nearest_point_in_lanelets[0][1]
-            basic_point2d = BasicPoint2d(nearest_point.x, nearest_point.y)
+            # basic_point2d = BasicPoint2d(nearest_point.x, nearest_point.y)
 
         max_centerline_length = math.floor(length2d(lanelet))
         point3d = Point3d(getId(), basic_point.x, basic_point.y, basic_point.z)
@@ -73,7 +76,7 @@ class Geometry:
         # https://releases.asam.net/OpenDRIVE/1.6.0/ASAM_OpenDRIVE_BS_V1-6-0.html#_reference_line_coordinate_systems
         s_attribute = min(max_centerline_length,
                           distance(lanelet.centerline[0], point3d))
-        t_attribute = distanceToCenterline2d(lanelet, basic_point2d)
+        
 
         return LanePosition(
             roadId='',
