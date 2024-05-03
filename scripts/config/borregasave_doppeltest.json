@@ -2,10 +2,10 @@
     "apollo-map-path": "./samples/map/BorregasAve/base_map.pickle",
     "vector-map-path": "./samples/map/BorregasAve/lanelet2_map.osm",
     "road-network-lanelet-map-path":
-    "/home/sora/Desktop/changnam/autoware_map/borregasave_map/lanelet2_map.osm",
+    "/home/sora/Desktop/changnam/autoware_map/BorregasAve/lanelet2_map.osm",
     "source-name": "BorregasAve-DoppelTest",
     "obstacle-waypoint-frequency": 2,
-    "output-scenario-path": "./BorregasAve-DoppelTest",
+    "output-scenario-path": "./BorregasAve",
     "disable-traffic-signal": false,
     "use-last-position-destination": true
 }

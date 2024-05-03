@@ -2,10 +2,10 @@
     "apollo-map-path": "./samples/map/Shalun/base_map.pickle",
     "vector-map-path": "./samples/map/Shalun/lanelet2_map.osm",
     "road-network-lanelet-map-path":
-    "/home/sora/Desktop/changnam/autoware_map/shalun_map/lanelet2_map.osm",
+    "/home/sora/Desktop/changnam/autoware_map/Shalun/lanelet2_map.osm",
     "source-name": "Shalun-scenoRITA",
     "obstacle-waypoint-frequency": 2,
-    "output-scenario-path": "./Shalun-scenoRITA",
+    "output-scenario-path": "./Shalun",
     "disable-traffic-signal": true,
     "use-last-position-destination": true
 }
