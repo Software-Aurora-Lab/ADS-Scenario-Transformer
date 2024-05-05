@@ -4,7 +4,7 @@
     "road-network-lanelet-map-path":
     "/home/sora/Desktop/changnam/autoware_map/BorregasAve/lanelet2_map.osm",
     "source-name": "BorregasAve-scenoRITA",
-    "obstacle-waypoint-frequency": 2,
+    "obstacle-waypoint-frequency": 5,
     "output-scenario-path": "./BorregasAve",
     "disable-traffic-signal": false,
     "use-last-position-destination": true
