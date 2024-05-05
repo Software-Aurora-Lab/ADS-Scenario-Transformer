@@ -6,6 +6,6 @@
     "source-name": "BorregasAve-scenoRITA",
     "obstacle-waypoint-frequency": 5,
     "output-scenario-path": "./BorregasAve",
-    "disable-traffic-signal": false,
+    "disable-traffic-signal": true,
     "use-last-position-destination": true
 }
