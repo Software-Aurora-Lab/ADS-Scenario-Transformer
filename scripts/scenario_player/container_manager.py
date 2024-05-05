@@ -43,15 +43,18 @@ class ContainerManager:
             f.write(f"  architecture_type:=awf/universe/20230906 \\\n")
             f.write(f"  record:=false \\\n")
             f.write(f"  scenario:={scenario_file_path} \\\n")
-            f.write(f"  log_directory:={log_dir_path} \\\n")
+            f.write(f"  output_directory:={log_dir_path} \\\n")
             f.write(f"  sensor_model:=sample_sensor_kit \\\n")
             f.write(f"  vehicle_model:=sample_vehicle")
         return script_path
 
     def start_instance(self, container_id: str, container_name: str,
                        map_path: str, scenario_path: str, script_path: str,
-                       docker_image_id: str):
-        print(f"start instance {container_name}_{container_id}")
+                       log_path: str, docker_image_id: str):
+        print("Start instance")
+        print("container name:", container_name)
+        print("container id:", container_id)
+        
         self.container = self.client.containers.run(
             docker_image_id,
             name=container_name,
@@ -78,6 +81,10 @@ class ContainerManager:
                 },
                 scenario_path: {
                     'bind': scenario_path,
+                    'mode': 'rw'
+                },
+                log_path: {
+                    'bind': log_path,
                     'mode': 'rw'
                 },
                 script_path: {
