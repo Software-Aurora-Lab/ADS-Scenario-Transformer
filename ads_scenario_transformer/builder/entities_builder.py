@@ -1,10 +1,10 @@
-from typing import List, Optional
+from typing import List, Optional, Set
 from enum import Enum
 from dataclasses import dataclass
 import yaml
 import copy
 from definitions import DEFAULT_ENTITIES_PATH
-from openscenario_msgs import Entities, BoundingBox, BoundingBox, Center, Dimensions
+from openscenario_msgs import Entities, BoundingBox, Center, Dimensions
 from ads_scenario_transformer.builder import Builder
 from ads_scenario_transformer.openscenario.openscenario_coder import OpenScenarioDecoder
 
@@ -14,6 +14,19 @@ class ASTEntityType(Enum):
     CAR = "car"
     BICYCLE = "bicycle"
     PEDESTRIAN = "pedestrian"
+
+    # ref: https://github.com/fzi-forschungszentrum-informatik/Lanelet2/blob/master/lanelet2_core/doc/LaneletAndAreaTagging.md#subtype-and-location
+    def available_lanelet_subtype(self) -> Set[str]:
+        if self == ASTEntityType.EGO or ASTEntityType.CAR:
+            return set(["road", "highway", "play_street", "exit"])
+        elif self == ASTEntityType.BICYCLE:
+            return set(["road", "play_street", "bicycle_lane"])
+        elif self == ASTEntityType.PEDESTRIAN:
+            return set([
+                "crosswalk", "stairs", "walkway", "shared_walkway",
+                "play_street", "exit"
+            ])
+        return set()
 
 
 @dataclass(frozen=True)

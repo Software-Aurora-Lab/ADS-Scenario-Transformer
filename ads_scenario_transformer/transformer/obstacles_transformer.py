@@ -1,11 +1,11 @@
 import math
 from dataclasses import dataclass
-from typing import List, Optional, Dict, Tuple
+from typing import List, Optional, Dict, Tuple, Set
 from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
 from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacles, PerceptionObstacle
 from modules.common.proto.geometry_pb2 import PointENU, Point3D
-from openscenario_msgs import Story, ScenarioObject, Position, Rule, SpeedActionDynamics, TransitionDynamics, Event, Condition, Act
+from openscenario_msgs import Story, ScenarioObject, Position, Rule, SpeedActionDynamics, TransitionDynamics, Event, Condition, Act, Vehicle
 from ads_scenario_transformer.transformer import Transformer
 from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformer, PointENUTransformerConfiguration
 from ads_scenario_transformer.builder.storyboard.story_builder import StoryBuilder
@@ -66,7 +66,7 @@ class ObstaclesTransformer(Transformer):
 
             start = obstacles[0]
             start_position = self.transform_coordinate_value(
-                position=start.position)
+                position=start.position, scenario_object=target_object)
 
             if not start_position:
                 raise ValueError(
@@ -90,7 +90,7 @@ class ObstaclesTransformer(Transformer):
                 routing_positions = []
                 for idx in self.obstacle_routing_indices(obstacles):
                     position = self.transform_coordinate_value(
-                        obstacles[idx].position)
+                        obstacles[idx].position, scenario_object=target_object)
                     if position:
                         routing_positions.append(position)
                     else:
@@ -337,14 +337,30 @@ class ObstaclesTransformer(Transformer):
                 return scenario_object
         return None
 
-    def transform_coordinate_value(self,
-                                   position: Point3D) -> Optional[Position]:
+    def transform_coordinate_value(
+            self, position: Point3D,
+            scenario_object: ScenarioObject) -> Optional[Position]:
+
         point = PointENU(x=position.x, y=position.y, z=0)
         transformer = PointENUTransformer(
             configuration=PointENUTransformerConfiguration(
                 supported_position=PointENUTransformer.SupportedPosition.Lane,
                 lanelet_map=self.configuration.lanelet_map,
-                projector=self.configuration.projector))
+                projector=self.configuration.projector,
+                lanelet_subtypes=self.available_lane_subtypes(
+                    scenario_object)))
 
         position = transformer.transform(source=(point, 0.0))
         return position
+
+    def available_lane_subtypes(self,
+                                scenario_object: ScenarioObject) -> Set[str]:
+
+        if scenario_object.entityObject.HasField("pedestrian"):
+            return ASTEntityType.PEDESTRIAN.available_lanelet_subtype()
+        elif scenario_object.entityObject.HasField("vehicle"):
+            if scenario_object.entityObject.vehicle.vehicleCategory == Vehicle.Category.BICYCLE:
+                return ASTEntityType.BICYCLE.available_lanelet_subtype()
+            elif scenario_object.entityObject.vehicle.vehicleCategory == Vehicle.Category.CAR:
+                return ASTEntityType.CAR.available_lanelet_subtype()
+        return set()

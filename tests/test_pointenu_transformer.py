@@ -1,8 +1,3 @@
-import pytest
-import lanelet2
-from lanelet2.projection import MGRSProjector
-from lanelet2.io import Origin
-from lanelet2.core import LaneletMap
 from modules.common.proto.geometry_pb2 import PointENU
 from ads_scenario_transformer.transformer import PointENUTransformer
 from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformerConfiguration
@@ -16,7 +11,8 @@ def test_transform_world_position(lanelet_map, mgrs_projector):
         configuration=PointENUTransformerConfiguration(
             supported_position=worldType,
             lanelet_map=lanelet_map,
-            projector=mgrs_projector))
+            projector=mgrs_projector,
+            lanelet_subtypes=set()))
     position = transformer.transform(source=(point, 0.0))
 
     assert position.worldPosition is not None, "The gpspoint should not be None."
@@ -33,7 +29,8 @@ def test_transform_lane_position(lanelet_map, mgrs_projector):
         configuration=PointENUTransformerConfiguration(
             supported_position=laneType,
             lanelet_map=lanelet_map,
-            projector=mgrs_projector))
+            projector=mgrs_projector,
+            lanelet_subtypes=set()))
 
     position = transformer.transform(source=(point, 0.0))
 

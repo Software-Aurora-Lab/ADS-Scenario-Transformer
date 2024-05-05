@@ -6,6 +6,7 @@ from modules.routing.proto.routing_pb2 import RoutingRequest
 from openscenario_msgs import Private, ScenarioObject
 from ads_scenario_transformer.transformer import Transformer
 from ads_scenario_transformer.transformer.lane_waypoint_transformer import LaneWaypointTransformer, LaneWaypointTransformerConfiguration
+from ads_scenario_transformer.builder.entities_builder import ASTEntityType
 from ads_scenario_transformer.builder.private_builder import PrivateBuilder
 from ads_scenario_transformer.tools.apollo_map_parser import ApolloMapParser
 
@@ -34,7 +35,9 @@ class RoutingRequestTransformer(Transformer):
             configuration=LaneWaypointTransformerConfiguration(
                 lanelet_map=self.configuration.lanelet_map,
                 projector=self.configuration.projector,
-                apollo_map_parser=self.configuration.apollo_map_parser))
+                apollo_map_parser=self.configuration.apollo_map_parser,
+                lanelet_subtypes=ASTEntityType.EGO.available_lanelet_subtype(
+                )))
 
         openscenario_waypoints = map(
             lambda lane_waypoint:

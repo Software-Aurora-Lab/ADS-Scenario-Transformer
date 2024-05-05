@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional, Union, Set
 import math
 from lanelet2.projection import MGRSProjector
 from lanelet2.core import Lanelet, LaneletMap, GPSPoint, BasicPoint2d, BasicPoint3d, getId, Point3d, TrafficLight
@@ -23,7 +23,7 @@ class Geometry:
             basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
 
             nearest_traffic_elements = findNearest(map.regulatoryElementLayer,
-                                                 basic_point2d, 10)
+                                                   basic_point2d, 10)
 
             for traffic_element in nearest_traffic_elements:
                 if isinstance(traffic_element[1], TrafficLight):
@@ -39,17 +39,34 @@ class Geometry:
 
     @staticmethod
     def find_lanelet(map: LaneletMap,
-                     basic_point: BasicPoint3d) -> Optional[Lanelet]:
+                     basic_point: BasicPoint3d,
+                     subtypes: Optional[Set[str]] = None) -> Optional[Lanelet]:
         found_lanes = findWithin3d(layer=map.laneletLayer,
                                    geometry=basic_point,
                                    maxDist=1)
-        if found_lanes:
-            return found_lanes[0][1]
+
+        if subtypes:
+            for lanelet in found_lanes:
+                if "subtype" in lanelet[1].attributes and lanelet[
+                        1].attributes["subtype"] in subtypes:
+                    return lanelet[1]
+        else:
+            if found_lanes:
+                return found_lanes[0][1]
 
         basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
-        found_lanes_2d = findNearest(map.laneletLayer, basic_point2d, 1)
-        if found_lanes_2d:
-            return found_lanes_2d[0][1]
+        found_lanes_2d = findNearest(map.laneletLayer, basic_point2d, 10)
+
+        if subtypes:
+            for lanelet in found_lanes_2d:
+                if "subtype" in lanelet[1].attributes and lanelet[
+                        1].attributes["subtype"] in subtypes:
+                    return lanelet[1]
+        else:
+            if found_lanes_2d:
+                return found_lanes_2d[0][1]
+
+        return None
 
     @staticmethod
     def nearest_lane_position(map: LaneletMap,
@@ -59,7 +76,7 @@ class Geometry:
 
         basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
         t_attribute = distanceToCenterline2d(lanelet, basic_point2d)
-        
+
         if not inside(lanelet, basic_point2d):
             # If the point is not in lanelet, we find nearest one and use it
             nearest_point_in_lanelets = findNearest(map.pointLayer,
@@ -68,7 +85,6 @@ class Geometry:
                 return None
 
             nearest_point = nearest_point_in_lanelets[0][1]
-            # basic_point2d = BasicPoint2d(nearest_point.x, nearest_point.y)
 
         max_centerline_length = math.floor(length2d(lanelet))
         point3d = Point3d(getId(), basic_point.x, basic_point.y, basic_point.z)
@@ -76,7 +92,6 @@ class Geometry:
         # https://releases.asam.net/OpenDRIVE/1.6.0/ASAM_OpenDRIVE_BS_V1-6-0.html#_reference_line_coordinate_systems
         s_attribute = min(max_centerline_length,
                           distance(lanelet.centerline[0], point3d))
-        
 
         return LanePosition(
             roadId='',

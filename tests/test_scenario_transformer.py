@@ -1,4 +1,3 @@
-from pathlib import Path
 import pytest
 from ads_scenario_transformer.transformer.scenario_transformer import ScenarioTransformer, ScenarioTransformerConfiguration
 from ads_scenario_transformer.openscenario import OpenScenarioEncoder

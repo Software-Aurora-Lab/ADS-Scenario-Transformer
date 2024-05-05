@@ -1,4 +1,4 @@
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple, Optional, Set
 import math
 from dataclasses import dataclass
 from lanelet2.core import LaneletMap
@@ -10,12 +10,15 @@ from ads_scenario_transformer.transformer import Transformer
 from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformer, PointENUTransformerConfiguration
 from ads_scenario_transformer.tools.apollo_map_parser import ApolloMapParser
 
+
 @dataclass
 class LaneWaypointTransformerConfiguration:
     lanelet_map: LaneletMap
     projector: MGRSProjector
+    lanelet_subtypes: Set[str]
     apollo_map_parser: Optional[ApolloMapParser] = None
-    
+
+
 class LaneWaypointTransformer(Transformer):
     configuration: LaneWaypointTransformerConfiguration
     Source = LaneWaypoint
@@ -32,13 +35,13 @@ class LaneWaypointTransformer(Transformer):
                 pose.x
         ):  # if pose.x and pose.y are nan, then it will check laneId and s
             (pose, heading) = self.get_pose_from_apollo_waypoint(source)
-        
+
         pointenu_transformer = PointENUTransformer(
             configuration=PointENUTransformerConfiguration(
-            supported_position=PointENUTransformer.SupportedPosition.Lane,
-            lanelet_map=self.configuration.lanelet_map,
-            projector=self.configuration.projector)
-        )
+                supported_position=PointENUTransformer.SupportedPosition.Lane,
+                lanelet_map=self.configuration.lanelet_map,
+                projector=self.configuration.projector,
+                lanelet_subtypes=self.configuration.lanelet_subtypes))
         position = pointenu_transformer.transform((pose, heading))
 
         return Waypoint(routeStrategy=RouteStrategy.ROUTESTRATEGY_SHORTEST,
@@ -47,7 +50,8 @@ class LaneWaypointTransformer(Transformer):
     def get_pose_from_apollo_waypoint(
             self, source: Source) -> Tuple[PointENU, float]:
         assert self.configuration.apollo_map_parser is not None
-        
-        (point, heading) = self.configuration.apollo_map_parser.get_coordinate_and_heading(
-            lane_id=source.id, s=source.s)
+
+        (point, heading
+         ) = self.configuration.apollo_map_parser.get_coordinate_and_heading(
+             lane_id=source.id, s=source.s)
         return (PointENU(x=point.x, y=point.y, z=0), heading)

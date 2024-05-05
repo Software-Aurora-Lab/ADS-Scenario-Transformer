@@ -1,4 +1,4 @@
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Set
 from enum import Enum
 from dataclasses import dataclass
 from lanelet2.core import LaneletMap
@@ -14,6 +14,7 @@ class PointENUTransformerConfiguration:
     supported_position: 'PointENUTransformer.SupportedPosition'
     lanelet_map: LaneletMap
     projector: MGRSProjector
+    lanelet_subtypes: Set[str]
 
 
 class PointENUTransformer(Transformer):
@@ -44,10 +45,13 @@ class PointENUTransformer(Transformer):
                                 source: Source) -> Optional[LanePosition]:
         lanelet_map = self.configuration.lanelet_map
         projector = self.configuration.projector
+        lanelet_subtypes = self.configuration.lanelet_subtypes
 
         projected_point = Geometry.project_UTM_point_on_lanelet(
             projector=projector, point=source[0])
-        lanelet = Geometry.find_lanelet(lanelet_map, projected_point)
+        lanelet = Geometry.find_lanelet(map=lanelet_map,
+                                        basic_point=projected_point,
+                                        subtypes=lanelet_subtypes)
 
         if lanelet:
             # Discard heading value

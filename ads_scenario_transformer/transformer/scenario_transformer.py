@@ -143,7 +143,9 @@ class ScenarioTransformer:
                     supported_position=PointENUTransformer.SupportedPosition.
                     Lane,
                     lanelet_map=self.vector_map_parser.lanelet_map,
-                    projector=self.vector_map_parser.projector))
+                    projector=self.vector_map_parser.projector,
+                    lanelet_subtypes=ASTEntityType.EGO.
+                    available_lanelet_subtype()))
             ego_end_position = pointenu_transformer.transform((last_pose, 0.0))
         else:
             if routing_action.HasField("assignRouteAction"):
@@ -220,7 +222,8 @@ class ScenarioTransformer:
         self.routing_request = routing_response.routing_request
 
         if not self.routing_request:
-            raise InvalidScenarioInputError("No RoutingRequest found in scenario")
+            raise InvalidScenarioInputError(
+                "No RoutingRequest found in scenario")
 
         return self.routing_request
 

@@ -1,12 +1,8 @@
-import unittest
-import lanelet2
-from lanelet2.projection import MGRSProjector
-from lanelet2.io import Origin
 from modules.common.proto.geometry_pb2 import PointENU
 from modules.routing.proto.routing_pb2 import LaneWaypoint
-from openscenario_msgs import Waypoint, LanePosition
 from ads_scenario_transformer.transformer import LaneWaypointTransformer
 from ads_scenario_transformer.transformer.lane_waypoint_transformer import LaneWaypointTransformerConfiguration
+from ads_scenario_transformer.builder.entities_builder import ASTEntityType
 
 
 def test_utm_type_lane_waypoint_transformer(lanelet_map, mgrs_projector):
@@ -16,7 +12,9 @@ def test_utm_type_lane_waypoint_transformer(lanelet_map, mgrs_projector):
 
     transformer = LaneWaypointTransformer(
         configuration=LaneWaypointTransformerConfiguration(
-            lanelet_map=lanelet_map, projector=mgrs_projector))
+            lanelet_map=lanelet_map,
+            projector=mgrs_projector,
+            lanelet_subtypes=ASTEntityType.EGO.available_lanelet_subtype()))
 
     openscenario_waypoint = transformer.transform(source=lane_waypoint)
 
@@ -36,7 +34,8 @@ def test_laneId_type_lane_waypoint_transformer(lanelet_map, mgrs_projector,
         configuration=LaneWaypointTransformerConfiguration(
             lanelet_map=lanelet_map,
             projector=mgrs_projector,
-            apollo_map_parser=apollo_map_parser))
+            apollo_map_parser=apollo_map_parser,
+            lanelet_subtypes=ASTEntityType.EGO.available_lanelet_subtype()))
 
     openscenario_waypoint = transformer.transform(source=lane_waypoint)
 
