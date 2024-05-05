@@ -22,6 +22,7 @@ from ads_scenario_transformer.builder.storyboard.story_builder import StoryBuild
 from ads_scenario_transformer.builder.storyboard.trigger_builder import StopTriggerBuilder
 from ads_scenario_transformer.transformer.traffic_signal_transformer import TrafficSignalTransformer, TrafficSignalTransformerConfiguration, TrafficSignalTransformerResult
 from ads_scenario_transformer.tools.error import InvalidScenarioInputError
+from ads_scenario_transformer.tools.map_cache import MapCache
 
 
 @dataclass
@@ -72,10 +73,11 @@ class ScenarioTransformer:
     def __init__(self, configuration: ScenarioTransformerConfiguration):
         self.configuration = configuration
 
-        self.apollo_map_parser = ApolloMapParser(
-            filepath=configuration.apollo_hd_map_path)
-        self.vector_map_parser = VectorMapParser(
+        self.apollo_map_parser = MapCache.get_apollo_map_parser(
+            apollo_hd_map_path=configuration.apollo_hd_map_path)
+        self.vector_map_parser = MapCache.get_vector_map_parser(
             vector_map_path=configuration.vector_map_path)
+
         self.localization_poses = []
         self.routing_request = None
         self.obstacles = []
