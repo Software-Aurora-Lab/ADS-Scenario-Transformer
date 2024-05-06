@@ -19,7 +19,7 @@ class CSVResult:
 
 
 @dataclass
-class ExperiementConfiguration:
+class ExperimentConfiguration:
 
     def __init__(self, ads_root: str, experiment_id: int,
                  docker_image_id: str):
@@ -56,10 +56,10 @@ class ExperiementConfiguration:
         return f"{self.single_exp_root}/log"
 
 
-class ExperiementRunner:
-    configuration: ExperiementConfiguration
+class ExperimentRunner:
+    configuration: ExperimentConfiguration
 
-    def __init__(self, configuration: ExperiementConfiguration):
+    def __init__(self, configuration: ExperimentConfiguration):
         self.configuration = configuration
         os.makedirs(self.configuration.script_dir, exist_ok=True)
         os.makedirs(self.configuration.log_dir, exist_ok=True)
@@ -81,7 +81,7 @@ class ExperiementRunner:
 
         return scenario_dict
 
-    def run_experiement(self, output_summary: bool, enable_recording: bool):
+    def run_experiment(self, output_summary: bool, enable_recording: bool):
         print("Running Scenarios:", self.scenario_paths)
 
         map_count = len(self.scenario_paths)
@@ -160,12 +160,20 @@ class ExperiementRunner:
         for testsuite in root.findall('testsuite'):
             for testcase in testsuite.findall('testcase'):
                 error = testcase.find('error')
+                failure = testcase.find('failure')
                 if error is not None:
                     results.append(
                         CSVResult(scenario_name=testcase.attrib['name'],
                                   is_success=False,
                                   error_type=error.attrib['type'],
                                   message=error.attrib['message']))
+                elif failure is not None:
+                    results.append(
+                        CSVResult(scenario_name=testcase.attrib['name'],
+                                  is_success=False,
+                                  error_type=failure.get('type'),
+                                  message=failure.get('message'))
+                    )
                 else:
                     results.append(
                         CSVResult(scenario_name=testcase.attrib['name'],
@@ -219,9 +227,9 @@ if __name__ == '__main__':
     EXPERIMENT_ID = args.experiment_id
 
     os.system("xhost +local:docker")
-    runner = ExperiementRunner(configuration=ExperiementConfiguration(
+    runner = ExperimentRunner(configuration=ExperimentConfiguration(
         ads_root=ADS_ROOT,
         experiment_id=EXPERIMENT_ID,
         docker_image_id=DOCKER_IMAGE_ID))
 
-    runner.run_experiement(output_summary=True, enable_recording=True)
+    runner.run_experiment(output_summary=True, enable_recording=True)
