@@ -1,4 +1,5 @@
 import os
+import shutil
 import random
 import csv
 import argparse
@@ -127,11 +128,16 @@ class ExperimentRunner:
                 self.container_manager.remove_instance()
                 self.container_id += 1
 
+                scenario_result_path = self.configuration.log_dir + "/scenario_test_runner/result.junit.xml"
                 results = self.create_result_data(
-                    result_file_path=self.configuration.log_dir +
-                    "/scenario_test_runner/result.junit.xml")
-
+                    result_file_path=scenario_result_path)
+                shutil.copy(scenario_result_path, self.configuration.log_dir + f"/result_{Path(scenario).stem}.junit.xml")
+                
                 csv_results.extend(results)
+                self.write_result_to_csv(
+                    result=csv_results,
+                    filename=self.configuration.log_dir + f"/intermediate_summary.csv")
+                
                 print(f"{scenario_idx + 1}/{scenario_count} done")
 
             map_name = Path(map_dir).stem
