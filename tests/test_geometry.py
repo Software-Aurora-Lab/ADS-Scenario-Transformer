@@ -27,7 +27,7 @@ def test_projection(mgrs_projector):
         ) <= 1.0, "projected point.y is not equal to the expectation"
 
 
-def test_geometry(lanelet_map):
+def test_geometry(lanelet_map, entities):
     basic_points = [
         BasicPoint3d(86973.4293, 41269.817, -5.6757),
         BasicPoint3d(86993.2289, 41343.5182, -4.5032),
@@ -49,11 +49,12 @@ def test_geometry(lanelet_map):
                                         basic_point=basic_point)
         assert lanelet is not None, "lanelet should not be None"
 
+        ego_bounding_box = entities.scenarioObjects[0].entityObject.vehicle.boundingBox
         target_lane_position = Geometry.nearest_lane_position(
             map=lanelet_map,
             lanelet=lanelet,
             basic_point=basic_point,
-            entity_width=1.875)
+            entity_bounding_box=ego_bounding_box)
 
         assert target_lane_position.laneId == expectation.laneId, "laneId should be the same"
 
