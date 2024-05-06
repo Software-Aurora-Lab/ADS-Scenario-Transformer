@@ -62,7 +62,7 @@ class PointENUTransformer(Transformer):
                 map=lanelet_map,
                 lanelet=lanelet,
                 basic_point=projected_point,
-                entity_width=bounding_box.dimensions.width,
+                entity_bounding_box=bounding_box,
                 heading=0.0)
             return lane_position
         return None

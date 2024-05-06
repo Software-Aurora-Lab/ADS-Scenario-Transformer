@@ -6,7 +6,7 @@ from lanelet2.geometry import distanceToCenterline2d, distance, findWithin3d, in
 from pyproj import Proj
 from modules.common.proto.geometry_pb2 import PointENU, Point3D
 from modules.map.proto.map_signal_pb2 import Signal
-from openscenario_msgs import LanePosition, Orientation, ReferenceContext
+from openscenario_msgs import LanePosition, Orientation, ReferenceContext, BoundingBox
 
 
 class Geometry:
@@ -72,7 +72,7 @@ class Geometry:
     def nearest_lane_position(map: LaneletMap,
                               lanelet: Lanelet,
                               basic_point: BasicPoint3d,
-                              entity_width: float,
+                              entity_bounding_box: BoundingBox,
                               heading=0.0) -> Optional[LanePosition]:
         point3d = Point3d(getId(), basic_point.x, basic_point.y, basic_point.z)
         basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
@@ -98,18 +98,20 @@ class Geometry:
         if not is_t_positive:
             t_attribute = -t_attribute
 
+        entity_width = entity_bounding_box.dimensions.width
+        entity_length = entity_bounding_box.dimensions.length
+        
         # If there is not enough space to place entity on the lane, simulator will fails.
         max_lane_width = (lane_width - entity_width) / 2
         min_lane_width = -max_lane_width
         t_attribute = min(max_lane_width, t_attribute)
         t_attribute = max(min_lane_width, t_attribute)
         
-        max_centerline_length = math.floor(length2d(lanelet))
+        max_s = max(math.floor(length2d(lanelet) - entity_length), 0)
 
         # Calculation of s attribute is simplified.
         # https://releases.asam.net/OpenDRIVE/1.6.0/ASAM_OpenDRIVE_BS_V1-6-0.html#_reference_line_coordinate_systems
-        s_attribute = min(max_centerline_length,
-                          distance(lanelet.centerline[0], point3d))
+        s_attribute = min(max_s, distance(lanelet.centerline[0], point3d))
 
         return LanePosition(
             roadId='',
