@@ -147,7 +147,8 @@ class ScenarioTransformer:
                     lanelet_map=self.vector_map_parser.lanelet_map,
                     projector=self.vector_map_parser.projector,
                     lanelet_subtypes=ASTEntityType.EGO.
-                    available_lanelet_subtype()))
+                    available_lanelet_subtype(),
+                    scenario_object=self.entities.scenarioObjects[0]))
             ego_end_position = pointenu_transformer.transform((last_pose, 0.0))
         else:
             if routing_action.HasField("assignRouteAction"):

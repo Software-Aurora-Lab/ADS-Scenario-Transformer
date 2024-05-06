@@ -1,8 +1,8 @@
 from typing import Optional, Union, Set
 import math
 from lanelet2.projection import MGRSProjector
-from lanelet2.core import Lanelet, LaneletMap, GPSPoint, BasicPoint2d, BasicPoint3d, getId, Point3d, TrafficLight
-from lanelet2.geometry import distanceToCenterline2d, distance, findWithin3d, inside, length2d, findNearest, findWithin2d
+from lanelet2.core import Lanelet, LaneletMap, GPSPoint, BasicPoint2d, BasicPoint3d, getId, Point3d, TrafficLight, Point2d
+from lanelet2.geometry import distanceToCenterline2d, distance, findWithin3d, inside, length2d, findNearest, findWithin2d, to2D
 from pyproj import Proj
 from modules.common.proto.geometry_pb2 import PointENU, Point3D
 from modules.map.proto.map_signal_pb2 import Signal
@@ -72,8 +72,9 @@ class Geometry:
     def nearest_lane_position(map: LaneletMap,
                               lanelet: Lanelet,
                               basic_point: BasicPoint3d,
+                              entity_width: float,
                               heading=0.0) -> Optional[LanePosition]:
-
+        point3d = Point3d(getId(), basic_point.x, basic_point.y, basic_point.z)
         basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
         t_attribute = distanceToCenterline2d(lanelet, basic_point2d)
 
@@ -85,9 +86,26 @@ class Geometry:
                 return None
 
             nearest_point = nearest_point_in_lanelets[0][1]
+            basic_point2d = BasicPoint2d(nearest_point.x, nearest_point.y)
+            t_attribute = distanceToCenterline2d(lanelet, basic_point2d)
 
+        point2d = Point2d(getId(), basic_point.x, basic_point.y)
+        left = distance(to2D(lanelet.leftBound), point2d)
+        right = distance(to2D(lanelet.rightBound), point2d)
+        is_t_positive = left < right
+        lane_width = distance(lanelet.centerline, lanelet.leftBound) + distance(lanelet.centerline, lanelet.rightBound)
+
+        if not is_t_positive:
+            t_attribute = -t_attribute
+
+        # If there is not enough space to place entity on the lane, simulator will fails.
+        max_lane_width = (lane_width - entity_width) / 2
+        min_lane_width = -max_lane_width
+        t_attribute = min(max_lane_width, t_attribute)
+        t_attribute = max(min_lane_width, t_attribute)
+        
         max_centerline_length = math.floor(length2d(lanelet))
-        point3d = Point3d(getId(), basic_point.x, basic_point.y, basic_point.z)
+
         # Calculation of s attribute is simplified.
         # https://releases.asam.net/OpenDRIVE/1.6.0/ASAM_OpenDRIVE_BS_V1-6-0.html#_reference_line_coordinate_systems
         s_attribute = min(max_centerline_length,

@@ -3,7 +3,7 @@ from ads_scenario_transformer.transformer import PointENUTransformer
 from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformerConfiguration
 
 
-def test_transform_world_position(lanelet_map, mgrs_projector):
+def test_transform_world_position(lanelet_map, mgrs_projector, entities):
     point = PointENU(x=587079.3045861976, y=4141574.299574421, z=0)
     worldType = PointENUTransformer.SupportedPosition.World
 
@@ -12,7 +12,8 @@ def test_transform_world_position(lanelet_map, mgrs_projector):
             supported_position=worldType,
             lanelet_map=lanelet_map,
             projector=mgrs_projector,
-            lanelet_subtypes=set()))
+            lanelet_subtypes=set(),
+            scenario_object=entities.scenarioObjects[0]))
     position = transformer.transform(source=(point, 0.0))
 
     assert position.worldPosition is not None, "The gpspoint should not be None."
@@ -21,7 +22,7 @@ def test_transform_world_position(lanelet_map, mgrs_projector):
     assert position.worldPosition.z == 0.0
 
 
-def test_transform_lane_position(lanelet_map, mgrs_projector):
+def test_transform_lane_position(lanelet_map, mgrs_projector, entities):
 
     point = PointENU(x=587079.3045861976, y=4141574.299574421, z=0)
     laneType = PointENUTransformer.SupportedPosition.Lane
@@ -30,11 +31,12 @@ def test_transform_lane_position(lanelet_map, mgrs_projector):
             supported_position=laneType,
             lanelet_map=lanelet_map,
             projector=mgrs_projector,
-            lanelet_subtypes=set()))
+            lanelet_subtypes=set(),
+            scenario_object=entities.scenarioObjects[0]))
 
     position = transformer.transform(source=(point, 0.0))
 
     assert position.lanePosition is not None, "The lane_position should not be None."
     assert position.lanePosition.laneId == "22"
     assert position.lanePosition.s == 35.812947374714085
-    assert position.lanePosition.offset == 0.17503992807876528
+    assert position.lanePosition.offset == 0.2289137647592503

@@ -5,7 +5,7 @@ from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
 from modules.common.proto.geometry_pb2 import PointENU
 from modules.routing.proto.routing_pb2 import LaneWaypoint
-from openscenario_msgs import (Waypoint, RouteStrategy)
+from openscenario_msgs import Waypoint, RouteStrategy, ScenarioObject
 from ads_scenario_transformer.transformer import Transformer
 from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformer, PointENUTransformerConfiguration
 from ads_scenario_transformer.tools.apollo_map_parser import ApolloMapParser
@@ -16,6 +16,7 @@ class LaneWaypointTransformerConfiguration:
     lanelet_map: LaneletMap
     projector: MGRSProjector
     lanelet_subtypes: Set[str]
+    scenario_object: ScenarioObject
     apollo_map_parser: Optional[ApolloMapParser] = None
 
 
@@ -41,7 +42,8 @@ class LaneWaypointTransformer(Transformer):
                 supported_position=PointENUTransformer.SupportedPosition.Lane,
                 lanelet_map=self.configuration.lanelet_map,
                 projector=self.configuration.projector,
-                lanelet_subtypes=self.configuration.lanelet_subtypes))
+                lanelet_subtypes=self.configuration.lanelet_subtypes,
+                scenario_object=self.configuration.scenario_object))
         position = pointenu_transformer.transform((pose, heading))
 
         return Waypoint(routeStrategy=RouteStrategy.ROUTESTRATEGY_SHORTEST,

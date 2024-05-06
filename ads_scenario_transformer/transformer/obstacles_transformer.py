@@ -347,8 +347,8 @@ class ObstaclesTransformer(Transformer):
                 supported_position=PointENUTransformer.SupportedPosition.Lane,
                 lanelet_map=self.configuration.lanelet_map,
                 projector=self.configuration.projector,
-                lanelet_subtypes=self.available_lane_subtypes(
-                    scenario_object)))
+                lanelet_subtypes=self.available_lane_subtypes(scenario_object),
+                scenario_object=scenario_object))
 
         position = transformer.transform(source=(point, 0.0))
         return position

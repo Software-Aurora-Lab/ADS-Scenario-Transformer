@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
 from modules.common.proto.geometry_pb2 import PointENU
-from openscenario_msgs import Position, LanePosition, WorldPosition
+from openscenario_msgs import Position, LanePosition, WorldPosition, ScenarioObject, BoundingBox, Vehicle
 from ads_scenario_transformer.transformer import Transformer
 from ads_scenario_transformer.tools.geometry import Geometry
 
@@ -15,6 +15,7 @@ class PointENUTransformerConfiguration:
     lanelet_map: LaneletMap
     projector: MGRSProjector
     lanelet_subtypes: Set[str]
+    scenario_object: Optional[ScenarioObject]
 
 
 class PointENUTransformer(Transformer):
@@ -54,11 +55,14 @@ class PointENUTransformer(Transformer):
                                         subtypes=lanelet_subtypes)
 
         if lanelet:
+            bounding_box = self.object_bouding_box(
+                self.configuration.scenario_object)
             # Discard heading value
             lane_position = Geometry.nearest_lane_position(
                 map=lanelet_map,
                 lanelet=lanelet,
                 basic_point=projected_point,
+                entity_width=bounding_box.dimensions.width,
                 heading=0.0)
             return lane_position
         return None
@@ -71,3 +75,13 @@ class PointENUTransformer(Transformer):
                              y=projected_point.y,
                              z=projected_point.z,
                              h=0.0)
+
+    def object_bouding_box(
+            self, scenario_object: ScenarioObject) -> Optional[BoundingBox]:
+        if scenario_object.entityObject.HasField("pedestrian"):
+            return scenario_object.entityObject.pedestrian.boundingBox
+        elif scenario_object.entityObject.HasField("vehicle"):
+            return scenario_object.entityObject.vehicle.boundingBox
+        elif scenario_object.entityObject.vehicle.vehicleCategory == Vehicle.Category.CAR:
+            return scenario_object.entityObject.vehicle.boundingBox
+        return None

@@ -36,8 +36,8 @@ class RoutingRequestTransformer(Transformer):
                 lanelet_map=self.configuration.lanelet_map,
                 projector=self.configuration.projector,
                 apollo_map_parser=self.configuration.apollo_map_parser,
-                lanelet_subtypes=ASTEntityType.EGO.available_lanelet_subtype(
-                )))
+                lanelet_subtypes=ASTEntityType.EGO.available_lanelet_subtype(),
+                scenario_object=self.configuration.ego_scenario_object))
 
         openscenario_waypoints = map(
             lambda lane_waypoint:
