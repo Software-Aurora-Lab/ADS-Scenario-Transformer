@@ -127,25 +127,17 @@ class ExperimentRunner:
 
                 self.container_manager.remove_instance()
                 self.container_id += 1
-
-                scenario_result_path = self.configuration.log_dir + "/scenario_test_runner/result.junit.xml"
-                results = self.create_result_data(
-                    result_file_path=scenario_result_path)
-                shutil.copy(scenario_result_path, self.configuration.log_dir + f"/result_{Path(scenario).stem}.junit.xml")
-                
+                results = self.create_result_data(result_file_path=scenario_result_path)
                 csv_results.extend(results)
-                self.write_result_to_csv(
-                    result=csv_results,
-                    filename=self.configuration.log_dir + f"/intermediate_summary.csv")
-                
+                self.create_intermediate_result(results)                
                 print(f"{scenario_idx + 1}/{scenario_count} done")
 
             map_name = Path(map_dir).stem
             if output_summary:
                 self.write_result_to_csv(
                     result=csv_results,
-                    filename=self.configuration.single_exp_root +
-                    f"_{map_name}_summary.csv")
+                    filename=self.summary_path(map_name))
+
             pass_count = len(
                 [result for result in csv_results if result.is_success])
             print(
@@ -156,8 +148,22 @@ class ExperimentRunner:
         if output_summary:
             self.write_result_to_csv(
                 result=all_results,
-                filename=self.configuration.single_exp_root +
-                "_all_summary.csv")
+                filename=self.summary_path(map_name=None))
+
+    def summary_path(self, map_name: Optional[str]) -> str:
+        if map_name:
+            return self.configuration.single_exp_root + f"/exp_{self.configuration.experiment_id}_{map_name}_summary.csv"
+        else:
+            return self.configuration.single_exp_root + f"/exp_{self.configuration.experiment_id}_all_summary.csv"
+
+    def create_intermediate_result(self, results):
+        scenario_result_path = self.configuration.log_dir + "/scenario_test_runner/result.junit.xml"
+        shutil.copy(scenario_result_path, self.configuration.log_dir + f"/result_{Path(scenario).stem}.junit.xml")
+
+        self.write_result_to_csv(
+            result=csv_results,
+            filename=self.configuration.log_dir + f"/intermediate_summary.csv")
+
 
     def create_result_data(self, result_file_path) -> List[CSVResult]:
         tree = ET.parse(result_file_path)
@@ -199,6 +205,7 @@ class ExperimentRunner:
                     result.scenario_name, result.is_success, result.error_type,
                     result.message
                 ])
+            print("Write a summary at:", {filename})
 
     def start_recording(self,
                         output_filename,
@@ -239,3 +246,4 @@ if __name__ == '__main__':
         docker_image_id=DOCKER_IMAGE_ID))
 
     runner.run_experiment(output_summary=True, enable_recording=True)
+
