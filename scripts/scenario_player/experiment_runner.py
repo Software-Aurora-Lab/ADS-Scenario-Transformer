@@ -4,6 +4,7 @@ import random
 import csv
 import argparse
 import subprocess
+import threading
 from pathlib import Path
 from typing import List, Optional
 from dataclasses import dataclass
@@ -23,10 +24,11 @@ class CSVResult:
 class ExperimentConfiguration:
 
     def __init__(self, ads_root: str, experiment_id: int,
-                 docker_image_id: str):
+                 docker_image_id: str, container_timeout_sec: float):
         self.ads_root = ads_root
         self.experiment_id = experiment_id
         self.docker_image_id = docker_image_id
+        self.container_timeout_sec = container_timeout_sec
 
     @property
     def exp_root(self):
@@ -82,6 +84,13 @@ class ExperimentRunner:
 
         return scenario_dict
 
+    def start_container_timeout_timer(self, interval):
+        self.timer = threading.Timer(interval, lambda x: self.stop_container_if_timeout(), [interval])
+        self.timer.start()
+
+    def stop_container_if_timeout(self):
+        self.container_manager.stop_container_if_timeout(timeout_sec=self.configuration.container_timeout_sec)
+
     def run_experiment(self, output_summary: bool, enable_recording: bool):
         print("Running Scenarios:", self.scenario_paths)
 
@@ -94,8 +103,10 @@ class ExperimentRunner:
             scenario_count = len(scenario_paths)
             csv_results = []
             for scenario_idx, scenario in enumerate(scenario_paths):
+                self.start_container_timeout_timer(interval=self.configuration.container_timeout_sec)
 
                 output_file = f'{self.configuration.log_dir}/{Path(scenario).stem}.mp4'
+                scenario_name = Path(scenario).stem
 
                 if enable_recording:
                     print("Start Recording:", Path(scenario).stem)
@@ -122,14 +133,17 @@ class ExperimentRunner:
                         running_script_path))
 
                 if enable_recording:
-                    print("Stop Recording:", Path(scenario).stem)
+                    print("Stop Recording:", scenario_name)
                     self.stop_recording(self.recording_process)
 
+                if self.timer is not None:
+                    self.timer.cancel()
                 self.container_manager.remove_instance()
                 self.container_id += 1
+                scenario_result_path = self.configuration.log_dir + "/scenario_test_runner/result.junit.xml"
                 results = self.create_result_data(result_file_path=scenario_result_path)
                 csv_results.extend(results)
-                self.create_intermediate_result(results)                
+                self.create_intermediate_result(results, scenario_result_path, scenario_name)                
                 print(f"{scenario_idx + 1}/{scenario_count} done")
 
             map_name = Path(map_dir).stem
@@ -156,12 +170,12 @@ class ExperimentRunner:
         else:
             return self.configuration.single_exp_root + f"/exp_{self.configuration.experiment_id}_all_summary.csv"
 
-    def create_intermediate_result(self, results):
-        scenario_result_path = self.configuration.log_dir + "/scenario_test_runner/result.junit.xml"
-        shutil.copy(scenario_result_path, self.configuration.log_dir + f"/result_{Path(scenario).stem}.junit.xml")
+    def create_intermediate_result(self, results, scenario_result_path, scenario_name):
+
+        shutil.copy(scenario_result_path, self.configuration.log_dir + f"/result_{scenario_name}.junit.xml")
 
         self.write_result_to_csv(
-            result=csv_results,
+            result=results,
             filename=self.configuration.log_dir + f"/intermediate_summary.csv")
 
 
@@ -243,7 +257,8 @@ if __name__ == '__main__':
     runner = ExperimentRunner(configuration=ExperimentConfiguration(
         ads_root=ADS_ROOT,
         experiment_id=EXPERIMENT_ID,
-        docker_image_id=DOCKER_IMAGE_ID))
+        docker_image_id=DOCKER_IMAGE_ID,
+        container_timeout_sec=120))
 
-    runner.run_experiment(output_summary=True, enable_recording=True)
-
+    runner.run_experiment(output_summary=True, 
+                          enable_recording=True)
