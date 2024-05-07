@@ -1,6 +1,5 @@
-import time
 import docker
-
+from datetime import datetime, timezone
 
 class ContainerManager:
     ads_root: str
@@ -18,6 +17,7 @@ class ContainerManager:
                 return True
         except:
             return False
+
 
     def execute_script_in_container(self, script_path):
         if self.container:
@@ -102,3 +102,19 @@ class ContainerManager:
         self.container.stop()
         self.container.remove()
         self.container = None
+
+    def stop_container_if_timeout(self, timeout_sec: float):
+        if not self.container:
+            return
+
+        result_dict = self.client.api.inspect_container(self.container.id)
+        created_timestamp_str = result_dict["Created"]
+
+        created_timestamp = datetime.fromisoformat(created_timestamp_str[:26])
+        current_utc_time = datetime.utcnow()
+
+        time_difference = current_utc_time - created_timestamp
+
+        if timeout_sec <= time_difference.seconds:
+            print(f"Stop Container since it is running for more than {timeout_sec} sec")
+            self.remove_instance()
