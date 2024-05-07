@@ -1,5 +1,5 @@
 import math
-from typing import List, Optional, Tuple
+from typing import List, Optional
 from dataclasses import dataclass
 from modules.localization.proto.localization_pb2 import LocalizationEstimate
 from modules.perception.proto.traffic_light_detection_pb2 import TrafficLightDetection

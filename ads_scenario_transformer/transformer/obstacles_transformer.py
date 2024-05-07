@@ -8,6 +8,7 @@ from modules.common.proto.geometry_pb2 import PointENU, Point3D
 from openscenario_msgs import Story, ScenarioObject, Position, Rule, SpeedActionDynamics, TransitionDynamics, Event, Condition, Act, Vehicle
 from ads_scenario_transformer.transformer import Transformer
 from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformer, PointENUTransformerConfiguration
+from ads_scenario_transformer.transformer.speed_transformer import SpeedTransformer, SpeedTransformerConfiguration
 from ads_scenario_transformer.builder.storyboard.story_builder import StoryBuilder
 from ads_scenario_transformer.builder.storyboard.act_builder import ActBuilder
 from ads_scenario_transformer.builder.storyboard.actors_builder import ActorsBuilder
@@ -111,8 +112,11 @@ class ObstaclesTransformer(Transformer):
                 events=events,
                 start_condition=simulation_start_condition,
                 entity_names=[target_object.name])
+
+            speed_act = self.create_speed_act(target_object=target_object,
+                                              obstacles=obstacles)
             story_builder = StoryBuilder(name=f"{target_object.name} Story")
-            story_builder.make_acts(acts=[act])
+            story_builder.make_acts(acts=[act, speed_act])
             stories.append(story_builder.get_result())
 
         return ObstaclesTransformerResult(entities_with_id=entities_with_id,
@@ -163,44 +167,26 @@ class ObstaclesTransformer(Transformer):
         event_builder.add_global_action(
             name=f"Locate {entity_name} on the road",
             global_action=global_action)
-
-        # If you don't set its speed to 0, obstacles start running ignoring specified condition.
-        private_action_builder = PrivateActionBuilder()
-        private_action_builder.make_absolute_speed_action(
-            speed_action_dynamics=SpeedActionDynamics(
-                dynamicsDimension=TransitionDynamics.DynamicsDimension.TIME,
-                dynamicsShape=TransitionDynamics.DynamicsShape.STEP,
-                value=0),
-            value=0)
-        speed_action = private_action_builder.get_result()
-        event_builder.add_private_action(
-            name=f"Stop {entity_name} at starting point",
-            private_action=speed_action)
-
         return event_builder.get_result()
 
     def create_routing_event(self, start_condition: Condition,
                              routing_positions: List[Position],
                              max_velocity: float, entity_name: str) -> Event:
         event_builder = EventBuilder(start_conditions=[start_condition])
-
         private_action_builder = PrivateActionBuilder()
-        private_action_builder.make_absolute_speed_action(
-            speed_action_dynamics=SpeedActionDynamics(
-                dynamicsDimension=TransitionDynamics.DynamicsDimension.TIME,
-                dynamicsShape=TransitionDynamics.DynamicsShape.STEP,
-                value=0),
-            value=max_velocity)
-        speed_action = private_action_builder.get_result()
-        event_builder.add_private_action(name=f"Speed of {entity_name}",
-                                         private_action=speed_action)
-
         private_action_builder.make_routing_action(positions=routing_positions,
                                                    name="")
         private_action = private_action_builder.get_result()
         event_builder.add_private_action(name=f"Route {entity_name}",
                                          private_action=private_action)
         return event_builder.get_result()
+
+    def create_speed_act(self, target_object: ScenarioObject,
+                         obstacles: List[PerceptionObstacles]) -> Act:
+        speed_transformer = SpeedTransformer(
+            configuration=SpeedTransformerConfiguration(
+                entity_name=target_object.name))
+        return speed_transformer.transform(source=obstacles)
 
     def wrap_events_to_act(self, events: List[Event],
                            start_condition: Condition,

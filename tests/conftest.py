@@ -45,6 +45,10 @@ def borregas_doppel_scenario160_path() -> str:
 def borregas_doppel_scenario9_path() -> str:
     return SAMPLE_ROOT + "/apollo_borregas/DoppelTest/00000009.00000"
 
+@pytest.fixture
+def sf_doppel_scenario_path() -> str:
+    return SAMPLE_ROOT + "/apollo_sanfrancisco/DoppelTest/apollo_dev_ROUTE_0.Scenario_00007.00000"
+
 
 @pytest.fixture
 def borregas_vector_map_path() -> str:
