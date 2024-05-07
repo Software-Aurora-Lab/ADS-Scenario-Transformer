@@ -1,6 +1,7 @@
 import docker
 from datetime import datetime, timezone
 
+
 class ContainerManager:
     ads_root: str
 
@@ -8,6 +9,7 @@ class ContainerManager:
         self.client = docker.from_env()
         self.container = None
         self.ads_root = ads_root
+        self.removing_in_progress = False
 
     def is_running(self) -> bool:
         try:
@@ -17,7 +19,6 @@ class ContainerManager:
                 return True
         except:
             return False
-
 
     def execute_script_in_container(self, script_path):
         if self.container:
@@ -98,10 +99,14 @@ class ContainerManager:
             })
 
     def remove_instance(self):
+        if self.removing_in_progress:
+            return
         print(f"Remove {self.container}")
+        self.removing_in_progress = True
         self.container.stop()
         self.container.remove()
         self.container = None
+        self.removing_in_progress = False
 
     def stop_container_if_timeout(self, timeout_sec: float):
         if not self.container:
@@ -116,5 +121,7 @@ class ContainerManager:
         time_difference = current_utc_time - created_timestamp
 
         if timeout_sec <= time_difference.seconds:
-            print(f"Stop Container since it is running for more than {timeout_sec} sec")
+            print(
+                f"Stop Container since it is running for more than {timeout_sec} sec"
+            )
             self.remove_instance()
