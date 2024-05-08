@@ -17,15 +17,15 @@ def assert_proto_type_equal(reflection_type, pb2_type):
     assert str(reflection_type.__class__) == str(pb2_type)
 
 
-def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object,
+def test_routing_request(vector_map_parser, ego_scenario_object,
                          apollo_map_parser, borregas_doppel_scenario9_path):
 
     routing_request_transformer = RoutingRequestTransformer(
         configuration=RoutingRequestTransformerConfiguration(
-            lanelet_map=lanelet_map,
-            projector=mgrs_projector,
+            vector_map_parser=vector_map_parser,
             apollo_map_parser=apollo_map_parser,
-            ego_scenario_object=ego_scenario_object))
+            ego_scenario_object=ego_scenario_object,
+            reference_points=None))
 
     routing_requests = CyberRecordReader.read_channel(
         source_path=borregas_doppel_scenario9_path,
@@ -61,15 +61,15 @@ def test_routing_request(lanelet_map, mgrs_projector, ego_scenario_object,
     assert end_lane_position.orientation.h == 0.0
 
 
-def test_routing_request_from_response(lanelet_map, mgrs_projector,
+def test_routing_request_from_response(vector_map_parser,
                                        borregas_doppel_scenario9_path,
                                        ego_scenario_object, apollo_map_parser):
     routing_request_transformer = RoutingRequestTransformer(
         configuration=RoutingRequestTransformerConfiguration(
-            lanelet_map=lanelet_map,
-            projector=mgrs_projector,
+            vector_map_parser=vector_map_parser,
             apollo_map_parser=apollo_map_parser,
-            ego_scenario_object=ego_scenario_object))
+            ego_scenario_object=ego_scenario_object,
+            reference_points=None))
     routing_responses = CyberRecordReader.read_channel(
         source_path=borregas_doppel_scenario9_path,
         channel=CyberRecordChannel.ROUTING_RESPONSE)

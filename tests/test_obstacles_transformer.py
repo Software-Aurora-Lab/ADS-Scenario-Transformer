@@ -20,8 +20,7 @@ def test_obstacle_transformer(perception_obstacles, vector_map_parser):
     obstacles_transformer = ObstaclesTransformer(
         configuration=ObstaclesTransformerConfiguration(
             sceanrio_start_timestamp=sceanrio_start_timestamp,
-            lanelet_map=vector_map_parser.lanelet_map,
-            projector=vector_map_parser.projector,
+            vector_map_parser=vector_map_parser,
             waypoint_frequency_in_sec=1,
             direction_change_detection_threshold=60))
 

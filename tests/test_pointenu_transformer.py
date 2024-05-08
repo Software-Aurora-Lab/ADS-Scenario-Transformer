@@ -1,20 +1,21 @@
 from modules.common.proto.geometry_pb2 import PointENU
 from ads_scenario_transformer.transformer import PointENUTransformer
-from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformerConfiguration
+from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformerConfiguration, PointENUTransformerInput
 
 
-def test_transform_world_position(lanelet_map, mgrs_projector, entities):
+def test_transform_world_position(localization_poses, vector_map_parser,
+                                  entities):
     point = PointENU(x=587079.3045861976, y=4141574.299574421, z=0)
     worldType = PointENUTransformer.SupportedPosition.World
 
     transformer = PointENUTransformer(
         configuration=PointENUTransformerConfiguration(
             supported_position=worldType,
-            lanelet_map=lanelet_map,
-            projector=mgrs_projector,
-            lanelet_subtypes=set(),
-            scenario_object=entities.scenarioObjects[0]))
-    position = transformer.transform(source=(point, 0.0))
+            vector_map_parser=vector_map_parser,
+            scenario_object=entities.scenarioObjects[0],
+            reference_points=None))
+    position = transformer.transform(
+        source=PointENUTransformerInput(point, 0.0))
 
     assert position.worldPosition is not None, "The gpspoint should not be None."
     assert position.worldPosition.x == 87079.30458619667
@@ -22,19 +23,20 @@ def test_transform_world_position(lanelet_map, mgrs_projector, entities):
     assert position.worldPosition.z == 0.0
 
 
-def test_transform_lane_position(lanelet_map, mgrs_projector, entities):
+def test_transform_lane_position(localization_poses, vector_map_parser,
+                                 entities):
 
     point = PointENU(x=587079.3045861976, y=4141574.299574421, z=0)
     laneType = PointENUTransformer.SupportedPosition.Lane
     transformer = PointENUTransformer(
         configuration=PointENUTransformerConfiguration(
             supported_position=laneType,
-            lanelet_map=lanelet_map,
-            projector=mgrs_projector,
-            lanelet_subtypes=set(),
-            scenario_object=entities.scenarioObjects[0]))
+            vector_map_parser=vector_map_parser,
+            scenario_object=entities.scenarioObjects[0],
+            reference_points=None))
 
-    position = transformer.transform(source=(point, 0.0))
+    position = transformer.transform(
+        source=PointENUTransformerInput(point, 0.0))
 
     assert position.lanePosition is not None, "The lane_position should not be None."
     assert position.lanePosition.laneId == "22"

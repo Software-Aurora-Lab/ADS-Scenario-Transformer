@@ -268,4 +268,4 @@ if __name__ == '__main__':
                                               docker_image_id=DOCKER_IMAGE_ID,
                                               container_timeout_sec=120))
 
-    runner.run_experiment(output_summary=True, enable_recording=True)
+    runner.run_experiment(output_summary=True, enable_recording=False)

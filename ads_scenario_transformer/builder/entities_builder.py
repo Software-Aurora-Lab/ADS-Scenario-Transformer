@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import yaml
 import copy
 from definitions import DEFAULT_ENTITIES_PATH
-from openscenario_msgs import Entities, BoundingBox, Center, Dimensions
+from openscenario_msgs import Entities, BoundingBox, Center, Dimensions, Vehicle, ScenarioObject
 from ads_scenario_transformer.builder import Builder
 from ads_scenario_transformer.openscenario.openscenario_coder import OpenScenarioDecoder
 
@@ -17,7 +17,7 @@ class ASTEntityType(Enum):
 
     # ref: https://github.com/fzi-forschungszentrum-informatik/Lanelet2/blob/master/lanelet2_core/doc/LaneletAndAreaTagging.md#subtype-and-location
     def available_lanelet_subtype(self) -> Set[str]:
-        if self == ASTEntityType.EGO or ASTEntityType.CAR:
+        if self == ASTEntityType.EGO or self == ASTEntityType.CAR:
             return set(["road", "highway", "play_street", "exit"])
         elif self == ASTEntityType.BICYCLE:
             return set(["road", "play_street", "bicycle_lane"])
@@ -27,6 +27,23 @@ class ASTEntityType(Enum):
                 "play_street", "exit"
             ])
         return set()
+
+    @staticmethod
+    def entity_type(
+            scenario_object: ScenarioObject) -> Optional['ASTEntityType']:
+        if scenario_object.name == "ego":
+            return ASTEntityType.EGO
+
+        entity_object = scenario_object.entityObject
+        if entity_object.HasField("pedestrian"):
+            return ASTEntityType.PEDESTRIAN
+        elif entity_object.HasField("vehicle"):
+            if entity_object.vehicle.vehicleCategory == Vehicle.Category.BICYCLE:
+                return ASTEntityType.BICYCLE
+            elif entity_object.vehicle.vehicleCategory == Vehicle.Category.CAR:
+                return ASTEntityType.CAR
+
+        return None
 
 
 @dataclass(frozen=True)

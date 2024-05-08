@@ -5,9 +5,9 @@ from lanelet2.core import LaneletMap
 from lanelet2.projection import MGRSProjector
 from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacles, PerceptionObstacle
 from modules.common.proto.geometry_pb2 import PointENU, Point3D
-from openscenario_msgs import Story, ScenarioObject, Position, Rule, SpeedActionDynamics, TransitionDynamics, Event, Condition, Act, Vehicle
+from openscenario_msgs import Story, ScenarioObject, Position, Rule, Event, Condition, Act, Vehicle
 from ads_scenario_transformer.transformer import Transformer
-from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformer, PointENUTransformerConfiguration
+from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformer, PointENUTransformerConfiguration, PointENUTransformerInput
 from ads_scenario_transformer.transformer.speed_transformer import SpeedTransformer, SpeedTransformerConfiguration
 from ads_scenario_transformer.builder.storyboard.story_builder import StoryBuilder
 from ads_scenario_transformer.builder.storyboard.act_builder import ActBuilder
@@ -20,13 +20,13 @@ from ads_scenario_transformer.builder.storyboard.global_action_builder import Gl
 from ads_scenario_transformer.builder.storyboard.condition_builder import ConditionBuilder
 from ads_scenario_transformer.builder.storyboard.trigger_builder import StartTriggerBuilder
 from ads_scenario_transformer.builder.entities_builder import EntitiesBuilder, ASTEntity, ASTEntityType
+from ads_scenario_transformer.tools.vector_map_parser import VectorMapParser
 
 
 @dataclass
 class ObstaclesTransformerConfiguration:
     sceanrio_start_timestamp: float
-    lanelet_map: LaneletMap
-    projector: MGRSProjector
+    vector_map_parser: VectorMapParser
     waypoint_frequency_in_sec: Optional[
         float]  # None = direction detection, 0 = all waypoints, others = input frequency, Average frequency of the PerceptionObstacles channel is 0.04s to 0.05s. If you set lower than 0.04s, the obstacles will add all waypoints.
     direction_change_detection_threshold: float = 60
@@ -67,7 +67,10 @@ class ObstaclesTransformer(Transformer):
 
             start = obstacles[0]
             start_position = self.transform_coordinate_value(
-                position=start.position, scenario_object=target_object)
+                position=start.position,
+                scenario_object=target_object,
+                start_point=obstacles[0].position,
+                end_point=obstacles[-1].position)
 
             if not start_position:
                 raise ValueError(
@@ -91,7 +94,10 @@ class ObstaclesTransformer(Transformer):
                 routing_positions = []
                 for idx in self.obstacle_routing_indices(obstacles):
                     position = self.transform_coordinate_value(
-                        obstacles[idx].position, scenario_object=target_object)
+                        position=obstacles[idx].position,
+                        scenario_object=target_object,
+                        start_point=obstacles[0].position,
+                        end_point=obstacles[-1].position)
                     if position:
                         routing_positions.append(position)
                     else:
@@ -103,8 +109,6 @@ class ObstaclesTransformer(Transformer):
                     routing_event = self.create_routing_event(
                         start_condition=start_condition,
                         routing_positions=routing_positions,
-                        max_velocity=self.max_velocity_meter_per_sec(
-                            obstacles=obstacles),
                         entity_name=target_object.name)
                     events.append(routing_event)
 
@@ -171,7 +175,7 @@ class ObstaclesTransformer(Transformer):
 
     def create_routing_event(self, start_condition: Condition,
                              routing_positions: List[Position],
-                             max_velocity: float, entity_name: str) -> Event:
+                             entity_name: str) -> Event:
         event_builder = EventBuilder(start_conditions=[start_condition])
         private_action_builder = PrivateActionBuilder()
         private_action_builder.make_routing_action(positions=routing_positions,
@@ -323,30 +327,23 @@ class ObstaclesTransformer(Transformer):
                 return scenario_object
         return None
 
-    def transform_coordinate_value(
-            self, position: Point3D,
-            scenario_object: ScenarioObject) -> Optional[Position]:
+    def transform_coordinate_value(self, position: Point3D,
+                                   scenario_object: ScenarioObject,
+                                   start_point: Point3D,
+                                   end_point: Point3D) -> Optional[Position]:
 
         point = PointENU(x=position.x, y=position.y, z=0)
         transformer = PointENUTransformer(
             configuration=PointENUTransformerConfiguration(
                 supported_position=PointENUTransformer.SupportedPosition.Lane,
-                lanelet_map=self.configuration.lanelet_map,
-                projector=self.configuration.projector,
-                lanelet_subtypes=self.available_lane_subtypes(scenario_object),
-                scenario_object=scenario_object))
+                vector_map_parser=self.configuration.vector_map_parser,
+                scenario_object=scenario_object,
+                reference_points=[
+                    PointENU(x=start_point.x, y=start_point.y,
+                             z=start_point.z),
+                    PointENU(x=end_point.x, y=end_point.y, z=end_point.z)
+                ]))
 
-        position = transformer.transform(source=(point, 0.0))
+        position = transformer.transform(
+            source=PointENUTransformerInput(point, 0.0))
         return position
-
-    def available_lane_subtypes(self,
-                                scenario_object: ScenarioObject) -> Set[str]:
-
-        if scenario_object.entityObject.HasField("pedestrian"):
-            return ASTEntityType.PEDESTRIAN.available_lanelet_subtype()
-        elif scenario_object.entityObject.HasField("vehicle"):
-            if scenario_object.entityObject.vehicle.vehicleCategory == Vehicle.Category.BICYCLE:
-                return ASTEntityType.BICYCLE.available_lanelet_subtype()
-            elif scenario_object.entityObject.vehicle.vehicleCategory == Vehicle.Category.CAR:
-                return ASTEntityType.CAR.available_lanelet_subtype()
-        return set()
