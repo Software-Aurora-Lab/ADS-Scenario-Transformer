@@ -3,6 +3,7 @@ import lanelet2
 from lanelet2.core import Lanelet, LaneletMap, TrafficLight
 from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
+from lanelet2.traffic_rules import Locations, Participants
 
 T = TypeVar('T')
 
@@ -15,6 +16,16 @@ class VectorMapParser:
         origin = Origin(0.0, 0.0, 0.0)
         self.projector = MGRSProjector(origin)
         self.lanelet_map = lanelet2.io.load(vector_map_path, self.projector)
+
+        self.vehicle_traffic_rules = lanelet2.traffic_rules.create(
+            Locations.Germany, Participants.Vehicle)
+        self.pedestrian_traffic_rules = lanelet2.traffic_rules.create(
+            Locations.Germany, Participants.Pedestrian)
+
+        self.vehicle_routing_graph = lanelet2.routing.RoutingGraph(
+            self.lanelet_map, self.vehicle_traffic_rules)
+        self.pedestrian_routing_graph = lanelet2.routing.RoutingGraph(
+            self.lanelet_map, self.pedestrian_traffic_rules)
 
     def get_attributes(self, key: str,
                        attribute_type: Type[T]) -> Dict[int, T]:

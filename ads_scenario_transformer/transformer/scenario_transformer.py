@@ -12,7 +12,7 @@ from ads_scenario_transformer.transformer import RoutingRequestTransformer
 from ads_scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
 from ads_scenario_transformer.tools.apollo_map_parser import ApolloMapParser
 from ads_scenario_transformer.tools.vector_map_parser import VectorMapParser
-from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformer, PointENUTransformerConfiguration
+from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformer, PointENUTransformerConfiguration, PointENUTransformerInput
 from ads_scenario_transformer.transformer.routing_request_transformer import RoutingRequestTransformerConfiguration
 from ads_scenario_transformer.transformer.obstacles_transformer import ObstaclesTransformer, ObstaclesTransformerConfiguration, ObstaclesTransformerResult
 from ads_scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
@@ -139,17 +139,17 @@ class ScenarioTransformer:
 
         ego_end_position = None
         if self.configuration.use_last_position_as_destination:
-            last_pose = self.localization_poses[-1].pose.position
+            start_pose = self.localization_poses[0].pose.position
+            end_pose = self.localization_poses[-1].pose.position
             pointenu_transformer = PointENUTransformer(
                 configuration=PointENUTransformerConfiguration(
                     supported_position=PointENUTransformer.SupportedPosition.
                     Lane,
-                    lanelet_map=self.vector_map_parser.lanelet_map,
-                    projector=self.vector_map_parser.projector,
-                    lanelet_subtypes=ASTEntityType.EGO.
-                    available_lanelet_subtype(),
-                    scenario_object=self.entities.scenarioObjects[0]))
-            ego_end_position = pointenu_transformer.transform((last_pose, 0.0))
+                    vector_map_parser=self.vector_map_parser,
+                    scenario_object=self.entities.scenarioObjects[0],
+                    reference_points=[start_pose, end_pose]))
+            ego_end_position = pointenu_transformer.transform(
+                PointENUTransformerInput(end_pose, 0.0))
         else:
             if routing_action.HasField("assignRouteAction"):
                 ego_end_position = routing_action.assignRouteAction.route.waypoints[
@@ -172,8 +172,7 @@ class ScenarioTransformer:
         obstacles_transformer = ObstaclesTransformer(
             configuration=ObstaclesTransformerConfiguration(
                 sceanrio_start_timestamp=self.scenario_start_time,
-                lanelet_map=self.vector_map_parser.lanelet_map,
-                projector=self.vector_map_parser.projector,
+                vector_map_parser=self.vector_map_parser,
                 waypoint_frequency_in_sec=self.configuration.
                 obstacle_waypoint_frequency_in_sec,
                 direction_change_detection_threshold=self.configuration.
@@ -183,12 +182,16 @@ class ScenarioTransformer:
 
     def transform_ego_routing(self,
                               ego_scenario_object: ScenarioObject) -> Private:
+
+        start_point = self.localization_poses[0].pose.position
+        end_point = self.localization_poses[-1].pose.position
+
         routing_request_transformer = RoutingRequestTransformer(
             configuration=RoutingRequestTransformerConfiguration(
-                lanelet_map=self.vector_map_parser.lanelet_map,
-                projector=self.vector_map_parser.projector,
+                vector_map_parser=self.vector_map_parser,
                 apollo_map_parser=self.apollo_map_parser,
-                ego_scenario_object=ego_scenario_object))
+                ego_scenario_object=ego_scenario_object,
+                reference_points=[start_point, end_point]))
 
         routing_request = self.input_routing_request()
 
@@ -220,6 +223,7 @@ class ScenarioTransformer:
         routing_responses = CyberRecordReader.read_channel(
             source_path=self.configuration.apollo_scenario_path,
             channel=CyberRecordChannel.ROUTING_RESPONSE)
+
         routing_response = routing_responses[0]
 
         self.routing_request = routing_response.routing_request

@@ -10,6 +10,8 @@ from ads_scenario_transformer.builder.parameter_declarations_builder import Para
 from ads_scenario_transformer.builder.entities_builder import ASTEntityType, EntitiesBuilder, ASTEntity
 from ads_scenario_transformer.openscenario.openscenario_coder import OpenScenarioDecoder
 from ads_scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
+from modules.localization.proto.localization_pb2 import LocalizationEstimate
+from ads_scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
 
 import lanelet2
 from lanelet2.projection import MGRSProjector
@@ -42,8 +44,14 @@ def borregas_doppel_scenario160_path() -> str:
 
 
 @pytest.fixture
+def borregas_doppel_scenario48_path() -> str:
+    return SAMPLE_ROOT + "/apollo_borregas/DoppelTest/00000048.00000"
+
+
+@pytest.fixture
 def borregas_doppel_scenario9_path() -> str:
     return SAMPLE_ROOT + "/apollo_borregas/DoppelTest/00000009.00000"
+
 
 @pytest.fixture
 def sf_doppel_scenario_path() -> str:
@@ -76,19 +84,27 @@ def vector_map_parser(borregas_vector_map_path) -> ApolloMapParser:
 
 
 @pytest.fixture
+def localization_poses(
+        borregas_doppel_scenario48_path) -> List[LocalizationEstimate]:
+    return CyberRecordReader.read_channel(
+        source_path=borregas_doppel_scenario48_path,
+        channel=CyberRecordChannel.LOCALIZATION_POSE)
+
+
+@pytest.fixture
 def scenario(storyboard) -> Scenario:
-    ast_entities=[
+    ast_entities = [
         ASTEntity(entity_type=ASTEntityType.EGO,
-                   use_default_scenario_object=True),
+                  use_default_scenario_object=True),
         ASTEntity(entity_type=ASTEntityType.CAR,
-                   use_default_scenario_object=True),
+                  use_default_scenario_object=True),
         ASTEntity(entity_type=ASTEntityType.CAR,
-                   use_default_scenario_object=True)
+                  use_default_scenario_object=True)
     ]
     entities_builder = EntitiesBuilder()
     for ast_entity in ast_entities:
-        builder.add_entity(ast_entity)
-        
+        entities_builder.add_entity(ast_entity)
+
     entities = entities_builder.get_result()
 
     scenario_config = ScenarioConfiguration(
@@ -104,18 +120,18 @@ def scenario(storyboard) -> Scenario:
 def ast_entities() -> List[ASTEntity]:
     return [
         ASTEntity(entity_type=ASTEntityType.CAR,
-                   use_default_scenario_object=True),
+                  use_default_scenario_object=True),
         ASTEntity(embedding_id=100,
-                   entity_type=ASTEntityType.CAR,
-                   use_default_scenario_object=True),
+                  entity_type=ASTEntityType.CAR,
+                  use_default_scenario_object=True),
         ASTEntity(entity_type=ASTEntityType.EGO,
-                   use_default_scenario_object=True),
+                  use_default_scenario_object=True),
         ASTEntity(embedding_id=200,
-                   entity_type=ASTEntityType.PEDESTRIAN,
-                   use_default_scenario_object=True),
+                  entity_type=ASTEntityType.PEDESTRIAN,
+                  use_default_scenario_object=True),
         ASTEntity(embedding_id=300,
-                   entity_type=ASTEntityType.CAR,
-                   use_default_scenario_object=True)
+                  entity_type=ASTEntityType.CAR,
+                  use_default_scenario_object=True)
     ]
 
 

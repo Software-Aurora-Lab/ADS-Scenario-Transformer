@@ -1,8 +1,13 @@
+from typing import List, Dict, Set
 import pytest
-from lanelet2.core import BasicPoint3d
-from modules.common.proto.geometry_pb2 import PointENU
+from lanelet2.core import BasicPoint3d, Lanelet
+from lanelet2.routing import LaneletPath
+from modules.common.proto.geometry_pb2 import PointENU, Point3D
 from openscenario_msgs import LanePosition
 from ads_scenario_transformer.tools.geometry import Geometry
+from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacles
+from ads_scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
+from ads_scenario_transformer.builder.entities_builder import ASTEntityType, ASTEntity
 
 
 def test_projection(mgrs_projector):
@@ -49,7 +54,8 @@ def test_geometry(lanelet_map, entities):
                                         basic_point=basic_point)
         assert lanelet is not None, "lanelet should not be None"
 
-        ego_bounding_box = entities.scenarioObjects[0].entityObject.vehicle.boundingBox
+        ego_bounding_box = entities.scenarioObjects[
+            0].entityObject.vehicle.boundingBox
         target_lane_position = Geometry.nearest_lane_position(
             map=lanelet_map,
             lanelet=lanelet,
@@ -65,3 +71,72 @@ def test_geometry(lanelet_map, entities):
         assert abs(
             target_lane_position.offset - expectation.offset
         ) <= 1.0, "t attribute should be almost equal to expectation"
+
+
+def group_obstacles(
+    obstacles: List[PerceptionObstacles]
+) -> Dict[str, List[PerceptionObstacles]]:
+    grouped_obstacles = {}
+    for perception_obstacles in obstacles:
+        for obstacle in perception_obstacles.perception_obstacle:
+
+            if obstacle.id not in grouped_obstacles:
+                grouped_obstacles[obstacle.id] = []
+            grouped_obstacles[obstacle.id].append(obstacle)
+    return grouped_obstacles
+
+
+@pytest.fixture
+def obstacles(
+        borregas_doppel_scenario48_path
+) -> Dict[str, List[PerceptionObstacles]]:
+    obstacles = CyberRecordReader.read_channel(
+        source_path=borregas_doppel_scenario48_path,
+        channel=CyberRecordChannel.PERCEPTION_OBSTACLES)
+
+    return group_obstacles(obstacles)
+
+
+def test_find_available_lanes_car(obstacles, vector_map_parser,
+                                  mgrs_projector):
+    car = obstacles[723811]
+
+    start_point = Geometry.project_UTM_point_on_lanelet(
+        point=car[0].position, projector=mgrs_projector)
+    end_point = Geometry.project_UTM_point_on_lanelet(point=car[-1].position,
+                                                      projector=mgrs_projector)
+
+    lanelets: Set[Lanelet] = Geometry.find_available_lanes(
+        vector_map_parser=vector_map_parser,
+        start_point=start_point,
+        end_point=end_point,
+        entity_type=ASTEntityType.CAR)
+
+    lane_id = [lane.id for lane in list(lanelets)]
+
+    assert 192 in lane_id
+    assert 104 in lane_id
+    assert 15 in lane_id
+    assert 210 in lane_id
+    assert 22 in lane_id
+
+
+def test_find_available_lanes_pedestrian(obstacles, vector_map_parser,
+                                         mgrs_projector):
+    pedestrian = obstacles[0]
+
+    start_point = Geometry.project_UTM_point_on_lanelet(
+        point=pedestrian[0].position, projector=mgrs_projector)
+    end_point = Geometry.project_UTM_point_on_lanelet(
+        point=pedestrian[-1].position, projector=mgrs_projector)
+
+    lanelets: Set[Lanelet] = Geometry.find_available_lanes(
+        vector_map_parser=vector_map_parser,
+        start_point=start_point,
+        end_point=end_point,
+        entity_type=ASTEntityType.PEDESTRIAN)
+
+    lane_id = [lane.id for lane in list(lanelets)]
+
+    assert 636 in lane_id
+    assert 643 in lane_id

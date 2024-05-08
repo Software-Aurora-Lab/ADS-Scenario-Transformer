@@ -1,22 +1,21 @@
-from typing import Optional
+from typing import Optional, Tuple
 from dataclasses import dataclass
-from lanelet2.core import LaneletMap
-from lanelet2.projection import MGRSProjector
+from modules.common.proto.geometry_pb2 import PointENU
 from modules.routing.proto.routing_pb2 import RoutingRequest
 from openscenario_msgs import Private, ScenarioObject
 from ads_scenario_transformer.transformer import Transformer
 from ads_scenario_transformer.transformer.lane_waypoint_transformer import LaneWaypointTransformer, LaneWaypointTransformerConfiguration
-from ads_scenario_transformer.builder.entities_builder import ASTEntityType
 from ads_scenario_transformer.builder.private_builder import PrivateBuilder
 from ads_scenario_transformer.tools.apollo_map_parser import ApolloMapParser
+from ads_scenario_transformer.tools.vector_map_parser import VectorMapParser
 
 
 @dataclass
 class RoutingRequestTransformerConfiguration:
-    lanelet_map: LaneletMap
-    projector: MGRSProjector
+    vector_map_parser: VectorMapParser
+    apollo_map_parser: ApolloMapParser
     ego_scenario_object: ScenarioObject
-    apollo_map_parser: Optional[ApolloMapParser] = None
+    reference_points: Optional[Tuple[PointENU, PointENU]]
 
 
 class RoutingRequestTransformer(Transformer):
@@ -33,11 +32,10 @@ class RoutingRequestTransformer(Transformer):
 
         transformer = LaneWaypointTransformer(
             configuration=LaneWaypointTransformerConfiguration(
-                lanelet_map=self.configuration.lanelet_map,
-                projector=self.configuration.projector,
+                vector_map_parser=self.configuration.vector_map_parser,
                 apollo_map_parser=self.configuration.apollo_map_parser,
-                lanelet_subtypes=ASTEntityType.EGO.available_lanelet_subtype(),
-                scenario_object=self.configuration.ego_scenario_object))
+                scenario_object=self.configuration.ego_scenario_object,
+                reference_points=self.configuration.reference_points))
 
         openscenario_waypoints = map(
             lambda lane_waypoint:

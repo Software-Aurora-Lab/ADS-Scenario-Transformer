@@ -1,12 +1,16 @@
-from typing import Optional, Union, Set
+from typing import Optional, Union, Set, List
 import math
+import lanelet2
 from lanelet2.projection import MGRSProjector
 from lanelet2.core import Lanelet, LaneletMap, GPSPoint, BasicPoint2d, BasicPoint3d, getId, Point3d, TrafficLight, Point2d
 from lanelet2.geometry import distanceToCenterline2d, distance, findWithin3d, inside, length2d, findNearest, findWithin2d, to2D
+from lanelet2.routing import RoutingGraph, Route, LaneletPath
 from pyproj import Proj
 from modules.common.proto.geometry_pb2 import PointENU, Point3D
 from modules.map.proto.map_signal_pb2 import Signal
 from openscenario_msgs import LanePosition, Orientation, ReferenceContext, BoundingBox
+from ads_scenario_transformer.tools.vector_map_parser import VectorMapParser
+from ads_scenario_transformer.builder.entities_builder import ASTEntityType
 
 
 class Geometry:
@@ -36,6 +40,84 @@ class Geometry:
             (distance, traffic_light)
             for distance, traffic_light in candidates)
         return nearest_traffic_light
+
+    @staticmethod
+    def find_available_lanes(vector_map_parser: VectorMapParser,
+                             start_point: BasicPoint3d,
+                             end_point: BasicPoint3d,
+                             entity_type: ASTEntityType) -> Set[Lanelet]:
+        """
+        Finds all available lanes between start_point and end_point trajectory. If start_point or end_point are placed on a lanelet where multiple lanelets are overlapped, it can return wrong set of lanelets.
+        """
+        def routing_graph(type: ASTEntityType) -> RoutingGraph:
+            if type == ASTEntityType.PEDESTRIAN:
+                return vector_map_parser.pedestrian_routing_graph
+            elif type == ASTEntityType.BICYCLE:
+                # Bicycle also uses vehicle routing graph
+                return vector_map_parser.vehicle_routing_graph
+            # ego, car
+            return vector_map_parser.vehicle_routing_graph
+
+        target_graph = routing_graph(entity_type)
+
+        subtypes = entity_type.available_lanelet_subtype()
+        
+        start_lanelet = Geometry.find_lanelet(
+            map=vector_map_parser.lanelet_map,
+            basic_point=start_point,
+            subtypes=subtypes)
+
+        end_lanelet = Geometry.find_lanelet(map=vector_map_parser.lanelet_map,
+                                            basic_point=end_point,
+                                            subtypes=subtypes)
+
+        paths = []
+        if start_lanelet and end_lanelet:
+            route: Route = target_graph.getRoute(start_lanelet, end_lanelet, 0,
+                                                 True)
+            if route:
+                return set([lanelet for lanelet in route.shortestPath()])
+
+            paths = target_graph.possiblePaths(
+                start_lanelet) + target_graph.possiblePaths(end_lanelet)
+        elif start_lanelet:
+            paths = target_graph.possiblePaths(start_lanelet)
+        elif end_lanelet:
+            paths = target_graph.possiblePaths(end_lanelet)
+
+        return set(
+            [lanelet for lanelet_path in paths for lanelet in lanelet_path])
+
+    @staticmethod
+    def find_close_lanelets(map: LaneletMap, basic_point: BasicPoint3d,
+                            entity_type: ASTEntityType) -> List[Lanelet]:
+        """
+        Find
+        """
+        found_lanes = findWithin3d(layer=map.laneletLayer,
+                                   geometry=basic_point,
+                                   maxDist=1)
+
+        subtypes = entity_type.available_lanelet_subtype()
+        if found_lanes:
+            lanelets = [
+                lanelet[1] for lanelet in found_lanes
+                if "subtype" in lanelet[1].attributes
+                and lanelet[1].attributes["subtype"] in subtypes
+            ]
+
+            if lanelets:
+                return lanelets
+
+        basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
+        found_lanes_2d = findNearest(map.laneletLayer, basic_point2d, 10)
+
+        lanelets = [
+            lanelet[1] for lanelet in found_lanes_2d
+            if "subtype" in lanelet[1].attributes
+            and lanelet[1].attributes["subtype"] in subtypes
+        ]
+        return lanelets
 
     @staticmethod
     def find_lanelet(map: LaneletMap,
@@ -93,20 +175,22 @@ class Geometry:
         left = distance(to2D(lanelet.leftBound), point2d)
         right = distance(to2D(lanelet.rightBound), point2d)
         is_t_positive = left < right
-        lane_width = distance(lanelet.centerline, lanelet.leftBound) + distance(lanelet.centerline, lanelet.rightBound)
+        lane_width = distance(lanelet.centerline,
+                              lanelet.leftBound) + distance(
+                                  lanelet.centerline, lanelet.rightBound)
 
         if not is_t_positive:
             t_attribute = -t_attribute
 
         entity_width = entity_bounding_box.dimensions.width
         entity_length = entity_bounding_box.dimensions.length
-        
+
         # If there is not enough space to place entity on the lane, simulator will fails.
         max_lane_width = (lane_width - entity_width) / 2
         min_lane_width = -max_lane_width
         t_attribute = min(max_lane_width, t_attribute)
         t_attribute = max(min_lane_width, t_attribute)
-        
+
         max_s = max(math.floor(length2d(lanelet) - entity_length), 0)
 
         # Calculation of s attribute is simplified.
