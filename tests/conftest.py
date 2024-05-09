@@ -27,13 +27,20 @@ def mgrs_projector() -> MGRSProjector:
     origin = Origin(37.04622247590861, -123.00000000000001, 0)
     return MGRSProjector(origin)
 
+
 @pytest.fixture
 def borregas_scenorita_scenario1_path() -> str:
     return SAMPLE_ROOT + "/apollo_borregas/scenoRITA/00000001.00000"
-    
+
+
 @pytest.fixture
 def borregas_scenorita_scenario9_path() -> str:
     return SAMPLE_ROOT + "/apollo_borregas/scenoRITA/00000009.00000"
+
+
+@pytest.fixture
+def borregas_scenorita_scenario23_path() -> str:
+    return SAMPLE_ROOT + "/apollo_borregas/scenoRITA/00000023.00000"
 
 
 @pytest.fixture

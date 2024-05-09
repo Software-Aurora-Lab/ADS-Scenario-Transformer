@@ -71,16 +71,19 @@ class PointENUTransformer(Transformer):
                 projector=projector,
                 point=self.configuration.reference_points[-1])
 
-            lanes_in_route = Geometry.find_available_lanes(
+            available_lane_paths = Geometry.find_available_lanes(
                 vector_map_parser=vector_map_parser,
                 start_point=start_point,
                 end_point=end_point,
                 entity_type=entity_type)
 
-            avaiable_lane_id = [lanelet.id for lanelet in lanes_in_route]
+            available_lane_id = [
+                lanelet.id for lanelet_path in available_lane_paths
+                for lanelet in lanelet_path
+            ]
 
             for lanelet in lanelets:
-                if lanelet.id in avaiable_lane_id:
+                if lanelet.id in available_lane_id:
                     target_lanelet = lanelet
                     break
 
