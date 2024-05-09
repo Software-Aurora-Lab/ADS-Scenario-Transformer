@@ -2,10 +2,10 @@
 
 if [ -d ".venv" ]; then
     echo "Activating virtual environment..."
-    source .venv/bin/activate
+    source /home/sora/Desktop/changnam/ADS-scenario-transfer/.venv/bin/activate
 else
     python3 -m venv .venv
-    source .venv/bin/activate
+    source /home/sora/Desktop/changnam/ADS-scenario-transfer/.venv/bin/activate
     pip install poetry
     poetry install    
 fi

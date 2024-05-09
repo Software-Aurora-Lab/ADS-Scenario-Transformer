@@ -58,6 +58,10 @@ class ExperimentConfiguration:
     def log_dir(self):
         return f"{self.single_exp_root}/log"
 
+    @property
+    def finished_scenario_dir(self):
+        return f"{self.single_exp_root}/fin_scenarios"
+
 
 class ExperimentRunner:
     configuration: ExperimentConfiguration
@@ -66,6 +70,7 @@ class ExperimentRunner:
         self.configuration = configuration
         os.makedirs(self.configuration.script_dir, exist_ok=True)
         os.makedirs(self.configuration.log_dir, exist_ok=True)
+        os.makedirs(self.configuration.finished_scenario_dir, exist_ok=True)
 
         self.container_manager = ContainerManager(
             ads_root=self.configuration.ads_root)
@@ -107,16 +112,17 @@ class ExperimentRunner:
                   scenario_paths) in enumerate(self.scenario_paths.items()):
 
             scenario_count = len(scenario_paths)
+            map_name = Path(map_dir).stem
             csv_results = []
             for scenario_idx, scenario in enumerate(scenario_paths):
-                self.start_container_timeout_timer(
-                    interval=self.configuration.container_timeout_sec)
+                # self.start_container_timeout_timer(
+                #     interval=self.configuration.container_timeout_sec)
 
-                output_file = f'{self.configuration.log_dir}/{Path(scenario).stem}.mp4'
                 scenario_name = Path(scenario).stem
 
                 if enable_recording:
-                    print("Start Recording:", Path(scenario).stem)
+                    print("Start Recording:", scenario_name)
+                    output_file = f'{self.configuration.log_dir}/{scenario_name}.mp4'
                     self.recording_process = self.start_recording(output_file)
 
                 self.container_manager.start_instance(
@@ -153,9 +159,13 @@ class ExperimentRunner:
                 self.create_intermediate_result(csv_results,
                                                 scenario_result_path,
                                                 scenario_name)
+
+                self.move_finished_scenario(scenario_path=scenario,
+                                            scenario_name=scenario_name,
+                                            map_name=map_name)
+
                 print(f"{scenario_idx + 1}/{scenario_count} done")
 
-            map_name = Path(map_dir).stem
             if output_summary:
                 self.write_result_to_csv(result=csv_results,
                                          filename=self.summary_path(map_name))
@@ -170,6 +180,16 @@ class ExperimentRunner:
         if output_summary:
             self.write_result_to_csv(result=all_results,
                                      filename=self.summary_path(map_name=None))
+
+    def move_finished_scenario(self, scenario_path: str, scenario_name: str,
+                               map_name: str):
+        map_path = self.configuration.finished_scenario_dir + f"/{map_name}"
+        output_path = f"{map_path}/{scenario_name}.yaml"
+
+        if not os.path.exists(map_path):
+            os.makedirs(map_path)
+
+        shutil.move(scenario_path, output_path)
 
     def summary_path(self, map_name: Optional[str]) -> str:
         if map_name:
