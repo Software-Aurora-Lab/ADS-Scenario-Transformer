@@ -14,7 +14,7 @@ Entities:
               width: 1.875
               height: 2.5
           Performance:
-            maxSpeed: 50
+            maxSpeed: 72
             maxAcceleration: INF
             maxDeceleration: INF
           Axles:

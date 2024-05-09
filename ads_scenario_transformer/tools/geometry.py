@@ -45,7 +45,7 @@ class Geometry:
     def find_available_lanes(vector_map_parser: VectorMapParser,
                              start_point: BasicPoint3d,
                              end_point: BasicPoint3d,
-                             entity_type: ASTEntityType) -> Set[Lanelet]:
+                             entity_type: ASTEntityType) -> List[LaneletPath]:
         """
         Finds all available lanes between start_point and end_point trajectory. If start_point or end_point are placed on a lanelet where multiple lanelets are overlapped, it can return wrong set of lanelets.
         """
@@ -59,35 +59,44 @@ class Geometry:
             # ego, car
             return vector_map_parser.vehicle_routing_graph
 
+        def find_paths(start_lanelet: Lanelet,
+                       end_lanelet: Lanelet) -> List[LaneletPath]:
+            paths = []
+            if start_lanelet and end_lanelet:
+                route: Route = target_graph.getRoute(start_lanelet,
+                                                     end_lanelet, 0, True)
+                if route:
+                    return [route.shortestPath()]
+
+                paths = target_graph.possiblePaths(
+                    start_lanelet) + target_graph.possiblePaths(end_lanelet)
+
+            elif start_lanelet:
+                paths = target_graph.possiblePaths(start_lanelet)
+            elif end_lanelet:
+                paths = target_graph.possiblePaths(end_lanelet)
+            return paths
+
         target_graph = routing_graph(entity_type)
 
-        subtypes = entity_type.available_lanelet_subtype()
-
-        start_lanelet = Geometry.find_lanelet(
+        start_lanelets = Geometry.find_close_lanelets(
             map=vector_map_parser.lanelet_map,
             basic_point=start_point,
-            subtypes=subtypes)
+            entity_type=entity_type)
 
-        end_lanelet = Geometry.find_lanelet(map=vector_map_parser.lanelet_map,
-                                            basic_point=end_point,
-                                            subtypes=subtypes)
+        end_lanelets = Geometry.find_close_lanelets(
+            map=vector_map_parser.lanelet_map,
+            basic_point=end_point,
+            entity_type=entity_type)
 
-        paths = []
-        if start_lanelet and end_lanelet:
-            route: Route = target_graph.getRoute(start_lanelet, end_lanelet, 0,
-                                                 True)
-            if route:
-                return set([lanelet for lanelet in route.shortestPath()])
+        all_paths = []
+        for start_lanelet in start_lanelets:
+            for end_lanelet in end_lanelets:
+                paths = find_paths(start_lanelet, end_lanelet)
+                for path in paths:
+                    all_paths.append(path)
 
-            paths = target_graph.possiblePaths(
-                start_lanelet) + target_graph.possiblePaths(end_lanelet)
-        elif start_lanelet:
-            paths = target_graph.possiblePaths(start_lanelet)
-        elif end_lanelet:
-            paths = target_graph.possiblePaths(end_lanelet)
-
-        return set(
-            [lanelet for lanelet_path in paths for lanelet in lanelet_path])
+        return all_paths
 
     @staticmethod
     def find_close_lanelets(map: LaneletMap, basic_point: BasicPoint3d,

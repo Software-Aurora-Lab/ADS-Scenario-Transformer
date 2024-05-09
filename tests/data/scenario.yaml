@@ -38,7 +38,7 @@ OpenSCENARIO:
         Performance:
           maxAcceleration: INF
           maxDeceleration: INF
-          maxSpeed: 50
+          maxSpeed: 72
         Properties:
           Property: []
         name: ''
