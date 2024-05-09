@@ -89,22 +89,8 @@ class ExperimentRunner:
 
         return scenario_dict
 
-    def start_container_timeout_timer(self, interval):
-        self.timer = threading.Timer(
-            interval, lambda x: self.stop_container_if_timeout(), [interval])
-        self.timer.start()
-
-    def stop_container_if_timeout(self):
-        self.container_manager.stop_container_if_timeout(
-            timeout_sec=self.configuration.container_timeout_sec)
-        if self.recording_process:
-            self.stop_recording(self.recording_process)
-        self.start_container_timeout_timer(
-            interval=self.configuration.container_timeout_sec)
-
-    def run_experiment(self, output_summary: bool, enable_recording: bool):
-        print("Running Scenarios:", self.scenario_paths)
-
+    def run_experiment(self, enable_recording: bool):
+        print("Running Scenarios:", self.scenario_paths.values())
         map_count = len(self.scenario_paths)
 
         all_results = []
@@ -115,9 +101,6 @@ class ExperimentRunner:
             map_name = Path(map_dir).stem
             csv_results = []
             for scenario_idx, scenario in enumerate(scenario_paths):
-                # self.start_container_timeout_timer(
-                #     interval=self.configuration.container_timeout_sec)
-
                 scenario_name = Path(scenario).stem
 
                 if enable_recording:
@@ -138,7 +121,8 @@ class ExperimentRunner:
                     container_id=f"{self.container_id}",
                     script_dir=self.configuration.script_dir,
                     scenario_file_path=scenario,
-                    log_dir_path=self.configuration.log_dir)
+                    log_dir_path=self.configuration.log_dir,
+                    launch_rviz=True)
 
                 print(
                     "exec:",
@@ -166,9 +150,8 @@ class ExperimentRunner:
 
                 print(f"{scenario_idx + 1}/{scenario_count} done")
 
-            if output_summary:
-                self.write_result_to_csv(result=csv_results,
-                                         filename=self.summary_path(map_name))
+            self.write_result_to_csv(result=csv_results,
+                                     filename=self.summary_path(map_name))
 
             pass_count = len(
                 [result for result in csv_results if result.is_success])
@@ -177,9 +160,32 @@ class ExperimentRunner:
             )
             all_results.extend(csv_results)
 
-        if output_summary:
-            self.write_result_to_csv(result=all_results,
-                                     filename=self.summary_path(map_name=None))
+        self.write_result_to_csv(result=all_results,
+                                 filename=self.summary_path(map_name=None))
+
+        self.replay_autoware_failed_scenarios(all_results)
+
+    def replay_autoware_failed_scenarios(self, all_results: List[CSVResult]):
+
+        if os.path.exists(self.configuration.scenario_dir):
+            shutil.rmtree(self.configuration.scenario_dir)
+            os.makedirs(self.configuration.scenario_dir)
+
+        autoware_failed_scenario_names = [
+            result.scenario_name for result in all_results
+            if result.error_type and result.error_type.startswith("Autoware")
+        ]
+
+        scenario_replay_dir = self.configuration.scenario_dir + "/replay_errors"
+        if not os.path.exists(scenario_replay_dir):
+            os.makedirs(scenario_replay_dir)
+
+        for scenario_name in autoware_failed_scenario_names:
+            from_path = self.configuration.finished_scenario_dir + f"/{scenario_name}.yaml"
+            to_path = scenario_replay_dir + f"/{scenario_name}.yaml"
+            shutil.move(from_path, to_path)
+
+        self.run_experiment(enable_recording=False)
 
     def move_finished_scenario(self, scenario_path: str, scenario_name: str,
                                map_name: str):
@@ -288,4 +294,4 @@ if __name__ == '__main__':
                                               docker_image_id=DOCKER_IMAGE_ID,
                                               container_timeout_sec=120))
 
-    runner.run_experiment(output_summary=True, enable_recording=False)
+    runner.run_experiment(enable_recording=False)
