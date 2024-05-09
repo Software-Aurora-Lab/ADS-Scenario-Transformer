@@ -49,6 +49,7 @@ class Geometry:
         """
         Finds all available lanes between start_point and end_point trajectory. If start_point or end_point are placed on a lanelet where multiple lanelets are overlapped, it can return wrong set of lanelets.
         """
+
         def routing_graph(type: ASTEntityType) -> RoutingGraph:
             if type == ASTEntityType.PEDESTRIAN:
                 return vector_map_parser.pedestrian_routing_graph
@@ -61,7 +62,7 @@ class Geometry:
         target_graph = routing_graph(entity_type)
 
         subtypes = entity_type.available_lanelet_subtype()
-        
+
         start_lanelet = Geometry.find_lanelet(
             map=vector_map_parser.lanelet_map,
             basic_point=start_point,
@@ -91,9 +92,6 @@ class Geometry:
     @staticmethod
     def find_close_lanelets(map: LaneletMap, basic_point: BasicPoint3d,
                             entity_type: ASTEntityType) -> List[Lanelet]:
-        """
-        Find
-        """
         found_lanes = findWithin3d(layer=map.laneletLayer,
                                    geometry=basic_point,
                                    maxDist=1)
@@ -109,15 +107,26 @@ class Geometry:
             if lanelets:
                 return lanelets
 
-        basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
-        found_lanes_2d = findNearest(map.laneletLayer, basic_point2d, 10)
+        assert len(map.laneletLayer) > 20
 
-        lanelets = [
-            lanelet[1] for lanelet in found_lanes_2d
-            if "subtype" in lanelet[1].attributes
-            and lanelet[1].attributes["subtype"] in subtypes
-        ]
-        return lanelets
+        for nearby_count in [1, 10] + list(range(20, len(map.laneletLayer),
+                                                 20)):
+            basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
+            found_lanes_2d = findNearest(map.laneletLayer, basic_point2d,
+                                         nearby_count)
+
+            lanelets = [
+                lanelet[1] for lanelet in found_lanes_2d
+                if "subtype" in lanelet[1].attributes
+                and lanelet[1].attributes["subtype"] in subtypes
+            ]
+            if lanelets:
+                return lanelets
+
+        raise ValueError(
+            f"Could not find close lanelets for point {basic_point} type {entity_type} in the map"
+        )
+        return []
 
     @staticmethod
     def find_lanelet(map: LaneletMap,
