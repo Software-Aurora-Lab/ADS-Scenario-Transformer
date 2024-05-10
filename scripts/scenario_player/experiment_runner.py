@@ -4,7 +4,6 @@ import random
 import csv
 import argparse
 import subprocess
-import threading
 from pathlib import Path
 from typing import List, Optional
 from dataclasses import dataclass
@@ -18,18 +17,18 @@ class CSVResult:
     is_success: bool
     error_type: Optional[str]
     message: Optional[str]
+    file_path: str
 
 
 @dataclass
 class ExperimentConfiguration:
 
     def __init__(self, ads_root: str, experiment_id: int, docker_image_id: str,
-                 container_timeout_sec: float):
+                 display_gui):
         self.ads_root = ads_root
         self.experiment_id = experiment_id
         self.docker_image_id = docker_image_id
-        self.container_timeout_sec = container_timeout_sec
-        self.replayed = False
+        self.display_gui = display_gui
 
     @property
     def exp_root(self):
@@ -78,6 +77,8 @@ class ExperimentRunner:
         self.container_id = random.randint(100, 100000)
         self.container_name = f"{self.configuration.docker_container_name}_{self.container_id}"
         self.recording_process = None
+        self.all_results = []
+        self.replayed = False
 
     @property
     def scenario_paths(self):
@@ -94,7 +95,7 @@ class ExperimentRunner:
         print("Running Scenarios:", self.scenario_paths.values())
         map_count = len(self.scenario_paths)
 
-        all_results = []
+        exp_results = []
         for idx, (map_dir,
                   scenario_paths) in enumerate(self.scenario_paths.items()):
 
@@ -116,14 +117,14 @@ class ExperimentRunner:
                     scenario_path=self.configuration.scenario_dir,
                     script_path=self.configuration.script_dir,
                     log_path=self.configuration.log_dir,
-                    docker_image_id=self.configuration.docker_image_id)
+                    docker_image_id=self.configuration.docker_image_id,
+                    display_gui=self.configuration.display_gui)
 
                 running_script_path = self.container_manager.create_scenario_running_script(
                     container_id=f"{self.container_id}",
                     script_dir=self.configuration.script_dir,
                     scenario_file_path=scenario,
-                    log_dir_path=self.configuration.log_dir,
-                    launch_rviz=True)
+                    log_dir_path=self.configuration.log_dir)
 
                 print(
                     "exec:",
@@ -138,16 +139,18 @@ class ExperimentRunner:
                 self.container_manager.remove_instance()
                 self.container_id += 1
                 scenario_result_path = self.configuration.log_dir + "/scenario_test_runner/result.junit.xml"
+
+                finished_scneario_path = self.move_finished_scenario(
+                    scenario_path=scenario,
+                    scenario_name=scenario_name,
+                    map_name=map_name)
                 results = self.create_result_data(
-                    result_file_path=scenario_result_path)
+                    result_file_path=scenario_result_path,
+                    scneario_path=finished_scneario_path)
                 csv_results.extend(results)
                 self.create_intermediate_result(csv_results,
                                                 scenario_result_path,
                                                 scenario_name)
-
-                self.move_finished_scenario(scenario_path=scenario,
-                                            scenario_name=scenario_name,
-                                            map_name=map_name)
 
                 print(f"{scenario_idx + 1}/{scenario_count} done")
 
@@ -159,12 +162,14 @@ class ExperimentRunner:
             print(
                 f"Finished {map_name}. Pass {pass_count} out of {len(csv_results)}. Progress: {idx + 1}/{map_count}"
             )
-            all_results.extend(csv_results)
+            exp_results.extend(csv_results)
 
-        self.write_result_to_csv(result=all_results,
-                                 filename=self.summary_path(map_name=None))
+        summary_name = "second_try" if self.replayed else "first_try"
+        self.write_result_to_csv(result=exp_results,
+                                 filename=self.summary_path(name=summary_name))
 
-        self.replay_autoware_failed_scenarios(all_results)
+        self.all_results.extend(exp_results)
+        self.replay_autoware_failed_scenarios(exp_results)
 
     def replay_autoware_failed_scenarios(self, all_results: List[CSVResult]):
 
@@ -184,20 +189,23 @@ class ExperimentRunner:
         for scenario_name in autoware_failed_scenario_names:
             yaml_files = [
                 entry.resolve()
-                for entry in self.configuration.finished_scenario_dir.rglob(
-                    f'{scenario_name}.yaml')
+                for entry in Path(self.configuration.finished_scenario_dir).
+                rglob(f'{scenario_name}.yaml')
             ]
             if yaml_files:
                 from_path = yaml_files[0]
                 to_path = scenario_replay_dir + f"/{scenario_name}.yaml"
                 shutil.move(from_path, to_path)
 
-        if autoware_failed_scenario_names and not self.configuration.replayed:
-            self.configuration.replayed = True
+        if autoware_failed_scenario_names and not self.replayed:
+            self.replayed = True
             self.run_experiment(enable_recording=False)
 
+        self.write_result_to_csv(result=self.all_results,
+                                 filename=self.summary_path(name=None))
+
     def move_finished_scenario(self, scenario_path: str, scenario_name: str,
-                               map_name: str):
+                               map_name: str) -> str:
         map_path = self.configuration.finished_scenario_dir + f"/{map_name}"
         output_path = f"{map_path}/{scenario_name}.yaml"
 
@@ -205,10 +213,11 @@ class ExperimentRunner:
             os.makedirs(map_path)
 
         shutil.move(scenario_path, output_path)
+        return output_path
 
-    def summary_path(self, map_name: Optional[str]) -> str:
-        if map_name:
-            return self.configuration.single_exp_root + f"/exp_{self.configuration.experiment_id}_{map_name}_summary.csv"
+    def summary_path(self, name: Optional[str]) -> str:
+        if name:
+            return self.configuration.single_exp_root + f"/exp_{self.configuration.experiment_id}_{name}_summary.csv"
         else:
             return self.configuration.single_exp_root + f"/exp_{self.configuration.experiment_id}_all_summary.csv"
 
@@ -223,7 +232,8 @@ class ExperimentRunner:
                                  filename=self.configuration.log_dir +
                                  f"/intermediate_summary.csv")
 
-    def create_result_data(self, result_file_path) -> List[CSVResult]:
+    def create_result_data(self, result_file_path: str,
+                           scneario_path: str) -> List[CSVResult]:
         tree = ET.parse(result_file_path)
         root = tree.getroot()
         results = []
@@ -236,19 +246,22 @@ class ExperimentRunner:
                         CSVResult(scenario_name=testcase.attrib['name'],
                                   is_success=False,
                                   error_type=error.attrib['type'],
-                                  message=error.attrib['message']))
+                                  message=error.attrib['message'],
+                                  file_path=scneario_path))
                 elif failure is not None:
                     results.append(
                         CSVResult(scenario_name=testcase.attrib['name'],
                                   is_success=False,
                                   error_type=failure.get('type'),
-                                  message=failure.get('message')))
+                                  message=failure.get('message'),
+                                  file_path=scneario_path))
                 else:
                     results.append(
                         CSVResult(scenario_name=testcase.attrib['name'],
                                   is_success=True,
                                   error_type=None,
-                                  message=None))
+                                  message=None,
+                                  file_path=scneario_path))
         return results
 
     def write_result_to_csv(self, result, filename):
@@ -301,6 +314,6 @@ if __name__ == '__main__':
         configuration=ExperimentConfiguration(ads_root=ADS_ROOT,
                                               experiment_id=EXPERIMENT_ID,
                                               docker_image_id=DOCKER_IMAGE_ID,
-                                              container_timeout_sec=120))
+                                              display_gui=False))
 
     runner.run_experiment(enable_recording=False)
