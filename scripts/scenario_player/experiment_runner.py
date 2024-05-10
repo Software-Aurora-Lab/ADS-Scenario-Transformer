@@ -29,6 +29,7 @@ class ExperimentConfiguration:
         self.experiment_id = experiment_id
         self.docker_image_id = docker_image_id
         self.container_timeout_sec = container_timeout_sec
+        self.replayed = False
 
     @property
     def exp_root(self):
@@ -181,11 +182,19 @@ class ExperimentRunner:
             os.makedirs(scenario_replay_dir)
 
         for scenario_name in autoware_failed_scenario_names:
-            from_path = self.configuration.finished_scenario_dir + f"/{scenario_name}.yaml"
-            to_path = scenario_replay_dir + f"/{scenario_name}.yaml"
-            shutil.move(from_path, to_path)
+            yaml_files = [
+                entry.resolve()
+                for entry in self.configuration.finished_scenario_dir.rglob(
+                    f'{scenario_name}.yaml')
+            ]
+            if yaml_files:
+                from_path = yaml_files[0]
+                to_path = scenario_replay_dir + f"/{scenario_name}.yaml"
+                shutil.move(from_path, to_path)
 
-        self.run_experiment(enable_recording=False)
+        if autoware_failed_scenario_names and not self.configuration.replayed:
+            self.configuration.replayed = True
+            self.run_experiment(enable_recording=False)
 
     def move_finished_scenario(self, scenario_path: str, scenario_name: str,
                                map_name: str):
