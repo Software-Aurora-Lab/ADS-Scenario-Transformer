@@ -4,6 +4,8 @@ from lanelet2.core import Lanelet, LaneletMap, TrafficLight
 from lanelet2.projection import MGRSProjector
 from lanelet2.io import Origin
 from lanelet2.traffic_rules import Locations, Participants
+from lanelet2.routing import RoutingGraph
+from ads_scenario_transformer.builder.entities_builder import ASTEntityType
 
 T = TypeVar('T')
 
@@ -58,3 +60,21 @@ class VectorMapParser:
 
     def regualtory_element_layer(self):
         return self.lanelet_map.regulatoryElementLayer
+
+    def routing_graph(self, type: ASTEntityType) -> RoutingGraph:
+        if type == ASTEntityType.PEDESTRIAN:
+            return self.pedestrian_routing_graph
+        elif type == ASTEntityType.BICYCLE:
+            # Bicycle also uses vehicle routing graph
+            return self.vehicle_routing_graph
+        # ego, car
+        return self.vehicle_routing_graph
+
+    def is_reachble(self, type: ASTEntityType, start: Lanelet,
+                    end: Lanelet) -> bool:
+        routing_graph = self.routing_graph(type=type)
+
+        for lanelet in routing_graph.reachableSets(start, 0, 0, True):
+            if lanelet.id == end.id:
+                return True
+        return False
