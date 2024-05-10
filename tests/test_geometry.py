@@ -106,10 +106,14 @@ def test_find_available_lanes_car(obstacles, vector_map_parser,
     end_point = Geometry.project_UTM_point_on_lanelet(point=car[-1].position,
                                                       projector=mgrs_projector)
 
+    target_point = Geometry.project_UTM_point_on_lanelet(
+        point=car[54].position, projector=mgrs_projector)
+
     lanelet_paths: List[LaneletPath] = Geometry.find_available_lanes(
         vector_map_parser=vector_map_parser,
         start_point=start_point,
         end_point=end_point,
+        target_point=target_point,
         entity_type=ASTEntityType.CAR)
 
     lane_id = [
@@ -132,10 +136,14 @@ def test_find_available_lanes_pedestrian(obstacles, vector_map_parser,
     end_point = Geometry.project_UTM_point_on_lanelet(
         point=pedestrian[-1].position, projector=mgrs_projector)
 
+    target_point = Geometry.project_UTM_point_on_lanelet(
+        point=pedestrian[54].position, projector=mgrs_projector)
+
     lanelet_paths: List[LaneletPath] = Geometry.find_available_lanes(
         vector_map_parser=vector_map_parser,
         start_point=start_point,
         end_point=end_point,
+        target_point=target_point,
         entity_type=ASTEntityType.PEDESTRIAN)
 
     lane_id = [

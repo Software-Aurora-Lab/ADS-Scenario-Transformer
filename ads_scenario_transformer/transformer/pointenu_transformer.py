@@ -62,6 +62,7 @@ class PointENUTransformer(Transformer):
                                                 basic_point=projected_point,
                                                 entity_type=entity_type)
 
+        print("projected_point:", projected_point)
         target_lanelet = None
         if self.configuration.reference_points:
             start_point = Geometry.project_UTM_point_on_lanelet(
@@ -75,6 +76,7 @@ class PointENUTransformer(Transformer):
                 vector_map_parser=vector_map_parser,
                 start_point=start_point,
                 end_point=end_point,
+                target_point=projected_point,
                 entity_type=entity_type)
 
             available_lane_id = [
@@ -87,7 +89,13 @@ class PointENUTransformer(Transformer):
                     target_lanelet = lanelet
                     break
 
+            print("available_lane_id:", available_lane_id)
+            print("li:", [lanelet.id for lanelet in lanelets])
+
         if not target_lanelet and len(lanelets) > 0:
+            print(
+                "Warning: target lanelet is not found, It can set imprecise lanelet"
+            )
             target_lanelet = lanelets[0]
 
         if target_lanelet:
