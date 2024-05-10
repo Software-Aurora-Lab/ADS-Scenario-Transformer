@@ -31,9 +31,8 @@ class ContainerManager:
     def create_scenario_running_script(self, container_id: str,
                                        script_dir: str,
                                        scenario_file_path: str,
-                                       log_dir_path: str, launch_rviz: bool):
+                                       log_dir_path: str):
         script_path = f"{script_dir}/run_scenario_{container_id}.sh"
-        launch_rviz_str = "true" if launch_rviz else "false"
 
         with open(f"{script_path}", "w") as f:
             f.write(f"#!/bin/bash\n")
@@ -46,17 +45,18 @@ class ContainerManager:
             f.write(f"record:=false \\\n")
             f.write(f"scenario:={scenario_file_path} \\\n")
             f.write(f"output_directory:={log_dir_path} \\\n")
-            f.write(f"launch_rviz:={launch_rviz_str} \\\n")
             f.write(f"sensor_model:=sample_sensor_kit \\\n")
             f.write(f"vehicle_model:=sample_vehicle")
         return script_path
 
     def start_instance(self, container_id: str, container_name: str,
                        map_path: str, scenario_path: str, script_path: str,
-                       log_path: str, docker_image_id: str):
+                       log_path: str, docker_image_id: str, display_gui: bool):
         print("Start instance")
         print("container name:", container_name)
         print("container id:", container_id)
+
+        display = ':0' if display_gui else ''
 
         self.container = self.client.containers.run(
             docker_image_id,
@@ -69,7 +69,7 @@ class ContainerManager:
                 docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])
             ],  # '--gpus all'
             environment={
-                'DISPLAY': ':0',
+                'DISPLAY': display,
                 'TERM': '',
                 'QT_X11_NO_MITSHM': '1'
             },
