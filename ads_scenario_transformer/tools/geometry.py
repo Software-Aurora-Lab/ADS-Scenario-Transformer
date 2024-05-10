@@ -176,7 +176,6 @@ class Geometry:
                               heading=0.0) -> Optional[LanePosition]:
         point3d = Point3d(getId(), basic_point.x, basic_point.y, basic_point.z)
         basic_point2d = BasicPoint2d(basic_point.x, basic_point.y)
-        t_attribute = distanceToCenterline2d(lanelet, basic_point2d)
 
         if not inside(lanelet, basic_point2d):
             # If the point is not in lanelet, we find nearest one and use it
@@ -187,28 +186,10 @@ class Geometry:
 
             nearest_point = nearest_point_in_lanelets[0][1]
             basic_point2d = BasicPoint2d(nearest_point.x, nearest_point.y)
-            t_attribute = distanceToCenterline2d(lanelet, basic_point2d)
 
-        point2d = Point2d(getId(), basic_point.x, basic_point.y)
-        left = distance(to2D(lanelet.leftBound), point2d)
-        right = distance(to2D(lanelet.rightBound), point2d)
-        is_t_positive = left < right
-        lane_width = distance(lanelet.centerline,
-                              lanelet.leftBound) + distance(
-                                  lanelet.centerline, lanelet.rightBound)
-
-        if not is_t_positive:
-            t_attribute = -t_attribute
-
-        entity_width = entity_bounding_box.dimensions.width
         entity_length = entity_bounding_box.dimensions.length
 
         # If there is not enough space to place entity on the lane, simulator will fails.
-        max_lane_width = (lane_width - entity_width) / 2
-        min_lane_width = -max_lane_width
-        t_attribute = min(max_lane_width, t_attribute)
-        t_attribute = max(min_lane_width, t_attribute)
-
         max_s = max(math.floor(length2d(lanelet) - entity_length), 0)
 
         # Calculation of s attribute is simplified.
@@ -219,7 +200,7 @@ class Geometry:
             roadId='',
             laneId=str(lanelet.id),
             s=s_attribute,
-            offset=t_attribute,
+            offset=0,
             orientation=Orientation(
                 h=heading,
                 p=0,

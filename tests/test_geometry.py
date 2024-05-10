@@ -41,10 +41,10 @@ def test_geometry(lanelet_map, entities):
     ]
 
     expectations = [
-        LanePosition(laneId="154", s=10.9835, offset=-0.5042),
-        LanePosition(laneId="108", s=35.266, offset=-1.1844),
-        LanePosition(laneId="108", s=121.5308, offset=-0.134),
-        LanePosition(laneId="22", s=35.7761, offset=-0.2818)
+        LanePosition(laneId="154", s=10.9835, offset=0.0),
+        LanePosition(laneId="108", s=35.266, offset=0.0),
+        LanePosition(laneId="108", s=121.5308, offset=0.0),
+        LanePosition(laneId="22", s=35.7761, offset=0.0)
     ]
 
     for idx, (basic_point,
