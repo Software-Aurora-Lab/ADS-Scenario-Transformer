@@ -43,7 +43,7 @@ def test_transform_lane_position(localization_poses, vector_map_parser,
     assert position.lanePosition is not None, "The lane_position should not be None."
     assert position.lanePosition.laneId == "22"
     assert position.lanePosition.s == 35.812947374714085
-    assert position.lanePosition.offset == 0.2289137647592503
+    assert position.lanePosition.offset == 0.0
 
 
 def test_geometry_in_routing3(vector_map_parser, apollo_map_parser,

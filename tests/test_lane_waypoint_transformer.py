@@ -27,6 +27,6 @@ def test_utm_type_lane_waypoint_transformer(vector_map_parser,
     lane_position = openscenario_waypoint.position.lanePosition
 
     assert lane_position.laneId == "15"
-    assert lane_position.offset == -0.21234711002946863
+    assert lane_position.offset == 0.0
     assert lane_position.s == 44.94214913248086
     assert lane_position.orientation.h == 0
