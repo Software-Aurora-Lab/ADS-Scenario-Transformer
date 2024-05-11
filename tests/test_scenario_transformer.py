@@ -62,13 +62,15 @@ def test_gen_all_samples(borregas_vector_map_path, borregas_apollo_map_path,
                          borregas_scenorita_scenario9_path,
                          borregas_scenorita_scenario75_path,
                          borregas_scenorita_scenario94_path,
+                         borregas_scenorita_scenario140_path,
                          borregas_doppel_scenario9_path,
                         borregas_doppel_scenario48_path):
 
     scenario_paths = [
         borregas_scenorita_scenario1_path, borregas_scenorita_scenario9_path,
         borregas_scenorita_scenario75_path, borregas_doppel_scenario9_path,
-        borregas_doppel_scenario48_path, borregas_scenorita_scenario94_path
+        borregas_doppel_scenario48_path, borregas_scenorita_scenario94_path,
+        borregas_scenorita_scenario140_path
     ]
 
     for scenario_path in scenario_paths:

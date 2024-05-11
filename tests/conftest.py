@@ -57,6 +57,11 @@ def borregas_scenorita_scenario94_path() -> str:
     return SAMPLE_ROOT + "/apollo_borregas/scenoRITA/00000094.00000"
 
 @pytest.fixture
+def borregas_scenorita_scenario140_path() -> str:
+    return SAMPLE_ROOT + "/apollo_borregas/scenoRITA/00000140.00000"
+
+
+@pytest.fixture
 def borregas_doppel_scenario160_path() -> str:
     return SAMPLE_ROOT + "/apollo_borregas/DoppelTest/00000160.00000"
 
