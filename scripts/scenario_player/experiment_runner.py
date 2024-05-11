@@ -164,12 +164,18 @@ class ExperimentRunner:
             )
             exp_results.extend(csv_results)
 
-        summary_name = "second_try" if self.replayed else "first_try"
-        self.write_result_to_csv(result=exp_results,
-                                 filename=self.summary_path(name=summary_name))
-
-        self.all_results.extend(exp_results)
-        self.replay_autoware_failed_scenarios(exp_results)
+        if self.replayed:
+            for replayed_result in exp_results:
+                for idx in range(0, len(self.all_results) - 1):
+                    first_result = self.all_results[idx]
+                    if first_result.scenario_name == replayed_result.scenario_name:
+                        self.all_results[idx] = replayed_result
+                        break
+            self.all_results.extend(exp_results)
+            self.write_result_to_csv(result=self.all_results, filename=self.summary_path(name=None))
+        else:
+            self.all_results.extend(exp_results)
+            self.replay_autoware_failed_scenarios(exp_results)
 
     def replay_autoware_failed_scenarios(self, all_results: List[CSVResult]):
 
@@ -197,12 +203,9 @@ class ExperimentRunner:
                 to_path = scenario_replay_dir + f"/{scenario_name}.yaml"
                 shutil.move(from_path, to_path)
 
-        if autoware_failed_scenario_names and not self.replayed:
-            self.replayed = True
-            self.run_experiment(enable_recording=False)
-
-        self.write_result_to_csv(result=self.all_results,
-                                 filename=self.summary_path(name=None))
+        self.replayed = True
+        self.run_experiment(enable_recording=False)
+        
 
     def move_finished_scenario(self, scenario_path: str, scenario_name: str,
                                map_name: str) -> str:
@@ -268,12 +271,12 @@ class ExperimentRunner:
         with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(
-                ['Scenario Name', 'P/F', 'Error Type', 'Error Message'])
+                ['Scenario Name', 'P/F', 'Error Type', 'Error Message', "File Path"])
 
             for result in result:
                 writer.writerow([
                     result.scenario_name, result.is_success, result.error_type,
-                    result.message
+                    result.message, result.file_path
                 ])
             print("Write a summary at:", {filename})
 
