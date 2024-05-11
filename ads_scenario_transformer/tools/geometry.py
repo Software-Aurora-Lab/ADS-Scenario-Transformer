@@ -57,7 +57,9 @@ class Geometry:
             paths = []
             for target_lanelet in target_lanelets:
                 # start_to_end_route can be None if start_lanelet and end_lanelet are the same.
-                start_to_end_route: Route = target_graph.getRouteVia(
+                start_to_end_route: Route = target_graph.getRoute(
+                    start_lanelet, end_lanelet, 0, True)
+                start_to_end_via_route: Route = target_graph.getRouteVia(
                     start_lanelet, [target_lanelet], end_lanelet, 0, True)
                 start_to_target_route: Route = target_graph.getRoute(
                     start_lanelet, target_lanelet, 0, True)
@@ -66,6 +68,8 @@ class Geometry:
                     paths.append(start_to_end_route.shortestPath())
                 if start_to_target_route:
                     paths.append(start_to_target_route.shortestPath())
+                if start_to_end_via_route:
+                    paths.append(start_to_end_via_route.shortestPath())
 
             if paths:
                 return paths
