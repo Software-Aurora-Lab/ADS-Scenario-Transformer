@@ -90,7 +90,7 @@ class PointENUTransformer(Transformer):
 
         if not target_lanelet and len(lanelets) > 0:
             print(
-                "Warning: target lanelet is not found, It can set imprecise lanelet"
+                f"Warning: target lanelet for {self.configuration.scenario_object.name} is not found, It can set imprecise lanelet"
             )
             target_lanelet = lanelets[0]
 
