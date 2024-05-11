@@ -14,6 +14,7 @@ from ads_scenario_transformer.tools.apollo_map_parser import ApolloMapParser
 from ads_scenario_transformer.tools.vector_map_parser import VectorMapParser
 from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformer, PointENUTransformerConfiguration, PointENUTransformerInput
 from ads_scenario_transformer.transformer.routing_request_transformer import RoutingRequestTransformerConfiguration
+from ads_scenario_transformer.transformer.localization_transformer import LocalizationTransformer, LocalizationTransformerConfiguration
 from ads_scenario_transformer.transformer.obstacles_transformer import ObstaclesTransformer, ObstaclesTransformerConfiguration, ObstaclesTransformerResult
 from ads_scenario_transformer.builder.scenario_builder import ScenarioBuilder, ScenarioConfiguration
 from ads_scenario_transformer.builder.storyboard.init_builder import InitBuilder
@@ -186,13 +187,20 @@ class ScenarioTransformer:
         start_point = self.localization_poses[0].pose.position
         end_point = self.localization_poses[-1].pose.position
 
+        if self.configuration.use_last_position_as_destination:
+            localization_transformer = LocalizationTransformer(
+                configuration=LocalizationTransformerConfiguration(
+                    vector_map_parser=self.vector_map_parser,
+                    apollo_map_parser=self.apollo_map_parser,
+                    ego_scenario_object=ego_scenario_object))
+            return localization_transformer.transform(self.localization_poses)
+
         routing_request_transformer = RoutingRequestTransformer(
             configuration=RoutingRequestTransformerConfiguration(
                 vector_map_parser=self.vector_map_parser,
                 apollo_map_parser=self.apollo_map_parser,
                 ego_scenario_object=ego_scenario_object,
                 reference_points=[start_point, end_point]))
-
         routing_request = self.input_routing_request()
 
         return routing_request_transformer.transform(routing_request)

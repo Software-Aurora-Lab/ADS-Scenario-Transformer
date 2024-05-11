@@ -154,7 +154,7 @@ def test_private_builder(waypoints):
     assert_proto_type_equal(ego, ScenarioObject)
 
     private_builder = PrivateBuilder(scenario_object=ego)
-    private_builder.make_routing_action_with_teleport_action(
+    private_builder.make_routing_action_with_waypoints(
         waypoints=waypoints,
         closed=False,
         name="Routing Request Transformer Generated Route")

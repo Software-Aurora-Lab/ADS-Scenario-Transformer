@@ -43,7 +43,7 @@ class RoutingRequestTransformer(Transformer):
 
         private_builder = PrivateBuilder(
             scenario_object=self.configuration.ego_scenario_object)
-        private_builder.make_routing_action_with_teleport_action(
+        private_builder.make_routing_action_with_waypoints(
             waypoints=list(openscenario_waypoints),
             closed=False,
             name="Routing Request Transformer Generated Route")
