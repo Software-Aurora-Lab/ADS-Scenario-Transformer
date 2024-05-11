@@ -6,15 +6,22 @@ import argparse
 import subprocess
 from pathlib import Path
 from typing import List, Optional
+from enum import Enum
 from dataclasses import dataclass
 import xml.etree.ElementTree as ET
 from container_manager import ContainerManager
 
 
+class ResultType(Enum):
+    SUCCESS = "success"
+    FAILURE = "failure"
+    ERROR = "error"
+
+
 @dataclass
 class CSVResult:
     scenario_name: str
-    is_success: bool
+    result_type: ResultType
     error_type: Optional[str]
     message: Optional[str]
     file_path: str
@@ -157,8 +164,10 @@ class ExperimentRunner:
             self.write_result_to_csv(result=csv_results,
                                      filename=self.summary_path(map_name))
 
-            pass_count = len(
-                [result for result in csv_results if result.is_success])
+            pass_count = len([
+                result for result in csv_results
+                if result.result_type == ResultType.SUCCESS
+            ])
             print(
                 f"Finished {map_name}. Pass {pass_count} out of {len(csv_results)}. Progress: {idx + 1}/{map_count}"
             )
@@ -172,7 +181,8 @@ class ExperimentRunner:
                         self.all_results[idx] = replayed_result
                         break
             self.all_results.extend(exp_results)
-            self.write_result_to_csv(result=self.all_results, filename=self.summary_path(name=None))
+            self.write_result_to_csv(result=self.all_results,
+                                     filename=self.summary_path(name=None))
         else:
             self.all_results.extend(exp_results)
             self.replay_autoware_failed_scenarios(exp_results)
@@ -205,7 +215,6 @@ class ExperimentRunner:
 
         self.replayed = True
         self.run_experiment(enable_recording=False)
-        
 
     def move_finished_scenario(self, scenario_path: str, scenario_name: str,
                                map_name: str) -> str:
@@ -247,21 +256,21 @@ class ExperimentRunner:
                 if error is not None:
                     results.append(
                         CSVResult(scenario_name=testcase.attrib['name'],
-                                  is_success=False,
+                                  result_type=ResultType.ERROR,
                                   error_type=error.attrib['type'],
                                   message=error.attrib['message'],
                                   file_path=scneario_path))
                 elif failure is not None:
                     results.append(
                         CSVResult(scenario_name=testcase.attrib['name'],
-                                  is_success=False,
+                                  result_type=ResultType.FAILURE,
                                   error_type=failure.get('type'),
                                   message=failure.get('message'),
                                   file_path=scneario_path))
                 else:
                     results.append(
                         CSVResult(scenario_name=testcase.attrib['name'],
-                                  is_success=True,
+                                  result_type=ResultType.SUCCESS,
                                   error_type=None,
                                   message=None,
                                   file_path=scneario_path))
@@ -270,13 +279,16 @@ class ExperimentRunner:
     def write_result_to_csv(self, result, filename):
         with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(
-                ['Scenario Name', 'P/F', 'Error Type', 'Error Message', "File Path"])
+            writer.writerow([
+                'Scenario Name', 'Source', 'S/F/E', 'Error Type',
+                'Error Message', "File Path"
+            ])
 
             for result in result:
+                source = "DoppelTest" if result.scenario_name in "Doppel" else "scenoRITA"
                 writer.writerow([
-                    result.scenario_name, result.is_success, result.error_type,
-                    result.message, result.file_path
+                    result.scenario_name, source, result.result_type.value,
+                    result.error_type, result.message, result.file_path
                 ])
             print("Write a summary at:", {filename})
 
