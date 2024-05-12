@@ -31,8 +31,9 @@ class ContainerManager:
     def create_scenario_running_script(self, container_id: str,
                                        script_dir: str,
                                        scenario_file_path: str,
-                                       log_dir_path: str):
+                                       log_dir_path: str, record: bool):
         script_path = f"{script_dir}/run_scenario_{container_id}.sh"
+        record_scenario = "true" if record else "false"
 
         with open(f"{script_path}", "w") as f:
             f.write(f"#!/bin/bash\n")
@@ -42,16 +43,39 @@ class ContainerManager:
                 f"ros2 launch scenario_test_runner scenario_test_runner.launch.py \\\n"
             )
             f.write(f"architecture_type:=awf/universe/20230906 \\\n")
-            f.write(f"record:=false \\\n")
+            f.write(f"record:={record_scenario} \\\n")
             f.write(f"scenario:={scenario_file_path} \\\n")
             f.write(f"output_directory:={log_dir_path} \\\n")
             f.write(f"sensor_model:=sample_sensor_kit \\\n")
             f.write(f"vehicle_model:=sample_vehicle")
         return script_path
 
+    def create_scenario_analyzing_script(self, container_id: str,
+                                         script_dir: str, record_path: str,
+                                         confVE_path: str,
+                                         violation_analyzer_path: str,
+                                         log_dir_path: str,
+                                         map_path: str) -> str:
+        script_path = f"{script_dir}/analyze_scenario_{container_id}.sh"
+
+        with open(f"{script_path}", "w") as f:
+            f.write(f"#!/bin/bash\n")
+            f.write(f"cd {confVE_path} \n")
+            f.write(f"source /autoware/install/setup.bash\n")
+            f.write(f"source venv/bin/activate \n")
+            f.write(f"poetry install --no-root \n")
+            f.write(f"which python3 \n")
+            f.write(f"echo $PYTHONPATH \n")
+            f.write(
+                f"poetry run python3 {violation_analyzer_path} {record_path} {log_dir_path} {map_path} \n"
+            )
+
+        return script_path
+
     def start_instance(self, container_id: str, container_name: str,
                        map_path: str, scenario_path: str, script_path: str,
-                       log_path: str, docker_image_id: str, display_gui: bool):
+                       log_path: str, project_path: str, docker_image_id: str,
+                       display_gui: bool):
         print("Start instance")
         print("container name:", container_name)
         print("container id:", container_id)
@@ -92,6 +116,10 @@ class ContainerManager:
                 },
                 script_path: {
                     'bind': script_path,
+                    'mode': 'rw'
+                },
+                project_path: {
+                    'bind': project_path,
                     'mode': 'rw'
                 },
                 '/etc/localtime': {

@@ -9,7 +9,8 @@ from typing import List, Optional
 from enum import Enum
 from dataclasses import dataclass
 import xml.etree.ElementTree as ET
-from container_manager import ContainerManager
+from scripts.scenario_player.container_manager import ContainerManager
+\
 
 
 class ResultType(Enum):
@@ -30,12 +31,15 @@ class CSVResult:
 @dataclass
 class ExperimentConfiguration:
 
-    def __init__(self, ads_root: str, experiment_id: int, docker_image_id: str,
-                 display_gui):
+    def __init__(self, ads_root: str, project_root: str, experiment_id: int,
+                 docker_image_id: str, display_gui: bool,
+                 analyze_scenario: bool):
         self.ads_root = ads_root
+        self.project_root = project_root
         self.experiment_id = experiment_id
         self.docker_image_id = docker_image_id
         self.display_gui = display_gui
+        self.analyze_scenario = analyze_scenario
 
     @property
     def exp_root(self):
@@ -69,6 +73,14 @@ class ExperimentConfiguration:
     def finished_scenario_dir(self):
         return f"{self.single_exp_root}/fin_scenarios"
 
+    @property
+    def confVE_path(self):
+        return f"{self.project_root}/pkgs/ConfVE_Autoware"
+
+    @property
+    def violation_analyzer_path(self):
+        return f"{self.confVE_path}/violation_analyzer.py"
+
 
 class ExperimentRunner:
     configuration: ExperimentConfiguration
@@ -98,7 +110,10 @@ class ExperimentRunner:
 
         return scenario_dict
 
-    def run_experiment(self, enable_recording: bool):
+    def rosbag_record_path(self, scenario_name: str) -> str:
+        return f"{self.configuration.log_dir}/scenario_test_runner/{scenario_name}/{scenario_name}"
+
+    def run_experiment(self, enable_display_recording: bool):
         print("Running Scenarios:", self.scenario_paths.values())
         map_count = len(self.scenario_paths)
 
@@ -109,10 +124,11 @@ class ExperimentRunner:
             scenario_count = len(scenario_paths)
             map_name = Path(map_dir).stem
             csv_results = []
+            violation_results = []
             for scenario_idx, scenario in enumerate(scenario_paths):
                 scenario_name = Path(scenario).stem
 
-                if enable_recording:
+                if enable_display_recording:
                     print("Start Recording:", scenario_name)
                     output_file = f'{self.configuration.log_dir}/{scenario_name}.mp4'
                     self.recording_process = self.start_recording(output_file)
@@ -124,6 +140,7 @@ class ExperimentRunner:
                     scenario_path=self.configuration.scenario_dir,
                     script_path=self.configuration.script_dir,
                     log_path=self.configuration.log_dir,
+                    project_path=self.configuration.project_root,
                     docker_image_id=self.configuration.docker_image_id,
                     display_gui=self.configuration.display_gui)
 
@@ -131,17 +148,38 @@ class ExperimentRunner:
                     container_id=f"{self.container_id}",
                     script_dir=self.configuration.script_dir,
                     scenario_file_path=scenario,
-                    log_dir_path=self.configuration.log_dir)
+                    log_dir_path=self.configuration.log_dir,
+                    record=self.configuration.analyze_scenario)
 
                 print(
                     "exec:",
                     self.container_manager.execute_script_in_container(
                         running_script_path))
 
-                if enable_recording:
+                if enable_display_recording:
                     if self.recording_process:
                         print("Stop Recording:", scenario_name)
                         self.stop_recording(self.recording_process)
+
+                # filename=f"{output_directory_path}/violation_{analyzer.record_name}.csv"
+                if self.configuration.analyze_scenario:
+                    print("Start Analyzing:", scenario_name)
+                    analyzing_script_path = self.container_manager.create_scenario_analyzing_script(
+                        container_id=f"{self.container_id}",
+                        script_dir=self.configuration.script_dir,
+                        record_path=self.rosbag_record_path(
+                            scenario_name=scenario_name),
+                        log_dir_path=self.configuration.log_dir,
+                        confVE_path=self.configuration.confVE_path,
+                        violation_analyzer_path=self.configuration.
+                        violation_analyzer_path,
+                        map_path=self.configuration.map_path +
+                        "/BorregasAve/lanelet2_map.osm")  # TODO: Change
+
+                    print(
+                        "exec:",
+                        self.container_manager.execute_script_in_container(
+                            analyzing_script_path))
 
                 self.container_manager.remove_instance()
                 self.container_id += 1
@@ -174,11 +212,13 @@ class ExperimentRunner:
             exp_results.extend(csv_results)
 
         if self.replayed:
-            for replayed_result in exp_results:
+            for i in range(0, len(exp_results) - 1):
+                replayed_result = exp_results[i]
                 for idx in range(0, len(self.all_results) - 1):
                     first_result = self.all_results[idx]
                     if first_result.scenario_name == replayed_result.scenario_name:
                         self.all_results[idx] = replayed_result
+                        del exp_results[idx]
                         break
             self.all_results.extend(exp_results)
             self.write_result_to_csv(result=self.all_results,
@@ -214,7 +254,7 @@ class ExperimentRunner:
                 shutil.move(from_path, to_path)
 
         self.replayed = True
-        self.run_experiment(enable_recording=False)
+        self.run_experiment(enable_display_recording=False)
 
     def move_finished_scenario(self, scenario_path: str, scenario_name: str,
                                map_name: str) -> str:
@@ -313,6 +353,7 @@ class ExperimentRunner:
 if __name__ == '__main__':
 
     ADS_ROOT = "/home/sora/Desktop/changnam"
+    PROJECT_ROOT = "/home/sora/Desktop/changnam/ADS-scenario-transfer"
     DOCKER_IMAGE_ID = "6f0050135292"
 
     parser = argparse.ArgumentParser(description="Process the experiment ID.")
@@ -327,8 +368,10 @@ if __name__ == '__main__':
     os.system("xhost +local:docker")
     runner = ExperimentRunner(
         configuration=ExperimentConfiguration(ads_root=ADS_ROOT,
+                                              project_root=PROJECT_ROOT,
                                               experiment_id=EXPERIMENT_ID,
                                               docker_image_id=DOCKER_IMAGE_ID,
-                                              display_gui=False))
+                                              display_gui=False,
+                                              analyze_scenario=True))
 
-    runner.run_experiment(enable_recording=False)
+    runner.run_experiment(enable_display_recording=False)
