@@ -4,13 +4,69 @@ import random
 import csv
 import argparse
 import subprocess
+import yaml
 from pathlib import Path
 from typing import List, Optional
 from enum import Enum
 from dataclasses import dataclass
 import xml.etree.ElementTree as ET
 from scripts.scenario_player.container_manager import ContainerManager
-\
+
+
+class CSVWorker:
+
+    @staticmethod
+    def write_scenario_result(result, filename):
+        with open(filename, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([
+                'Scenario Name', 'Source', 'S/F/E', 'Error Type',
+                'Error Message', "File Path"
+            ])
+
+            for result in result:
+                source = "DoppelTest" if result.scenario_name in "Doppel" else "scenoRITA"
+                writer.writerow([
+                    result.scenario_name, source, result.result_type.value,
+                    result.error_type, result.message, result.file_path
+                ])
+            print("Write a summary at:", {filename})
+
+    @staticmethod
+    def write_violation_result(scenario_name, violations, filename):
+        with open(filename, 'w', newline='') as csvfile:
+            fieldnames = [
+                'scenario_name', 'main_type', 'features', 'key_label'
+            ]
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            for violation in violations:
+                writer.writerow({
+                    'scenario_name': scenario_name,
+                    'main_type': str(violation.main_type),
+                    'features': str(violation.features),
+                    'key_label': violation.key_label
+                })
+
+    @staticmethod
+    def merge_violation_results(directory_path: str, output_path: str):
+        violation_files = [
+            entry.resolve()
+            for entry in Path(directory_path).rglob('violation*.csv')
+        ]
+        violations = []
+
+        for violation_file in violation_files:
+            with open(violation_file, 'r') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    violations.append(row)
+
+        with open(output_path, 'w', newline='') as merged_file:
+            fieldnames = violations[0].keys()
+            writer = csv.DictWriter(merged_file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(violations)
 
 
 class ResultType(Enum):
@@ -40,6 +96,8 @@ class ExperimentConfiguration:
         self.docker_image_id = docker_image_id
         self.display_gui = display_gui
         self.analyze_scenario = analyze_scenario
+
+        self.cached_map_path = {}
 
     @property
     def exp_root(self):
@@ -81,6 +139,23 @@ class ExperimentConfiguration:
     def violation_analyzer_path(self):
         return f"{self.confVE_path}/violation_analyzer.py"
 
+    def rosbag_record_path(self, scenario_name: str) -> str:
+        return f"{self.log_dir}/scenario_test_runner/{scenario_name}/{scenario_name}"
+
+    def target_map_path(self, scenario_path: str, cache_no: int) -> str:
+        if cache_no in self.cached_map_path:
+            return self.cached_map_path[cache_no]
+
+        with open(scenario_path, 'r') as file:
+            yaml_contents = yaml.load(file, Loader=yaml.FullLoader)
+
+        scenario_map_path = yaml_contents['OpenSCENARIO']['RoadNetwork'][
+            'LogicFile']['filepath']
+
+        self.cached_map_path[cache_no] = self.map_path + "/" + "/".join(
+            Path(scenario_map_path).parts[-2:])
+        return self.cached_map_path[cache_no]
+
 
 class ExperimentRunner:
     configuration: ExperimentConfiguration
@@ -101,30 +176,30 @@ class ExperimentRunner:
 
     @property
     def scenario_paths(self):
-        map_directories = Path(self.configuration.scenario_dir)
+        scenario_directories = Path(self.configuration.scenario_dir)
         scenario_dict = {}
-        for map_dir in map_directories.iterdir():
-            yaml_files = [entry.resolve() for entry in map_dir.glob('*.yaml')]
-            yml_files = [entry.resolve() for entry in map_dir.glob('*.yml')]
-            scenario_dict[map_dir] = sorted(yaml_files + yml_files)
+        for scenario_dir in scenario_directories.iterdir():
+            yaml_files = [
+                entry.resolve() for entry in scenario_dir.glob('*.yaml')
+            ]
+            yml_files = [
+                entry.resolve() for entry in scenario_dir.glob('*.yml')
+            ]
+            scenario_dict[scenario_dir] = sorted(yaml_files + yml_files)
 
         return scenario_dict
-
-    def rosbag_record_path(self, scenario_name: str) -> str:
-        return f"{self.configuration.log_dir}/scenario_test_runner/{scenario_name}/{scenario_name}"
 
     def run_experiment(self, enable_display_recording: bool):
         print("Running Scenarios:", self.scenario_paths.values())
         map_count = len(self.scenario_paths)
 
         exp_results = []
-        for idx, (map_dir,
+        for idx, (scenario_dir,
                   scenario_paths) in enumerate(self.scenario_paths.items()):
 
             scenario_count = len(scenario_paths)
-            map_name = Path(map_dir).stem
+            scenario_dir_name = Path(scenario_dir).stem
             csv_results = []
-            violation_results = []
             for scenario_idx, scenario in enumerate(scenario_paths):
                 scenario_name = Path(scenario).stem
 
@@ -161,20 +236,19 @@ class ExperimentRunner:
                         print("Stop Recording:", scenario_name)
                         self.stop_recording(self.recording_process)
 
-                # filename=f"{output_directory_path}/violation_{analyzer.record_name}.csv"
                 if self.configuration.analyze_scenario:
                     print("Start Analyzing:", scenario_name)
                     analyzing_script_path = self.container_manager.create_scenario_analyzing_script(
                         container_id=f"{self.container_id}",
                         script_dir=self.configuration.script_dir,
-                        record_path=self.rosbag_record_path(
+                        record_path=self.configuration.rosbag_record_path(
                             scenario_name=scenario_name),
                         log_dir_path=self.configuration.log_dir,
                         confVE_path=self.configuration.confVE_path,
                         violation_analyzer_path=self.configuration.
                         violation_analyzer_path,
-                        map_path=self.configuration.map_path +
-                        "/BorregasAve/lanelet2_map.osm")  # TODO: Change
+                        map_path=self.configuration.target_map_path(
+                            scenario_path=scenario, cache_no=idx))
 
                     print(
                         "exec:",
@@ -188,7 +262,7 @@ class ExperimentRunner:
                 finished_scneario_path = self.move_finished_scenario(
                     scenario_path=scenario,
                     scenario_name=scenario_name,
-                    map_name=map_name)
+                    scenario_dir_name=scenario_dir_name)
                 results = self.create_result_data(
                     result_file_path=scenario_result_path,
                     scneario_path=finished_scneario_path)
@@ -199,36 +273,46 @@ class ExperimentRunner:
 
                 print(f"{scenario_idx + 1}/{scenario_count} done")
 
-            self.write_result_to_csv(result=csv_results,
-                                     filename=self.summary_path(map_name))
+            CSVWorker.write_scenario_result(
+                result=csv_results,
+                filename=self.summary_path(scenario_dir_name))
 
             pass_count = len([
                 result for result in csv_results
                 if result.result_type == ResultType.SUCCESS
             ])
             print(
-                f"Finished {map_name}. Pass {pass_count} out of {len(csv_results)}. Progress: {idx + 1}/{map_count}"
+                f"Finished {scenario_dir}. Pass {pass_count} out of {len(csv_results)}. Progress: {idx + 1}/{map_count}"
             )
             exp_results.extend(csv_results)
 
         if self.replayed:
-            for i in range(0, len(exp_results) - 1):
-                replayed_result = exp_results[i]
-                for idx in range(0, len(self.all_results) - 1):
-                    first_result = self.all_results[idx]
-                    if first_result.scenario_name == replayed_result.scenario_name:
-                        self.all_results[idx] = replayed_result
-                        del exp_results[idx]
-                        break
-            self.all_results.extend(exp_results)
-            self.write_result_to_csv(result=self.all_results,
-                                     filename=self.summary_path(name=None))
+            self.update_replayed_results(exp_results=exp_results)
+
+            CSVWorker.write_scenario_result(
+                self.all_results, filename=self.summary_path(name=None))
+
+            if self.configuration.analyze_scenario:
+                CSVWorker.merge_violation_results(
+                    directory_path=self.configuration.log_dir,
+                    output_path=self.configuration.single_exp_root +
+                    "/violations.csv")
         else:
             self.all_results.extend(exp_results)
             self.replay_autoware_failed_scenarios(exp_results)
 
-    def replay_autoware_failed_scenarios(self, all_results: List[CSVResult]):
+    def update_replayed_results(self, exp_results: List[CSVResult]):
+        for i in range(0, len(exp_results) - 1):
+            replayed_result = exp_results[i]
+            for idx in range(0, len(self.all_results) - 1):
+                first_result = self.all_results[idx]
+                if first_result.scenario_name == replayed_result.scenario_name:
+                    self.all_results[idx] = replayed_result
+                    del exp_results[idx]
+                    break
+        self.all_results.extend(exp_results)
 
+    def replay_autoware_failed_scenarios(self, all_results: List[CSVResult]):
         if os.path.exists(self.configuration.scenario_dir):
             shutil.rmtree(self.configuration.scenario_dir)
             os.makedirs(self.configuration.scenario_dir)
@@ -257,8 +341,8 @@ class ExperimentRunner:
         self.run_experiment(enable_display_recording=False)
 
     def move_finished_scenario(self, scenario_path: str, scenario_name: str,
-                               map_name: str) -> str:
-        map_path = self.configuration.finished_scenario_dir + f"/{map_name}"
+                               scenario_dir_name: str) -> str:
+        map_path = self.configuration.finished_scenario_dir + f"/{scenario_dir_name}"
         output_path = f"{map_path}/{scenario_name}.yaml"
 
         if not os.path.exists(map_path):
@@ -275,14 +359,13 @@ class ExperimentRunner:
 
     def create_intermediate_result(self, results, scenario_result_path,
                                    scenario_name):
-
         shutil.copy(
             scenario_result_path,
             self.configuration.log_dir + f"/result_{scenario_name}.junit.xml")
 
-        self.write_result_to_csv(result=results,
-                                 filename=self.configuration.log_dir +
-                                 f"/intermediate_summary.csv")
+        CSVWorker.write_scenario_result(result=results,
+                                        filename=self.configuration.log_dir +
+                                        "/intermediate_summary.csv")
 
     def create_result_data(self, result_file_path: str,
                            scneario_path: str) -> List[CSVResult]:
@@ -315,22 +398,6 @@ class ExperimentRunner:
                                   message=None,
                                   file_path=scneario_path))
         return results
-
-    def write_result_to_csv(self, result, filename):
-        with open(filename, mode='w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([
-                'Scenario Name', 'Source', 'S/F/E', 'Error Type',
-                'Error Message', "File Path"
-            ])
-
-            for result in result:
-                source = "DoppelTest" if result.scenario_name in "Doppel" else "scenoRITA"
-                writer.writerow([
-                    result.scenario_name, source, result.result_type.value,
-                    result.error_type, result.message, result.file_path
-                ])
-            print("Write a summary at:", {filename})
 
     def start_recording(self,
                         output_filename,
