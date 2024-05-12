@@ -31,14 +31,15 @@ class ContainerManager:
     def create_scenario_running_script(self, container_id: str,
                                        script_dir: str,
                                        scenario_file_path: str,
-                                       log_dir_path: str, record: bool):
+                                       log_dir_path: str, record: bool,
+                                       confVE_path: str):
         script_path = f"{script_dir}/run_scenario_{container_id}.sh"
         record_scenario = "true" if record else "false"
 
         with open(f"{script_path}", "w") as f:
             f.write(f"#!/bin/bash\n")
-            f.write(f"cd {self.ads_root}\n")
             f.write(f"source /autoware/install/setup.bash\n")
+            f.write(f"cd {self.ads_root}\n")
             f.write(
                 f"ros2 launch scenario_test_runner scenario_test_runner.launch.py \\\n"
             )
@@ -48,6 +49,20 @@ class ContainerManager:
             f.write(f"output_directory:={log_dir_path} \\\n")
             f.write(f"sensor_model:=sample_sensor_kit \\\n")
             f.write(f"vehicle_model:=sample_vehicle")
+        return script_path
+
+    def create_env_setup_script(self, container_id: str, script_dir: str,
+                                confVE_path: str):
+        script_path = f"{script_dir}/setup_env_{container_id}.sh"
+
+        with open(f"{script_path}", "w") as f:
+            f.write(f"#!/bin/bash\n")
+            f.write(f"sudo cp -f {confVE_path}/bashrc ~/.bashrc \n")
+            f.write("source ~/.bashrc\n")
+            f.write("echo $CYCLONEDDS_URI\n")
+            f.write("echo $RMW_IMPLEMENTATION\n")
+            f.write("cat $(echo $CYCLONEDDS_URI)\n")
+
         return script_path
 
     def create_scenario_analyzing_script(self, container_id: str,
@@ -60,12 +75,10 @@ class ContainerManager:
 
         with open(f"{script_path}", "w") as f:
             f.write(f"#!/bin/bash\n")
-            f.write(f"cd {confVE_path} \n")
             f.write(f"source /autoware/install/setup.bash\n")
+            f.write(f"cd {confVE_path} \n")
             f.write(f"source venv/bin/activate \n")
             f.write(f"poetry install --no-root \n")
-            f.write(f"which python3 \n")
-            f.write(f"echo $PYTHONPATH \n")
             f.write(
                 f"poetry run python3 {violation_analyzer_path} {record_path} {log_dir_path} {map_path} \n"
             )

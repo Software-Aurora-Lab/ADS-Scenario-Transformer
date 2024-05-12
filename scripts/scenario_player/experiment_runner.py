@@ -219,15 +219,25 @@ class ExperimentRunner:
                     docker_image_id=self.configuration.docker_image_id,
                     display_gui=self.configuration.display_gui)
 
+                env_setup_path = self.container_manager.create_env_setup_script(
+                    container_id=f"{self.container_id}",
+                    script_dir=self.configuration.script_dir,
+                    confVE_path=self.configuration.confVE_path)
+                print(
+                    "exec env setup:",
+                    self.container_manager.execute_script_in_container(
+                        env_setup_path))
+
                 running_script_path = self.container_manager.create_scenario_running_script(
                     container_id=f"{self.container_id}",
                     script_dir=self.configuration.script_dir,
                     scenario_file_path=scenario,
                     log_dir_path=self.configuration.log_dir,
-                    record=self.configuration.analyze_scenario)
+                    record=self.configuration.analyze_scenario,
+                    confVE_path=self.configuration.confVE_path)
 
                 print(
-                    "exec:",
+                    "exec scenario running:",
                     self.container_manager.execute_script_in_container(
                         running_script_path))
 
@@ -439,6 +449,6 @@ if __name__ == '__main__':
                                               experiment_id=EXPERIMENT_ID,
                                               docker_image_id=DOCKER_IMAGE_ID,
                                               display_gui=False,
-                                              analyze_scenario=True))
+                                              analyze_scenario=False))
 
     runner.run_experiment(enable_display_recording=False)
