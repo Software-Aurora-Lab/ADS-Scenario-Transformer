@@ -38,7 +38,9 @@ def run_scenario_transformer(directory_path, config_path):
                     "obstacle-waypoint-frequency"],
                 disable_traffic_signal=config["disable-traffic-signal"],
                 use_last_position_as_destination=config[
-                    "use-last-position-destination"])
+                    "use-last-position-destination"],
+                add_violation_detecting_conditions=config[
+                    "add-violation-detecting-conditions"])
 
             transformer = ScenarioTransformer(configuration=configuration)
             scenario = transformer.transform()
