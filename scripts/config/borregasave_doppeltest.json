@@ -7,5 +7,6 @@
     "obstacle-waypoint-frequency": 5,
     "output-scenario-path": "./BorregasAve",
     "disable-traffic-signal": false,
-    "use-last-position-destination": true
+    "use-last-position-destination": true,
+    "add-violation-detecting-conditions": true
 }

@@ -7,5 +7,6 @@
     "obstacle-waypoint-frequency": 2,
     "output-scenario-path": "./SanFrancisco",
     "disable-traffic-signal": true,
-    "use-last-position-destination": true
+    "use-last-position-destination": true,
+    "add-violation-detecting-conditions": true
 }

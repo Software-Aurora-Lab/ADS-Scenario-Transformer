@@ -47,6 +47,7 @@ class ContainerManager:
             f.write(f"record:={record_scenario} \\\n")
             f.write(f"scenario:={scenario_file_path} \\\n")
             f.write(f"output_directory:={log_dir_path} \\\n")
+            f.write(f"global_timeout:=120 \\\n")
             f.write(f"sensor_model:=sample_sensor_kit \\\n")
             f.write(f"vehicle_model:=sample_vehicle")
         return script_path
