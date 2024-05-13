@@ -31,7 +31,8 @@ class StoryBuilder(Builder):
 
     @staticmethod
     def default_end_story(entities: Entities, ego_end_position: Position,
-                          exit_failure_duration: float) -> Story:
+                          exit_failure_duration: float,
+                          add_violation_detecting_conditions: bool) -> Story:
         """
         Create a default ending condition story
         - Exit_Failure condition: Simulation time exceeds exit_failure_duration seconds
@@ -40,8 +41,10 @@ class StoryBuilder(Builder):
 
         exit_failure_event = EventBuilder.exit_failure_event(
             rule=Rule.GREATER_THAN,
-            value_in_sec=int(exit_failure_duration) +
-            30)  # Apollo ego car accerlate faster than Autoware.
+            value_in_sec=int(exit_failure_duration) + 30,
+            entities=entities,
+            add_violation_detecting_conditions=add_violation_detecting_conditions
+        )  # Apollo ego car accerlate faster than Autoware.
 
         ego_name = entities.scenarioObjects[0].name
         exit_success_event = EventBuilder.exit_success_event(
