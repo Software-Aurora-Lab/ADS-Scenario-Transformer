@@ -37,6 +37,7 @@ class ScenarioTransformerConfiguration:
     obstacle_direction_change_detection_threshold: float  # 0 ~ 360 degree, Will be used if obstacle_waypoint_frequency_in_sec is None
     disable_traffic_signal: bool
     use_last_position_as_destination: bool  # if True, the destination is the last position of the ego in LocalizationPose chanel, otherwise, the ego destination becomes the last position in routing request
+    add_violation_detecting_conditions: bool
 
     def __init__(self,
                  apollo_scenario_path: str,
@@ -44,6 +45,7 @@ class ScenarioTransformerConfiguration:
                  vector_map_path: str,
                  use_last_position_as_destination: bool,
                  obstacle_waypoint_frequency_in_sec: Optional[float],
+                 add_violation_detecting_conditions: bool,
                  disable_traffic_signal: bool = False,
                  obstacle_direction_change_detection_threshold=60,
                  road_network_lanelet_map_path: Optional[str] = None,
@@ -60,6 +62,7 @@ class ScenarioTransformerConfiguration:
         else:
             self.road_network_lanelet_map_path = vector_map_path
         self.road_network_pcd_map_path = road_network_pcd_map_path
+        self.add_violation_detecting_conditions = add_violation_detecting_conditions
 
 
 class ScenarioTransformer:
@@ -165,7 +168,9 @@ class ScenarioTransformer:
         return StoryBuilder.default_end_story(
             entities=self.entities,
             ego_end_position=ego_end_position,
-            exit_failure_duration=total_duration)
+            exit_failure_duration=total_duration,
+            add_violation_detecting_conditions=self.configuration.
+            add_violation_detecting_conditions)
 
     def transform_obstacle_movements(self) -> ObstaclesTransformerResult:
         obstacles = self.input_perception_obstacles()

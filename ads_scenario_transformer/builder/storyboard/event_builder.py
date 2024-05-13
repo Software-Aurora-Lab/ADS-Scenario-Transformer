@@ -1,5 +1,5 @@
 from typing import List
-from openscenario_msgs import Event, Action, Condition, Priority, GlobalAction, UserDefinedAction, PrivateAction, Rule, Position, CoordinateSystem, RelativeDistanceType, RoutingAlgorithm
+from openscenario_msgs import Event, Action, Condition, Priority, GlobalAction, UserDefinedAction, PrivateAction, Rule, Position, Entities
 from ads_scenario_transformer.builder import Builder
 from ads_scenario_transformer.builder.storyboard.action_builder import ActionBuilder
 from ads_scenario_transformer.builder.storyboard.trigger_builder import StartTriggerBuilder
@@ -56,11 +56,23 @@ class EventBuilder(Builder):
         return self.product
 
     @staticmethod
-    def exit_failure_event(rule: Rule, value_in_sec: float) -> Event:
-        exit_failure_condtion = ConditionBuilder.simulation_time_condition(
+    def exit_failure_event(rule: Rule, value_in_sec: float, entities: Entities,
+                           add_violation_detecting_conditions: bool) -> Event:
+        simulation_time_condition = ConditionBuilder.simulation_time_condition(
             rule=Rule.GREATER_THAN, value_in_sec=value_in_sec)
 
-        event_builder = EventBuilder(start_conditions=[exit_failure_condtion])
+        start_conditions = [simulation_time_condition]
+        if add_violation_detecting_conditions:
+            if len(entities.scenarioObjects) > 1:
+                collision_conditions = ConditionBuilder.ego_collision_conditions(
+                    colliding_entities=entities.scenarioObjects[1:])
+                start_conditions.extend(collision_conditions)
+
+            accel_conditions = ConditionBuilder.ego_acceleration_conditions(
+                threshold=2.5)
+            start_conditions.extend(accel_conditions)
+
+        event_builder = EventBuilder(start_conditions=start_conditions)
 
         exit_failure_action = UserDefinedActionBuilder.built_in_action(
             type=BuiltInUserDefinedActionType.EXIT_FAILURE)
