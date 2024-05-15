@@ -312,15 +312,18 @@ class ExperimentRunner:
             self.replay_autoware_failed_scenarios(exp_results)
 
     def update_replayed_results(self, exp_results: List[CSVResult]):
-        for i in range(0, len(exp_results) - 1):
-            replayed_result = exp_results[i]
-            for idx in range(0, len(self.all_results) - 1):
-                first_result = self.all_results[idx]
-                if first_result.scenario_name == replayed_result.scenario_name:
-                    self.all_results[idx] = replayed_result
-                    del exp_results[idx]
+        filtered_results = []
+        for old_result in self.all_results:
+            for new_result in exp_results[:]:
+                if old_result.scenario_name == new_result.scenario_name:
+                    filtered_results.append(new_result)
+                    exp_results.remove(new_result)
                     break
-        self.all_results.extend(exp_results)
+            else:
+                filtered_results.append(old_result)
+                
+        filtered_results.extend(exp_results)
+        self.all_results = filtered_results
 
     def replay_autoware_failed_scenarios(self, all_results: List[CSVResult]):
         if os.path.exists(self.configuration.scenario_dir):
