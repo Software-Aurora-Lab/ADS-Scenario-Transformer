@@ -219,14 +219,14 @@ class ExperimentRunner:
                     docker_image_id=self.configuration.docker_image_id,
                     display_gui=self.configuration.display_gui)
 
-                env_setup_path = self.container_manager.create_env_setup_script(
-                    container_id=f"{self.container_id}",
-                    script_dir=self.configuration.script_dir,
-                    confVE_path=self.configuration.confVE_path)
-                print(
-                    "exec env setup:",
-                    self.container_manager.execute_script_in_container(
-                        env_setup_path))
+                # env_setup_path = self.container_manager.create_env_setup_script(
+                #     container_id=f"{self.container_id}",
+                #     script_dir=self.configuration.script_dir,
+                #     confVE_path=self.configuration.confVE_path)
+                # print(
+                #     "exec env setup:",
+                #     self.container_manager.execute_script_in_container(
+                #         env_setup_path))
 
                 running_script_path = self.container_manager.create_scenario_running_script(
                     container_id=f"{self.container_id}",

@@ -2,19 +2,12 @@ import os
 import random
 import argparse
 import shutil
-
-
-def find_files(directory, extension):
-    """Recursively find all files in the given directory with a specific extension."""
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith(extension):
-                yield os.path.join(root, file)
-
+from pathlib import Path
 
 def randomly_select_files(directory, num_files=1, extension=".00000"):
     """Randomly select a specified number of files with a specific extension from a directory, including its subdirectories."""
-    all_files = list(find_files(directory, extension))
+
+    all_files = list(Path(directory).rglob(f"*.{extension}"))
     if len(all_files) == 0:
         return []
     selected_files = random.sample(all_files, min(len(all_files), num_files))
@@ -25,6 +18,7 @@ def copy_files(files, target_directory):
     """Copy selected files to the target directory."""
     if not os.path.exists(target_directory):
         os.makedirs(target_directory)
+    print(f"Copy {len(files)}")
     for file in files:
         shutil.copy(file, target_directory)
         print(f"Copied {file} to {target_directory}")
