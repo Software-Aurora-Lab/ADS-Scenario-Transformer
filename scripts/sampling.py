@@ -4,7 +4,7 @@ import argparse
 import shutil
 from pathlib import Path
 
-def randomly_select_files(directory, num_files=1, extension=".00000"):
+def randomly_select_files(directory, num_files=1, extension="00000"):
     """Randomly select a specified number of files with a specific extension from a directory, including its subdirectories."""
 
     all_files = list(Path(directory).rglob(f"*.{extension}"))
@@ -19,9 +19,13 @@ def copy_files(files, target_directory):
     if not os.path.exists(target_directory):
         os.makedirs(target_directory)
     print(f"Copy {len(files)}")
-    for file in files:
-        shutil.copy(file, target_directory)
-        print(f"Copied {file} to {target_directory}")
+    
+    for i, file in enumerate(files):
+        file_name, file_extension = os.path.splitext(os.path.basename(file))
+        new_file_name = f"{i}_{file_name}{file_extension}"
+        target_path = os.path.join(target_directory, new_file_name)
+        shutil.copy(file, target_path)
+        print(f"Copied {file} to {target_path}")
 
 
 def parse_args():
