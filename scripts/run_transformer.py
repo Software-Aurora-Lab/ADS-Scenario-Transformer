@@ -21,7 +21,7 @@ def run_scenario_transformer(directory_path, config_path):
     with open(config_path, 'r') as file:
         config = json.load(file)
 
-    for filename in sorted(os.listdir(directory_path)):
+    for i, filename in sorted(enumerate(os.listdir(directory_path))):
         full_file_path = os.path.join(directory_path, filename)
 
         if file_has_extension(full_file_path, "00000"):
@@ -47,12 +47,12 @@ def run_scenario_transformer(directory_path, config_path):
             scenario_yaml = OpenScenarioEncoder.encode_proto_pyobject_to_yaml(
                 proto_pyobject=scenario, wrap_result_with_typename=False)
 
-            filename = ""
+            filename = f"{i}_"
             if config["source-name"]:
-                filename = config["source-name"]
+                filename = filename + config["source-name"]
                 filename = filename + "-" + Path(full_file_path).stem
             else:
-                filename = Path(full_file_path).stem
+                filename = filename + Path(full_file_path).stem
 
             output_path = Path(
                 config["output-scenario-path"]) / (filename + ".yaml")
