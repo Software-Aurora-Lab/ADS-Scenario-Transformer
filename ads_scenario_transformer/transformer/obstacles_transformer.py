@@ -88,8 +88,8 @@ class ObstaclesTransformer(Transformer):
             if self.is_obstacle_moved(obstacles):
 
                 start_moving_time = self.obstacle_start_moving_time(obstacles)
-                start_condition = ConditionBuilder.ego_start_moving_condition(
-                    delay=start_moving_time)
+                start_condition = ConditionBuilder.simulation_time_condition(
+                    rule=Rule.GREATER_THAN, value_in_sec=start_moving_time)
 
                 routing_positions = []
                 for idx in self.obstacle_routing_indices(obstacles):
