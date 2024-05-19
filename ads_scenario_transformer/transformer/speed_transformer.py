@@ -29,7 +29,7 @@ class SpeedTransformerResult:
 class SpeedState(Enum):
     INCREASING = "Increasing"
     DECREASING = "Decreasing"
-    NOT_MOVING = "Not Moving"
+    CONSTANT = "Constant"
 
 
 class SpeedTransformer(Transformer):
@@ -48,19 +48,14 @@ class SpeedTransformer(Transformer):
 
         events = []
         start_time = source[0].timestamp
-        for cur, next in zip(speed_slopes[:-1], speed_slopes[1:]):
-            duration = source[next[0]].timestamp - source[cur[0]].timestamp
+        for idx_range, state, speed in  speed_slopes:
+            duration = source[idx_range.stop].timestamp - source[idx_range.start].timestamp
 
-            time_from_start = source[cur[0]].timestamp - start_time
+            time_from_start = source[idx_range.start].timestamp - start_time
             start_condition = ConditionBuilder.simulation_time_condition(
                 rule=Rule.GREATER_THAN, value_in_sec=time_from_start)
 
-            speed = 0
-            if cur[1] != SpeedState.NOT_MOVING:
-                speed = next[2]
-
             event_builder = EventBuilder(start_conditions=[start_condition])
-
             private_action_builder = PrivateActionBuilder()
             private_action_builder.make_absolute_speed_action(
                 speed_action_dynamics=SpeedActionDynamics(
@@ -71,10 +66,10 @@ class SpeedTransformer(Transformer):
                 value=speed)
 
             speed_action = private_action_builder.get_result()
-            event_builder.add_private_action(name=f"{cur[1].value}",
+            event_builder.add_private_action(name=f"{state.value}",
                                              private_action=speed_action)
             events.append(event_builder.get_result())
-
+        
         start_condition = ConditionBuilder.simulation_time_condition(
             rule=Rule.GREATER_THAN, value_in_sec=0)
 
@@ -90,30 +85,31 @@ class SpeedTransformer(Transformer):
         prev_speed = 0
         cur_speed = 0
         result = []
+
+        last_idx = 0
+        cur_state = SpeedState.CONSTANT
         for idx, linear_velocity in enumerate(linear_velocities):
             if idx == 0:
                 prev_speed = self.calculate_velocity_meter_per_sec(
                     linear_velocity)
-                result.append((0, SpeedState.NOT_MOVING, 0))
                 continue
             cur_speed = self.calculate_velocity_meter_per_sec(linear_velocity)
             speed_diff = cur_speed - prev_speed
 
             if abs(speed_diff) > threshold:
                 if speed_diff > 0:
-                    if result[-1][1] != SpeedState.INCREASING:
-                        result.append((idx, SpeedState.INCREASING, cur_speed))
+                    if cur_state != SpeedState.INCREASING:
+                        result.append((range(last_idx, idx - 1), cur_state, prev_speed))
+                        last_idx = idx
+                    cur_state = SpeedState.INCREASING
                 else:
-                    if result[-1][1] != SpeedState.DECREASING:
-                        result.append((idx, SpeedState.DECREASING, cur_speed))
-            else:
-                if speed_diff == 0.0 and result[-1][1] != SpeedState.NOT_MOVING:
-                    result.append((idx, SpeedState.NOT_MOVING, cur_speed))
-
+                    if cur_state != SpeedState.DECREASING:
+                        result.append((range(last_idx, idx - 1), cur_state, prev_speed))
+                        last_idx = idx
+                    cur_state = SpeedState.DECREASING
             prev_speed = cur_speed
 
-        result.append(
-            (len(linear_velocities) - 1, SpeedState.NOT_MOVING, cur_speed))
+        result.append((range(last_idx, len(linear_velocities) - 1), cur_state, cur_speed))
         return result
 
     def wrap_events_to_act(self, events: List[Event],
