@@ -8,7 +8,7 @@ class InvalidScenarioInputError(ASTError):
         super().__init__(message)
 
 
-class RoutingError(ASTError):
+class LaneFindingError(ASTError):
 
     def __init__(self, message):
         super().__init__(message)
