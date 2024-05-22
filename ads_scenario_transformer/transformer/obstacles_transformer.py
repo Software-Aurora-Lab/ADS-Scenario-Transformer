@@ -78,6 +78,11 @@ class ObstaclesTransformer(Transformer):
                 raise ValueError(
                     "start poisiion of the obstacle cannot be projected")
 
+            if not self.is_obstacle_routable(obstacles):
+                raise ValueError(
+                    f"obstacle {target_object.name} is not routable, please check the obstacle"
+                )
+
             simulation_start_condition = ConditionBuilder.simulation_time_condition(
                 rule=Rule.GREATER_THAN, value_in_sec=0)
 
@@ -87,7 +92,7 @@ class ObstaclesTransformer(Transformer):
                 entity_name=target_object.name)
 
             events = [locating_event]
-            if self.is_obstacle_moved(obstacles):
+            if self.is_obstacle_moved(obstacles) and start.type != 3:
 
                 start_moving_time = self.obstacle_start_moving_time(obstacles)
                 start_condition = ConditionBuilder.simulation_time_condition(
@@ -216,6 +221,19 @@ class ObstaclesTransformer(Transformer):
         act_builder.make_maneuver_groups(maneuver_groups=[maneuver_group])
         act_builder.make_start_trigger(trigger=strat_trigger.get_result())
         return act_builder.get_result()
+
+    def is_obstacle_routable(self,
+                             obstacles: List[PerceptionObstacle]) -> bool:
+        if obstacles[0].type != 3:
+            return True
+
+        start_degree = self.normalize_radians(obstacles[0].theta)
+        threshold = 10
+        for obstacle in obstacles:
+            if abs(start_degree -
+                   self.normalize_radians(obstacle.theta)) > threshold:
+                return False
+        return True
 
     def is_obstacle_moved(self, obstacles: List[PerceptionObstacle]) -> bool:
         return self.max_velocity_meter_per_sec(obstacles=obstacles) != 0.0
