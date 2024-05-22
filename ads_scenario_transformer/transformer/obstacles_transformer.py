@@ -66,7 +66,6 @@ class ObstaclesTransformer(Transformer):
             if not target_object:
                 continue
 
-            print(target_object.name)
             start = obstacles[0]
             start_position = self.transform_coordinate_value(
                 position=start.position,

@@ -31,6 +31,7 @@ class ContainerManager:
     def create_scenario_running_script(self, container_id: str,
                                        script_dir: str,
                                        scenario_file_path: str,
+                                       rviz_config_path: str,
                                        log_dir_path: str, record: bool,
                                        confVE_path: str):
         script_path = f"{script_dir}/run_scenario_{container_id}.sh"
@@ -47,6 +48,8 @@ class ContainerManager:
             f.write(f"record:={record_scenario} \\\n")
             f.write(f"scenario:={scenario_file_path} \\\n")
             f.write(f"output_directory:={log_dir_path} \\\n")
+            f.write(f"global_timeout:=120 \\\n")
+            f.write(f"rviz_config:={rviz_config_path} \\\n")
             f.write(f"global_timeout:=120 \\\n")
             f.write(f"sensor_model:=sample_sensor_kit \\\n")
             f.write(f"vehicle_model:=sample_vehicle")
