@@ -59,12 +59,14 @@ class ObstaclesTransformer(Transformer):
 
         stories = []
         for id, obstacles in grouped_obstacles.items():
+
             target_object = self.find_scenario_object(
                 id=id, entities_with_id=entities_with_id)
 
             if not target_object:
                 continue
 
+            print(target_object.name)
             start = obstacles[0]
             start_position = self.transform_coordinate_value(
                 position=start.position,

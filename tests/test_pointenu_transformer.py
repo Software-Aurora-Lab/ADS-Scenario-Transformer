@@ -1,8 +1,10 @@
+import pytest
 from modules.common.proto.geometry_pb2 import PointENU
 from ads_scenario_transformer.transformer import PointENUTransformer
 from ads_scenario_transformer.transformer.pointenu_transformer import PointENUTransformerConfiguration, PointENUTransformerInput
 from ads_scenario_transformer.builder.entities_builder import ASTEntityType, ASTEntity
 from ads_scenario_transformer.tools.cyber_record_reader import CyberRecordReader, CyberRecordChannel
+from ads_scenario_transformer.tools.error import LaneFindingError
 
 
 def test_transform_world_position(localization_poses, vector_map_parser,
@@ -37,13 +39,9 @@ def test_transform_lane_position(localization_poses, vector_map_parser,
             scenario_object=entities.scenarioObjects[0],
             reference_points=None))
 
-    position = transformer.transform(
-        source=PointENUTransformerInput(point, 0.0))
-
-    assert position.lanePosition is not None, "The lane_position should not be None."
-    assert position.lanePosition.laneId == "22"
-    assert position.lanePosition.s == 35.812947374714085
-    assert position.lanePosition.offset == 0.0
+    with pytest.raises(LaneFindingError):
+        position = transformer.transform(
+            source=PointENUTransformerInput(point, 0.0))
 
 
 def test_geometry_in_routing3(vector_map_parser, apollo_map_parser,

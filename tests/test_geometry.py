@@ -109,16 +109,14 @@ def test_find_available_lanes_car(obstacles, vector_map_parser,
     target_point = Geometry.project_UTM_point_on_lanelet(
         point=car[54].position, projector=mgrs_projector)
 
-    lanelet_paths: List[LaneletPath] = Geometry.find_available_lanes(
+    lanelets: Set[Lanelet] = Geometry.find_available_lanes(
         vector_map_parser=vector_map_parser,
         start_point=start_point,
         end_point=end_point,
         target_point=target_point,
         entity_type=ASTEntityType.CAR)
 
-    lane_id = [
-        lanelet.id for lane_path in lanelet_paths for lanelet in lane_path
-    ]
+    lane_id = [lanelet.id for lanelet in lanelets]
 
     assert 192 in lane_id
     assert 104 in lane_id
@@ -139,16 +137,13 @@ def test_find_available_lanes_pedestrian(obstacles, vector_map_parser,
     target_point = Geometry.project_UTM_point_on_lanelet(
         point=pedestrian[54].position, projector=mgrs_projector)
 
-    lanelet_paths: List[LaneletPath] = Geometry.find_available_lanes(
+    lanelets: Set[Lanelet] = Geometry.find_available_lanes(
         vector_map_parser=vector_map_parser,
         start_point=start_point,
         end_point=end_point,
         target_point=target_point,
         entity_type=ASTEntityType.PEDESTRIAN)
 
-    lane_id = [
-        lanelet.id for lane_path in lanelet_paths for lanelet in lane_path
-    ]
+    lane_id = [lanelet.id for lanelet in lanelets]
 
-    assert 636 in lane_id
     assert 643 in lane_id

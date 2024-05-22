@@ -10,7 +10,7 @@ from modules.common.proto.geometry_pb2 import PointENU, Point3D
 from modules.map.proto.map_signal_pb2 import Signal
 from openscenario_msgs import LanePosition, Orientation, ReferenceContext, BoundingBox
 from ads_scenario_transformer.tools.vector_map_parser import VectorMapParser
-from ads_scenario_transformer.tools.error import RoutingError
+from ads_scenario_transformer.tools.error import LaneFindingError
 from ads_scenario_transformer.builder.entities_builder import ASTEntityType
 
 
@@ -47,7 +47,7 @@ class Geometry:
                              start_point: BasicPoint3d,
                              end_point: BasicPoint3d,
                              target_point: BasicPoint3d,
-                             entity_type: ASTEntityType) -> List[LaneletPath]:
+                             entity_type: ASTEntityType) -> Set[Lanelet]:
         """
         Finds all available lanes between start_point and end_point trajectory. If start_point or end_point are placed on a lanelet where multiple lanelets are overlapped, it can return wrong set of lanelets.
         """
@@ -56,26 +56,17 @@ class Geometry:
                        target_lanelets: List[Lanelet]) -> List[LaneletPath]:
             paths = []
             for target_lanelet in target_lanelets:
-                # start_to_end_route can be None if start_lanelet and end_lanelet are the same.
                 start_to_end_route: Route = target_graph.getRoute(
                     start_lanelet, end_lanelet, 0, True)
                 start_to_end_via_route: Route = target_graph.getRouteVia(
                     start_lanelet, [target_lanelet], end_lanelet, 0, True)
-                start_to_target_route: Route = target_graph.getRoute(
-                    start_lanelet, target_lanelet, 0, True)
 
                 if start_to_end_route:
                     paths.append(start_to_end_route.shortestPath())
-                if start_to_target_route:
-                    paths.append(start_to_target_route.shortestPath())
                 if start_to_end_via_route:
                     paths.append(start_to_end_via_route.shortestPath())
 
-            if paths:
-                return paths
-
-            return target_graph.possiblePaths(
-                start_lanelet) + target_graph.possiblePaths(end_lanelet)
+            return paths if paths else []
 
         target_graph = vector_map_parser.routing_graph(entity_type)
 
@@ -94,14 +85,19 @@ class Geometry:
             basic_point=target_point,
             entity_type=entity_type)
 
-        all_paths = []
+        print("start", [lanelet.id for lanelet in start_lanelets])
+        print("end", [lanelet.id for lanelet in end_lanelets])
+        print("target", [lanelet.id for lanelet in target_lanelets])
+
+        lanelets = set()
         for start_lanelet in start_lanelets:
             for end_lanelet in end_lanelets:
                 paths = find_paths(start_lanelet, end_lanelet, target_lanelets)
-                for path in paths:
-                    all_paths.append(path)
 
-        return all_paths
+                for path in paths:
+                    for lane in path:
+                        lanelets.add(lane)
+        return lanelets
 
     @staticmethod
     def find_close_lanelets(map: LaneletMap, basic_point: BasicPoint3d,
@@ -137,7 +133,7 @@ class Geometry:
             if lanelets:
                 return lanelets
 
-        raise RoutingError(
+        raise LaneFindingError(
             f"Could not find close lanelets for point {basic_point} type {entity_type} in the map"
         )
 

@@ -7,6 +7,7 @@ from ads_scenario_transformer.transformer import Transformer
 from ads_scenario_transformer.tools.geometry import Geometry
 from ads_scenario_transformer.tools.vector_map_parser import VectorMapParser
 from ads_scenario_transformer.builder.entities_builder import ASTEntityType
+from ads_scenario_transformer.tools.error import LaneFindingError
 
 
 @dataclass
@@ -71,17 +72,14 @@ class PointENUTransformer(Transformer):
                 projector=projector,
                 point=self.configuration.reference_points[-1])
 
-            available_lane_paths = Geometry.find_available_lanes(
+            available_lanelets = Geometry.find_available_lanes(
                 vector_map_parser=vector_map_parser,
                 start_point=start_point,
                 end_point=end_point,
                 target_point=projected_point,
                 entity_type=entity_type)
 
-            available_lane_id = [
-                lanelet.id for lanelet_path in available_lane_paths
-                for lanelet in lanelet_path
-            ]
+            available_lane_id = [lanelet.id for lanelet in available_lanelets]
 
             for lanelet in lanelets:
                 if lanelet.id in available_lane_id:
@@ -89,23 +87,22 @@ class PointENUTransformer(Transformer):
                     break
 
         if not target_lanelet and len(lanelets) > 0:
-            print(
-                f"Warning: target lanelet for {self.configuration.scenario_object.name} is not found, It can set imprecise lanelet"
+            # print("available_lane_id", available_lane_id)
+            # print("lanelets", lanelets)
+            raise LaneFindingError(
+                f"target lanelet for {self.configuration.scenario_object.name} is not found."
             )
-            target_lanelet = lanelets[0]
 
-        if target_lanelet:
-            bounding_box = self.object_bouding_box(
-                self.configuration.scenario_object)
-            # Discard heading value
-            lane_position = Geometry.nearest_lane_position(
-                map=lanelet_map,
-                lanelet=target_lanelet,
-                basic_point=projected_point,
-                entity_bounding_box=bounding_box,
-                heading=0.0)
-            return lane_position
-        return None
+        bounding_box = self.object_bouding_box(
+            self.configuration.scenario_object)
+        # Discard heading value
+        lane_position = Geometry.nearest_lane_position(
+            map=lanelet_map,
+            lanelet=target_lanelet,
+            basic_point=projected_point,
+            entity_bounding_box=bounding_box,
+            heading=0.0)
+        return lane_position
 
     def transformToWorldPosition(self, source: Source) -> WorldPosition:
         projected_point = Geometry.project_UTM_point_on_lanelet(

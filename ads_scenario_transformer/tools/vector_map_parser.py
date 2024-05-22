@@ -69,12 +69,3 @@ class VectorMapParser:
             return self.vehicle_routing_graph
         # ego, car
         return self.vehicle_routing_graph
-
-    def is_reachble(self, type: ASTEntityType, start: Lanelet,
-                    end: Lanelet) -> bool:
-        routing_graph = self.routing_graph(type=type)
-
-        for lanelet in routing_graph.reachableSets(start, 0, 0, True):
-            if lanelet.id == end.id:
-                return True
-        return False
