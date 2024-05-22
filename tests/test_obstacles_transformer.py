@@ -33,8 +33,16 @@ def test_obstacle_transformer(perception_obstacles, vector_map_parser):
             waypoint_frequency_in_sec=1,
             direction_change_detection_threshold=60))
 
-    with pytest.raises(LaneFindingError):
-        result = obstacles_transformer.transform(source=perception_obstacles)
+    result = obstacles_transformer.transform(source=perception_obstacles)
+
+    assert len(result.entities_with_id) == 7
+    assert len(result.stories) == 6
+
+    pedestrian5_events = result.stories[-1].acts[0].maneuverGroups[
+        0].maneuvers[0].events
+
+    assert pedestrian5_events[0].actions[
+        0].name == "Locate pedestrian_6_id_2 on the road"
 
 
 def test_obstacle_transformer2(perception_obstacles10, vector_map_parser):

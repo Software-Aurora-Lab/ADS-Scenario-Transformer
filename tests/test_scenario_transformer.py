@@ -41,8 +41,17 @@ def test_scenario_transformer(borregas_doppel_scenario9_path,
         add_violation_detecting_conditions=True)
     transformer = ScenarioTransformer(configuration=configuration)
 
-    with pytest.raises(LaneFindingError):
-        scenario = transformer.transform()
+    scenario = transformer.transform()
+
+    encoded_scenario = OpenScenarioEncoder.encode_proto_pyobject_to_dict(
+        proto_pyobject=scenario, wrap_result_with_typename=False)
+
+    assert len(transformer.entities.scenarioObjects) == 7
+    assert encoded_scenario['OpenSCENARIO']['RoadNetwork']['LogicFile'][
+        'filepath'] == configuration.road_network_lanelet_map_path
+    assert len(
+        encoded_scenario['OpenSCENARIO']['Entities']['ScenarioObject']) == 7
+    assert len(encoded_scenario['OpenSCENARIO']['Storyboard']['Story']) == 7
 
 
 def test_gen_all_samples(
