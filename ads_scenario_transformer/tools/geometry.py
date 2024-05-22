@@ -85,10 +85,6 @@ class Geometry:
             basic_point=target_point,
             entity_type=entity_type)
 
-        print("start", [lanelet.id for lanelet in start_lanelets])
-        print("end", [lanelet.id for lanelet in end_lanelets])
-        print("target", [lanelet.id for lanelet in target_lanelets])
-
         lanelets = set()
         for start_lanelet in start_lanelets:
             for end_lanelet in end_lanelets:

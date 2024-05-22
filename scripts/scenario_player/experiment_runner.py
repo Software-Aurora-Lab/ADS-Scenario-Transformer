@@ -96,7 +96,6 @@ class ExperimentConfiguration:
         self.docker_image_id = docker_image_id
         self.display_gui = display_gui
         self.analyze_scenario = analyze_scenario
-
         self.cached_map_path = {}
 
     @property
@@ -106,6 +105,10 @@ class ExperimentConfiguration:
     @property
     def map_path(self):
         return f"{self.ads_root}/autoware_map"
+
+    @property
+    def rviz_config_path(self):
+        return f"{self.ads_root}/autoware_test.rviz"
 
     @property
     def docker_container_name(self):
@@ -233,6 +236,7 @@ class ExperimentRunner:
                     script_dir=self.configuration.script_dir,
                     scenario_file_path=scenario,
                     log_dir_path=self.configuration.log_dir,
+                    rviz_config_path=self.configuration.rviz_config_path,
                     record=self.configuration.analyze_scenario,
                     confVE_path=self.configuration.confVE_path)
 
@@ -321,7 +325,7 @@ class ExperimentRunner:
                     break
             else:
                 filtered_results.append(old_result)
-                
+
         filtered_results.extend(exp_results)
         self.all_results = filtered_results
 
