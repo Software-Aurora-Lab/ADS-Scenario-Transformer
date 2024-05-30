@@ -2,7 +2,7 @@
     "apollo-map-path": "./samples/map/BorregasAve/base_map.pickle",
     "vector-map-path": "./samples/map/BorregasAve/lanelet2_map.osm",
     "road-network-lanelet-map-path":
-    "/home/sora/Desktop/changnam/autoware_map/BorregasAve/lanelet2_map.osm",
+    "/home/sora/Desktop/changnam/ADS-scenario-transfer/samples/map/BorregasAve/lanelet2_map.osm",
     "source-name": "BorregasAve-scenoRITA",
     "obstacle-waypoint-frequency": 5,
     "output-scenario-path": "./BorregasAve",

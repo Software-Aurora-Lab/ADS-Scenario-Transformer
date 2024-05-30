@@ -1,7 +1,6 @@
 import sys
 import os
 import csv
-import subprocess
 from pathlib import Path
 from dataclasses import dataclass
 import json
@@ -43,6 +42,7 @@ def run_scenario_transformer(directory_path, config_path):
 
     results = []
     configuration = ""
+    output_dir_path = ""
     for i, filename in sorted(enumerate(os.listdir(directory_path))):
         full_file_path = os.path.join(directory_path, filename)
 
@@ -79,6 +79,7 @@ def run_scenario_transformer(directory_path, config_path):
                 output_path = Path(
                     config["output-scenario-path"]) / (filename + ".yaml")
                 output_path.parent.mkdir(parents=True, exist_ok=True)
+                output_dir_path = output_path.parent
 
                 print("Configuration")
                 pprint.pprint(vars(configuration), indent=4)
@@ -97,7 +98,9 @@ def run_scenario_transformer(directory_path, config_path):
                               message=str(ex),
                               configuration=str(configuration)))
 
-    write_result(result=results, filename="transformation_summary.csv")
+    write_result(
+        result=results,
+        filename=f"{output_dir_path.absolute()}/transformation_summary.csv")
 
 
 if __name__ == "__main__":
