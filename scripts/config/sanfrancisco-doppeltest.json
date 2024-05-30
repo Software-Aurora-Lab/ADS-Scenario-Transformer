@@ -2,9 +2,9 @@
     "apollo-map-path": "./samples/map/SanFrancisco/base_map.pickle",
     "vector-map-path": "./samples/map/SanFrancisco/lanelet2_map.osm",
     "road-network-lanelet-map-path":
-    "/home/sora/Desktop/changnam/autoware_map/SanFrancisco/lanelet2_map.osm",
+    "/home/sora/Desktop/changnam/ADS-scenario-transfer/samples/map/SanFrancisco/lanelet2_map.osm",
     "source-name": "SanFrancisco-DoppelTest",
-    "obstacle-waypoint-frequency": 2,
+    "obstacle-waypoint-frequency": 5,
     "output-scenario-path": "./SanFrancisco",
     "disable-traffic-signal": false,
     "use-last-position-destination": true,

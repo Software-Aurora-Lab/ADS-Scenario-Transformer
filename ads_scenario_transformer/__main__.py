@@ -35,7 +35,7 @@ def main():
     parser.add_argument("--obstacle-waypoint-frequency",
                         required=False,
                         default=2,
-                        help="")
+                        help="Intervals of obstacle waypoint")
 
     parser.add_argument(
         "--obstacle-threshold",
@@ -45,7 +45,7 @@ def main():
     parser.add_argument("--disable-traffic-signal",
                         action="store_true",
                         default=False,
-                        help="Enable processing of traffic signals.")
+                        help="Disable processing of traffic signals.")
     parser.add_argument("--use-last-position-destination",
                         action="store_true",
                         default=False,

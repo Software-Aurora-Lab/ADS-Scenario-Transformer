@@ -11,6 +11,7 @@ from enum import Enum
 from dataclasses import dataclass
 import xml.etree.ElementTree as ET
 from scripts.scenario_player.container_manager import ContainerManager
+from definitions import PROJECT_ROOT
 
 
 class CSVWorker:
@@ -87,28 +88,21 @@ class CSVResult:
 @dataclass
 class ExperimentConfiguration:
 
-    def __init__(self, ads_root: str, project_root: str, experiment_id: int,
+    def __init__(self, map_path: str, project_root: str, experiment_id: int,
                  docker_image_id: str, display_gui: bool,
-                 analyze_scenario: bool):
-        self.ads_root = ads_root
+                 analyze_scenario: bool, rviz_config_path: Optional[str]):
+        self.map_path = map_path
         self.project_root = project_root
         self.experiment_id = experiment_id
         self.docker_image_id = docker_image_id
         self.display_gui = display_gui
         self.analyze_scenario = analyze_scenario
+        self.rviz_config_path = rviz_config_path
         self.cached_map_path = {}
 
     @property
     def exp_root(self):
-        return f"{self.ads_root}/experiments"
-
-    @property
-    def map_path(self):
-        return f"{self.ads_root}/autoware_map"
-
-    @property
-    def rviz_config_path(self):
-        return f"{self.ads_root}/autoware_test.rviz"
+        return f"{self.project_root}/experiments"
 
     @property
     def docker_container_name(self):
@@ -169,8 +163,7 @@ class ExperimentRunner:
         os.makedirs(self.configuration.log_dir, exist_ok=True)
         os.makedirs(self.configuration.finished_scenario_dir, exist_ok=True)
 
-        self.container_manager = ContainerManager(
-            ads_root=self.configuration.ads_root)
+        self.container_manager = ContainerManager()
         self.container_id = random.randint(100, 100000)
         self.container_name = f"{self.configuration.docker_container_name}_{self.container_id}"
         self.recording_process = None
@@ -436,26 +429,40 @@ class ExperimentRunner:
 
 if __name__ == '__main__':
 
-    ADS_ROOT = "/home/sora/Desktop/changnam"
-    PROJECT_ROOT = "/home/sora/Desktop/changnam/ADS-scenario-transfer"
-    DOCKER_IMAGE_ID = "6f0050135292"
-
-    parser = argparse.ArgumentParser(description="Process the experiment ID.")
+    parser = argparse.ArgumentParser(description="Run Experiment")
+    parser.add_argument('--map_path',
+                        required=True,
+                        help='Autoware Vector Map directory path')
+    parser.add_argument(
+        '--docker_image_id',
+        required=True,
+        help='Docker image id that will be used for running the scenario.')
     parser.add_argument('--experiment_id',
                         type=int,
                         default=1,
                         help='An integer for the experiment ID')
+    parser.add_argument('--enable_third_person_view',
+                        action="store_true",
+                        default=False,
+                        help='Enable third person view in simulator')
+
+    parser.add_argument('--display_gui',
+                        action="store_true",
+                        default=False,
+                        help='Enable displaying GUI')
 
     args = parser.parse_args()
-    EXPERIMENT_ID = args.experiment_id
+    third_person_view_config_path = PROJECT_ROOT + "/scripts/scenario_player/third_person_view.rviz"
 
     os.system("xhost +local:docker")
-    runner = ExperimentRunner(
-        configuration=ExperimentConfiguration(ads_root=ADS_ROOT,
-                                              project_root=PROJECT_ROOT,
-                                              experiment_id=EXPERIMENT_ID,
-                                              docker_image_id=DOCKER_IMAGE_ID,
-                                              display_gui=False,
-                                              analyze_scenario=False))
+    runner = ExperimentRunner(configuration=ExperimentConfiguration(
+        map_path=str(Path(args.map_path).absolute()),
+        project_root=PROJECT_ROOT,
+        experiment_id=args.experiment_id,
+        docker_image_id=args.docker_image_id,  # "6f0050135292"
+        rviz_config_path=third_person_view_config_path if args.
+        enable_third_person_view else None,
+        display_gui=args.display_gui,
+        analyze_scenario=False))
 
     runner.run_experiment(enable_display_recording=False)
