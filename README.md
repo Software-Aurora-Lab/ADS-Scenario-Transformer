@@ -11,7 +11,10 @@ ADS Scenario Transformer transfers scenarios running on Apollo and SimControl en
 
 ## Installation
 
+Clone this project and execute setup_env script.
+
 ```shell
+git clone https://github.com/hcn1519/ADS-Scenario-Transformer.git
 source ./scripts/setup_env.sh
 ```
 
