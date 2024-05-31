@@ -11,7 +11,7 @@ ADS Scenario Transformer transfers scenarios running on Apollo and SimControl en
 
 ## Installation
 
-Clone this project and execute setup_env script.
+Clone this project and execute `setup_env` script. This script will set up virtual environment and install required packages.
 
 ```shell
 git clone https://github.com/hcn1519/ADS-Scenario-Transformer.git
@@ -31,7 +31,9 @@ poetry run python3 scripts/run_transformer.py <apollo_scenario_dir_path> <config
 This command transforms all scenarios in `<apollo_scenario_dir_path>` using the configuration defined in `<config_file_path>`. For example:
 
 ```shell
-poetry run python3 scripts/run_transformer.py ../ADS_DataSet/DoppelTest_borregas_ave_30 ./scripts/config/borregasave_doppeltest.json
+poetry run python3 scripts/run_transformer.py \
+../ADS_DataSet/DoppelTest_borregas_ave_30 \
+./scripts/config/borregasave_doppeltest.json
 ```
 
 Running the transformer requires many arguments, which are listed [here](https://github.com/hcn1519/ADS-Scenario-Transformer/blob/main/ads_scenario_transformer/__main__.py). You can define them in a configuration file in JSON format like below:
@@ -54,9 +56,8 @@ Running the transformer requires many arguments, which are listed [here](https:/
 
 We also support a script for running scenarios in Docker. We play the scenario through this [prebuilt image](https://hub.docker.com/r/hcn1519/humble-202402-prebuilt-cuda-with-simulator) of Scenario Simulator and Autoware.
 
-To play scenarios, first locate the scenario directories in `./experiments/exp_<unique_experiment_id>/scenarios/`.
-
-The experiment running script can be run with the following command:
+- To play scenarios, first locate the scenario directories in `./experiments/exp_<unique_experiment_id>/scenarios/`.
+- The experiment running script can be run with the following command:
 
 ```shell
 poetry run python3 scripts/scenario_player/experiment_runner.py --experiment_id <unique_experiment_id> \
