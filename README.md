@@ -11,12 +11,19 @@ ADS Scenario Transformer transfers scenarios running on Apollo and SimControl en
 
 ## Installation
 
-Clone this project and execute `setup_env` script. This script will set up virtual environment and install required packages.
+Clone this project and install dependency. We are using `poetry` to manage project.
 
 ```shell
-git clone https://github.com/hcn1519/ADS-Scenario-Transformer.git
-source ./scripts/setup_env.sh
+git clone https://github.com/Software-Aurora-Lab/ADS-Scenario-Transformer.git
+pip install poetry
+poetry install
 ```
+
+Check if it works by running unit test.
+
+```shell
+poetry run pytest
+````
 
 ## Usage
 
@@ -52,12 +59,18 @@ Running the transformer requires many arguments, which are listed [here](https:/
 }
 ```
 
+You can see more examples in [here](https://github.com/Software-Aurora-Lab/ADS-Scenario-Transformer/blob/main/tests/test_scenario_transformer.py#L57)
+
 ### 2. Running Scenarios in Docker
 
 We also support a script for running scenarios in Docker. We play the scenario through this [prebuilt image](https://hub.docker.com/r/hcn1519/humble-202402-prebuilt-cuda-with-simulator) of Scenario Simulator and Autoware.
 
-- To play scenarios, first locate the scenario directories in `./experiments/exp_<unique_experiment_id>/scenarios/`.
-- The experiment running script can be run with the following command:
+#### How to Play Scenarios
+ 
+1. Install [Prerequisites](https://autowarefoundation.github.io/autoware-documentation/main/installation/autoware/docker-installation/) listed in Autoware document.
+2. Create directory at `./experiments/exp_<unique_experiment_id>/scenarios`
+3. Locate directiory containing scenarios at `scenarios`. You can put multiple directories in there. Script will create summary for each directory.
+4. Run experiemnt. The experiment running script can be run with the following command:
 
 ```shell
 poetry run python3 scripts/scenario_player/experiment_runner.py --experiment_id <unique_experiment_id> \
